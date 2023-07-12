@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nome: MyString
+  descricao: MyString
+  tipoNivel: MyString
+  menorNivel: MyString
+  maiorNivel: MyString
+  resultadoEscolha: MyString
+  nivelEscolha: MyString
+
+two:
+  nome: MyString
+  descricao: MyString
+  tipoNivel: MyString
+  menorNivel: MyString
+  maiorNivel: MyString
+  resultadoEscolha: MyString
+  nivelEscolha: MyString

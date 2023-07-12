@@ -1,0 +1,1 @@
+json.array! @dimensaos, partial: "cadastro/dimensao", as: :dimensao

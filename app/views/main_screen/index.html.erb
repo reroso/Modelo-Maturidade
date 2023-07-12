@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Modelo de Maturidade</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@3.2.1/css/font-awesome.min.css" rel="stylesheet">
+  <style>
+    body {
+        background-color: #8eb729;
+        margin: 0;
+    }
+    main {
+        display: -webkit-box; 
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex; 
+        display: flex;
+    }
+
+    .hidden {
+        display: none!important;
+    }
+
+    .main-left {
+        width: 15%;
+        display: -webkit-box; 
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex; 
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+    }
+    .nav-bar {
+        width: 80%;
+        height: fit-content;
+        padding: 5px 0 0 0;
+        margin: 4.5vw 0 0 0 ;
+        background-color: white;
+        border-radius: 6px;
+        border-radius: 6px 0 0 6px;
+        display: -webkit-box; 
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+    .nav-bar-cadastrar-modelo, .nav-bar-escolher-modelo {
+        width: 100%;
+        padding: 0.25vw;
+        border: 0;
+        border-radius: 5px;
+        color: white;
+        margin-bottom: 5px;
+    }
+    .nav-bar-cadastrar-modelo {
+        background: -webkit-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
+        background: -o-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
+        background: -moz-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
+        background: linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
+    }
+    .nav-bar-escolher-modelo {
+        background: -webkit-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
+        background: -o-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
+        background: -moz-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
+        background: linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
+    }
+
+    .main-right {
+        width: 85%;
+        padding: 1vw 1.5vw 1.5vw 0;
+    }
+    .main-right-header {
+        height: 3.5vw;
+        background: rgb(227,227,227);
+        background: linear-gradient(180deg, rgba(227,227,227,1) 0%, rgba(236,236,236,1) 52%, rgba(204,204,204,1) 100%);
+        display: -webkit-box; 
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex; 
+        display: flex;
+        align-items: center;
+        padding: 0 2vw 0 1vw;
+        justify-content: space-between;
+        border-radius: 0 15px 0 0 ; 
+    }
+
+    .header-title-wrapper {
+        display: -webkit-box; 
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex; 
+        display: flex;
+        align-items: center;
+    }
+    .header-title-h2 {
+        margin-right: 0.8vw;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    #modelo_maturidade {
+        height: 26px;
+        width: 100px;
+        border: 1px solid white;
+        border-radius: 2px;
+    }
+
+    .header-cadastrar {
+        margin-left: auto;
+        background-color: white;
+        height: 65%;
+        width: 14vw;
+        border-radius: 6px;
+        display: -webkit-box; 
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .header-cadastrar-btn {
+        border: white;
+        background-color: white;
+        font-size: 0.85rem;
+        color: #5e7e0f;
+    }
+    .header-cadastrar-btn i {
+        margin-right: 0.4vw;
+        color: #5e7e0f!important;
+    }
+    .main-right-hero {
+        padding: 1vw 1.2vw 0.8vw 1.2vw;
+        background-color: white;
+        display: -webkit-box; 
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .hero-form, .dimensao-form, .processo-form, .resultado-esperado-form {
+        background-color: #f7f7f7;
+        width: 100%;
+        padding: 1vw 0;
+        border-radius: 8px;
+        display: -webkit-box; 
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .hero-form form, .dimensao-form form, .processo-form form, .resultado-esperado-form form {
+        width: 30vw;
+        padding: 1vw 1.2vw .5vw 1.2vw;
+        display: -webkit-box; 
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .form-group {
+        margin-bottom: 0.5vw;
+    }
+    .form-group input {
+        width: 25vw;
+        height: 1.6vw;
+        border: 1px solid #cccccc!important;
+        border-radius: 3px;
+    }
+    .main-right-main {
+        padding: 1vw 1.2vw 2.5vw 1.2vw;
+        background-color: white;
+    }
+
+    label{
+        margin-bottom: 15px;
+        display: inline-block;
+    }
+    textarea{
+        margin-bottom: 15px;
+        display: inline-block;
+        display: block;
+    }
+    input[type=text]{
+        display: block;
+    }
+    H3{
+        margin-bottom: 15px;
+        display: inline-block;
+    }
+    .btn-submit {
+        margin-top: 5px;
+        color: #ffffff;
+        background-color: #365e02;
+        font-size: 15px;
+        border: 1px solid #365e02;
+        padding: 15px 50px;
+        cursor: pointer
+    }
+
+  </style>
+
+</head>
+<body>
+  <main>
+    <!-- Parte Esquerda -->
+    <section class="main-left">
+      <div class="nav-bar">
+        <a style="width: 96%;"href="/main_screen"><button class="btn nav-bar-cadastrar-modelo" onClick="recarregarAPagina()">Cadastrar Modelo</button></a>
+        <a style="width: 96%;"href="/cadastro"><button class="btn nav-bar-escolher-modelo" onClick="recarregarAPagina()">Escolher Modelo</button></a>
+      </div>
+    </section>
+
+    <!-- Parte Direita -->
+    <section class="main-right">
+
+      <!-- Cabeçalho Modelo -->
+      <div class="main-right-header">
+        <div class="header-title-wrapper">
+          <div class="header-title">
+            <h2 class="header-title-h2">Modelo de Maturidade</h2>
+          </div>
+          <div class="header-select">
+          </div>
+        </div>
+      </div>
+
+      <!--x Corpo do Modelo Atual -->
+      <div class="main-right-main">
+        <!--x Dimenção -->
+        <div class="main-expand dimensao">
+            <form action="/cadastroMaturidade/incluir_maturidade" method="post">  
+                <label>Nome</label>
+                
+                <input type="text" name="nome" aria-label="Recipient's username" aria-describedby="button-addon2"><br>
+                
+                <label>Descrição</label>
+                
+                <textarea id="w3review" name="w3review" rows="4" cols="50"></textarea>
+                
+                <div>
+                    <h3>Selecione o tipo de nível do modelo</h3><br>
+                    <input type="radio" id="tipo_nivel_numerico" name="tipo_nivel" value="1" > 
+                    <label>Numerico</label><br>
+                    <input type="radio" id="tipo_nivel_alfanumerico" name="tipo_nivel" value="2" >
+                    <label style="margin-bottom: 3px;">Alfanumerico</label><br>
+                    <h3>Escolha a extensão do nível do modelo</h3>
+                    <input type="text" name="tipoNivel" class="tipo_nivel hidden" value="1"><br>
+                    <label>Menor Nivel</label>
+                    <input type="text" name="menorNivel" aria-label="Recipient's username" aria-describedby="button-addon2"><br>
+                    <label>Maior Nivel</label>
+                    <input type="text" name="maiorNivel" aria-label="Recipient's username" aria-describedby="button-addon2">
+                </div>
+
+                <div>
+                    <h3>O modelo vai possuir resultados esperados ?</h3><br>
+                        <input type="radio" id="escolha_resultado_sim" name="resultado_escolha" value="1">
+                        <label>Não</label><br>
+                        <input type="radio" id="escolha_resultado_nao" name="resultado_escolha" value="2">
+                        <label style="margin-bottom: 3px;">Sim</label><br>
+                        <input type="text" name="resultadoEscolha" class="resultado_escolha hidden" value="1">
+                </div>
+                
+                <div id="nivel_escolha" class="hidden">
+                    <h3>Escolha quem usará o nivel de maturidade: </h3><br>
+                        <input type="radio" id="nivel_processo" name="nivel_escolha" value="1" >
+                        <label>Processos</label><br>
+                        <input type="radio" id="nivel_resultado_esperado" name="nivel_escolha" value="2" >
+                        <label>Resultados Esperados</label><br>
+                        <input type="text" name="nivelEscolha" class="nivel_escolha hidden" value="1">
+                </div>
+                <button class="btn-submit" type="submit" id="button-addon2">Cadastrar</button>
+            </form>
+        </div>
+      </div> 
+    </section>
+  </main>
+  
+  <script>
+   
+
+    const escolha_sim =  document.getElementById("escolha_resultado_sim");
+    const escolha_nao =  document.getElementById("escolha_resultado_nao");
+    const nivel_processo = document.getElementById("nivel_processo");
+    const nivel_resultado_esperado = document.getElementById("nivel_resultado_esperado");   
+    const tipo_nivel_numerico = document.getElementById("tipo_nivel_numerico");     
+    const tipo_nivel_alfanumerico = document.getElementById("tipo_nivel_alfanumerico");
+
+    escolha_sim.addEventListener("click",function(){
+        if(escolha_sim.checked){
+            resultado_escolha(1); 
+        }
+    })
+
+    escolha_nao.addEventListener("click",function(){
+        if(escolha_nao.checked){
+            resultado_escolha(2); 
+        }
+    })
+
+    nivel_processo.addEventListener("click",function(){
+        if(nivel_processo.checked){
+            nivel_escolha(1); 
+        }
+    })
+
+    nivel_resultado_esperado.addEventListener("click",function(){
+        if(nivel_resultado_esperado.checked){
+            nivel_escolha(2); 
+        }
+    })
+    
+    tipo_nivel_numerico.addEventListener("click",function(){
+        if(tipo_nivel_numerico.checked){
+            tipo_nivel(1); 
+        }
+    })
+
+    tipo_nivel_alfanumerico.addEventListener("click",function(){
+        if(tipo_nivel_alfanumerico.checked){
+            tipo_nivel(2); 
+        }
+    })
+
+
+    function resultado_escolha(escolha){
+        if(escolha == "2"){
+            document.getElementById("nivel_escolha").classList.remove("hidden");
+            document.getElementsByClassName("resultado_escolha")[0].value = 2;
+        } else if(escolha == "1"){
+            document.getElementById("nivel_escolha").classList.add("hidden");
+            document.getElementById("nivel_processo").checked = true;
+            document.getElementById("nivel_resultado_esperado").checked = false;
+            document.getElementsByClassName("nivel_escolha")[0].value = 1;
+            document.getElementsByClassName("resultado_escolha")[0].value = 1;
+        }
+    }
+                            
+    function nivel_escolha(escolha){
+        if(escolha == "2"){
+            document.getElementsByClassName("nivel_escolha")[0].value = 2;
+        }else if(escolha == "1"){
+            document.getElementsByClassName("nivel_escolha")[0].value = 1;
+        }
+    }
+    
+    function tipo_nivel(escolha){
+        if(escolha == "2"){
+            document.getElementsByClassName("tipo_nivel")[0].value = 2;
+        }else if(escolha == "1"){
+            document.getElementsByClassName("tipo_nivel")[0].value = 1;
+        }
+    }
+    
+  </script>
+</body>
+</html>

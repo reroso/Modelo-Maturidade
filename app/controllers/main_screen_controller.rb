@@ -1,0 +1,3 @@
+class MainScreenController < ApplicationController
+   
+end

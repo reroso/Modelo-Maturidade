@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Modelo de Maturidade</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@3.2.1/css/font-awesome.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #8eb729;
+      margin: 0;
+    }
+    main {
+      display: -webkit-box; 
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex; 
+      display: flex;
+    }
+
+    .hidden {
+      display: none!important;
+    }
+
+    .main-left {
+      width: 15%;
+      display: -webkit-box; 
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex; 
+      display: flex;
+      flex-direction: column;
+      align-items: end;
+    }
+    .nav-bar {
+      width: 80%;
+      height: fit-content;
+      padding: 5px 0 0 0;
+      margin: 4.5vw 0 0 0 ;
+      background-color: white;
+      border-radius: 6px;
+      border-radius: 6px 0 0 6px;
+      display: -webkit-box; 
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex; 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+    }
+    .nav-bar-cadastrar-modelo, .nav-bar-escolher-modelo {
+      width: 100%;
+      padding: 0.25vw;
+      border: 0;
+      border-radius: 5px;
+      color: white;
+      margin-bottom: 5px;
+    }
+    .nav-bar-cadastrar-modelo {
+      background: -webkit-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
+      background: -o-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
+      background: -moz-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
+      background: linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
+    }
+    .nav-bar-escolher-modelo {
+      background: -webkit-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
+      background: -o-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
+      background: -moz-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
+      background: linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
+    }
+
+    .main-right {
+      width: 85%;
+      padding: 1vw 1.5vw 1.5vw 0;
+    }
+    .main-right-header {
+      height: 3.5vw;
+      background: rgb(227,227,227);
+      background: linear-gradient(180deg, rgba(227,227,227,1) 0%, rgba(236,236,236,1) 52%, rgba(204,204,204,1) 100%);
+      display: -webkit-box; 
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex; 
+      display: flex;
+      align-items: center;
+      padding: 0 2vw 0 1vw;
+      justify-content: space-between;
+      border-radius: 0 15px 0 0 ; 
+    }
+
+    .header-title-wrapper {
+      display: -webkit-box; 
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex; 
+      display: flex;
+      align-items: center;
+    }
+    .header-title-h2 {
+      margin-right: 0.8vw;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    #modelo_maturidade {
+      height: 26px;
+      width: 100px;
+      border: 1px solid white;
+      border-radius: 2px;
+    }
+
+    .header-cadastrar {
+      margin-left: auto;
+      background-color: white;
+      height: 65%;
+      width: 14vw;
+      border-radius: 6px;
+      display: -webkit-box; 
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .header-cadastrar-btn {
+      border: white;
+      background-color: white;
+      font-size: 0.85rem;
+      color: #5e7e0f;
+    }
+    .header-cadastrar-btn i {
+      margin-right: 0.4vw;
+      color: #5e7e0f!important;
+    }
+    .main-right-hero {
+      padding: 1vw 1.2vw 0.8vw 1.2vw;
+      background-color: white;
+      display: -webkit-box; 
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-form, .dimensao-form, .processo-form, .resultado-esperado-form {
+      background-color: #f7f7f7;
+      width: 100%;
+      padding: 1vw 0;
+      border-radius: 8px;
+      display: -webkit-box; 
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-form form, .dimensao-form form, .processo-form form, .resultado-esperado-form form {
+      width: 30vw;
+      padding: 1vw 1.2vw .5vw 1.2vw;
+      display: -webkit-box; 
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .hero-form-cancelar {
+      text-decoration: none;
+      color: #5b8911;
+      border: 1px solid #f7f7f7;
+      background-color: #f7f7f7;
+    }
+    .form-group {
+      margin-bottom: 0.5vw;
+    }
+    .form-group input {
+      width: 25vw;
+      height: 1.6vw;
+      border: 1px solid #cccccc!important;
+      border-radius: 3px;
+    }
+    .hero-form-cadastrar{
+      height: 2vw;
+      width: 6vw;
+      background-color: #8eb729;
+      border: 1px solid white;
+      border-radius: 6px;
+    }
+    .hero-form-cancelar {
+      margin-left: 0.5vw;
+    }
+    .main-right-main {
+      padding: 1vw 1.2vw 2.5vw 1.2vw;
+      background-color: white;
+    }
+    .dimensao-header {
+      display: -webkit-box; 
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex; 
+      display: flex;
+      align-items: center;
+    }
+    .icon-minus, .icon-plus, .icon-caret-right {
+      margin-right: 0.8vw;
+      color: #7cbb16;
+    }
+    .icon-pencil {
+      color:rgb(226, 187, 12);
+    }
+    .icon-plus-sign {
+      color: rgb(11, 25, 212);
+    }
+    .icon-remove-sign {
+      color: rgb(211, 8, 8);
+    }
+    .dimensao-header i, .processo-header i, .resultado-header i  {
+      margin-right: 0.3vw;
+    }
+    .dimensao-header p, .processo-header p, .resultado-header p {
+      font-weight: 600;
+      margin-right: 0.8vw;
+    }
+
+    .dimensao-form {
+      margin-left: 1.5vw;
+      width: 98%;
+    }
+    .dimensao-form form {
+      margin-right: 2vw;
+    }
+
+    .dimensao-childen {
+      margin-left: 2.5vw;
+    }
+
+    .processo-header {
+      display: -webkit-box; 
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex; 
+      display: flex;
+      align-items: center;
+    }
+
+    .resultado-esperado {
+      margin-left: 2.5vw;
+    }
+    .resultado-header {
+      display: -webkit-box; 
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex; 
+      display: flex;
+      align-items: center;
+    }
+
+  </style>
+
+</head>
+<body>
+  
+  <main>
+    
+    <!-- Parte Esquerda -->
+    <section class="main-left">
+      <div class="nav-bar">
+        <a style="width: 96%;"href="/main_screen"><button class="btn nav-bar-cadastrar-modelo" onClick="recarregarAPagina()">Cadastrar Modelo</button></a>
+        <a style="width: 96%;"href="/cadastro"><button class="btn nav-bar-escolher-modelo" onClick="recarregarAPagina()">Escolher Modelo</button></a>
+      </div>
+    </section>
+
+    <!-- Parte Direita -->
+    <section class="main-right">
+
+      <!-- Cabeçalho Modelo -->
+      <div class="main-right-header">
+        <div class="header-title-wrapper">
+          <div class="header-title">
+            <h2 class="header-title-h2">Modelo de Maturidade</h2>
+          </div>
+          <div class="header-select">
+            <%= select_tag "maturidade_id", options_from_collection_for_select(@maturidades, "id", "nome"), prompt: "Escolha um modelo", class: "modelo corpo_texto_select" %>
+          </div>
+        </div>
+
+        <div class="header-cadastrar">
+          <button class="header-cadastrar-btn" id="abrir_form" onclick="show_dimensao(this.id)"><strong><i class="icon-plus-sign"></i>Cadastrar Nova Dimensão</strong></button>
+        </div>
+      </div>
+      
+      <!--x Form criação nova Dimensão -->
+      <div class="main-right-hero hidden" id="form_dimensao_1">
+        <div class="hero-form">
+          <form action="/cadastro/incluir_dimensao" method="post">
+            <div class="form-group">
+              <label for="nome_dimensao">Nome:</label>
+              <input name="descricao" type="text" id="nome_dimensao">
+              <input name="maturidade_id" type="text" id="maturidade_dimensao">
+            </div>
+            <div class="from-group-btn">
+              <button type="submit" class="hero-form-cadastrar">Cadastrar</button>
+              <button type="button" class="hero-form-cancelar" id="cancelar_form" onclick="show_dimensao(this.id)">cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <!--x Corpo do Modelo Atual -->
+      <div class="main-right-main">
+        <!--x Dimenção -->
+        <% contadorDimensaos = 1 %>
+        <% @dimensaos.each do |dimensao| %>
+        <%if dimensao.maturidade_id == @opcao%>
+        <div class="main-expand dimensao">
+          <!--x Cabeçalho Dimenção -->
+          <div class="dimensao-header"> 
+            <i class="icon-plus" id="dimensao_<%= dimensao.id %>_icon" onclick="show_todos_processos(this.id,<%= dimensao.id %>)"></i><!-- o 1 do id é o id da dimensão-->
+            <p><%=contadorDimensaos%>. <%= dimensao.descricao %></p>
+            <i class="icon-pencil" id="abrir_salvar_dimensao_<%= dimensao.id %>" onclick="show_dimensao_salvar(this.id,<%= dimensao.id %>,'<%= dimensao.descricao %>')"></i><!-- o 1 do id é o id da dimensao e o textoDoProcesso é a descrição-->
+            <i class="icon-plus-sign" id="abrir_form_processo_<%= dimensao.id %>" onclick="show_processo(this.id,<%= dimensao.id %>)"></i> <!-- o 1 do id e do onclick são o id da dimensão-->
+            <a href="/cadastro/<%= dimensao.id %>/excluir_dimensao"><i class="icon-remove-sign"></i></a>
+          </div>
+          <!--* Form novo Processo -->
+          <div class="dimensao-form hidden" id="form_processo_<%= dimensao.id %>"> <!-- o 1 do id é o id da dimensão-->
+          </div>
+          <!--* Processos Filhos da Dimensão -->
+          <div class="dimensao-childen hidden" id="dimensao_child_<%= dimensao.id %>"> <!-- o 1 do id é o id da dimensão-->
+            <% contadorProcessos = 1 %>
+            <% @processos.each do |processo| %>
+              <%if dimensao.id == processo.dimensao_id%>
+            <div class="main-expand processo">
+              <div class="processo-header">
+                <i class="icon-plus" id="processo_<%= processo.id %>_icon" onclick="show_todos_resultados(this.id,<%= processo.id %>)"></i><!-- o 1 do id é o id do processo-->
+                <p><%=contadorDimensaos%>.<%=contadorProcessos%> <%= processo.descricao %></p>
+                <i class="icon-pencil" id="abrir_salvar_processo_<%= processo.id %>" onclick="show_processo_salvar(this.id,<%= processo.id %>,'<%= processo.descricao %>')"></i> <!-- o 1 do id é o id do processo e o textoDoProcesso é a descrição-->
+                <i class="icon-plus-sign" id="abrir_form_resultado_esperado_<%= processo.id %>" onclick="show_resultado(this.id,<%= processo.id %>)"></i> <!-- o 1 do id e do onclick são o id do processo-->
+                <a href="/cadastroProcesso/<%= processo.id %>/excluir_processo"><i class="icon-remove-sign"></i></a>
+                <select name="select">
+                  <option value="valor1">a</option>
+                  <option value="valor1">b</option>
+                  <option value="valor2" selected>c</option>
+                  <option value="valor3">d</option>
+                  <option value="valor1">e</option>
+                  <option value="valor2" >f</option>
+                </select>
+              </div>
+              <!--! Form criação novo resultado esperado -->
+              <div class="processo-form hidden"  id="form_resultado_esperado_<%= processo.id %>"> <!-- o 1 do id é o id do processo-->
+              </div>
+              <div class="processo-child hidden" id="processo_child_<%= processo.id %>"> <!-- o 1 do id é o id do processo-->
+                <!--! Resultados esperados do Processo -->
+                <% contadorResultados = 1 %>
+                <% @resultados.each do |resultado| %>
+                  <%if processo.id == resultado.processo_id%>
+                <div class="main-expand resultado-esperado">
+                  <div class="resultado-header">
+                    <i class="icon-caret-right"></i>
+                    <p><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> <%= resultado.descricao %></p>
+                    <i class="icon-pencil"  id="abrir_salvar_resultado_esperado_<%= resultado.id %>" onclick="show_resultado_esperado_salvar(this.id,<%= resultado.id %>,'<%= resultado.descricao %>')"></i> <!-- o 1 do id é o id do resultado esperado e o textoDoProcesso é a descrição-->
+                    <a href="/cadastroResultado/<%= resultado.id %>/excluir_resultado"><i class="icon-remove-sign"></i></a>
+                  </div>
+                  <!--! Form criação novo resultado esperado -->
+                  <div class="resultado-esperado-form hidden"  id="form_resultado_esperado_salvar_<%= resultado.id %>"> <!-- o 1 do id é o id do resultado esperado-->
+                  </div>
+                </div>
+                    <%contadorResultados = contadorResultados + 1%>
+                  <%end%>
+                <%end%>
+              </div>
+            </div>
+                <%contadorProcessos = contadorProcessos + 1%>
+              <%end%>
+            <%end%>
+          </div>
+          <%contadorDimensaos = contadorDimensaos + 1%>
+        <%end%>
+        <%end%>
+        </div>
+      </div>
+      
+    </section>
+
+  </main>
+
+  <form action="/cadastroProcesso/incluir_processo" method="post" id="form_dimensao_novo" class="hidden">
+    <div class="form-group">
+      <label for="nome_processo">Descricao:</label>
+      <input type="text" name="descricao" id="nome_processo" class="inputDescricao">
+    </div>
+    <div class="from-group-btn">
+      <button type="submit" class="hero-form-cadastrar">Cadastrar</button>
+  </form>
+      <button type="button" class="hero-form-cancelar" id="cancelar_form_dimensao" onclick="show_dimensao(this.id)">cancelar</button>
+    </div>
+    
+  <form action="/cadastroProcesso/incluir_processo" method="post" id="form_processo_novo" class="hidden">
+    <div class="form-group">
+      <label for="nome_processo">Descricao:</label>
+      <input type="text" name="descricao" id="nome_processo" class="inputDescricao">
+      <input type="text" name="dimensao_id" class="inputDimensao hidden">
+    </div>
+    <div class="from-group-btn">
+      <button type="submit" class="hero-form-cadastrar">Cadastrar</button>
+  </form>
+      <button type="button" class="hero-form-cancelar" id="cancelar_form_processo" onclick="show_processo(this.id)">cancelar</button>
+    </div>
+
+  <form action="/cadastroResultado/incluir_resultado" method="post" id="form_resultado_esperado_novo" class="hidden">
+    <div class="form-group">
+      <label for="nome_resultado_esperado">Descricao:</label>
+      <input type="text" name="descricao" id="nome_resultado_esperado" class="inputDescricao">
+    </div>
+    <div class="from-group-btn">
+      <button type="submit" class="hero-form-cadastrar">Cadastrar</button>
+  </form>
+      <button type="button" class="hero-form-cancelar" id="cancelar_form_resultado_esperado" onclick="show_resultado(this.id)">cancelar</button>
+    </div>
+  
+  <script>
+
+    function show_dimensao(form_id){
+      
+      if (form_id == "abrir_form") {
+        document.getElementById("form_dimensao_1").classList.remove('hidden');
+      } else if (form_id == "cancelar_form") {
+        document.getElementById("form_dimensao_1").classList.add('hidden');
+      }
+      
+    }
+
+    function show_processo(form_id,dimensao){
+      
+      if (form_id == `cancelar_form_processo`+dimensao){
+        var classExcluir = `.form_processo_novo_clone`+dimensao;
+        document.querySelector(classExcluir).remove();
+        document.getElementById(`form_processo_`+dimensao).classList.add("hidden");
+      } else if(form_id == `abrir_form_processo_`+dimensao){
+        
+        var element = document.getElementById(`form_processo_novo_clone`+dimensao);
+        var element2 = document.getElementById(`form_salvar_dimensao_novo_clone`+dimensao);
+        
+        if(!element && !element2){
+        
+          var temp = document.getElementById('form_processo_novo');
+          var tempClone = temp.cloneNode(true);
+          tempClone.classList.remove('hidden');
+          tempClone.classList.add(`form_processo_novo_clone`+dimensao);
+          var destino = `form_processo_`+dimensao;
+          document.getElementById(destino).classList.remove('hidden');
+          var tempDestiny = document.getElementById(destino);
+          tempClone.id = `form_processo_novo_clone`+dimensao;
+          tempClone.getElementsByClassName("inputDimensao")[0].value = dimensao;
+          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.onclick.value = `show_processo(this.id,`+dimensao+`)`;
+          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.id.value = `cancelar_form_processo`+dimensao;
+          tempDestiny.appendChild(tempClone);
+          addEventListenerToForm();
+
+        }
+      }
+    }
+
+    function show_todos_processos(form_id,dimensao){
+      
+      if((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-plus")){
+        document.getElementById(`dimensao_child_`+dimensao).classList.remove('hidden');
+        document.getElementById(form_id).classList.remove('icon-plus');
+        document.getElementById(form_id).classList.add('icon-minus');
+      } else if ((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-minus")) {
+        document.getElementById(`dimensao_child_`+dimensao).classList.add('hidden');
+        document.getElementById(form_id).classList.remove('icon-minus');
+        document.getElementById(form_id).classList.add('icon-plus');
+      }
+    }
+
+    function show_resultado(form_id,processo){
+      
+      if (form_id == "cancelar_form_resultado_esperado"+processo){
+        
+        var classExcluir = `#form_resultado_esperado_novo_clone`+processo;
+        document.querySelector(classExcluir).remove();
+        document.getElementById(`form_resultado_esperado_`+processo).classList.add("hidden");
+      } else if(form_id == `abrir_form_resultado_esperado_`+processo){
+        
+        var element = document.getElementById(`form_resultado_esperado_novo_clone`+processo);
+        var element2 = document.getElementById(`form_salvar_processo_novo_clone`+processo);
+
+        if(!element && !element2){
+        
+          var temp = document.getElementById('form_processo_novo');
+          var tempClone = temp.cloneNode(true);
+          tempClone.classList.remove('hidden');
+          tempClone.classList.add(`form_resultado_esperado_novo_clone`+processo);
+          var destino = `form_resultado_esperado_`+processo;
+          document.getElementById(destino).classList.remove('hidden');
+          var tempDestiny = document.getElementById(destino);
+          tempClone.id = `form_resultado_esperado_novo_clone`+processo;
+          tempClone.getElementsByClassName("inputDimensao")[0].value = processo;
+          tempClone.getElementsByClassName("inputDimensao")[0].name = "processo_id"
+          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.onclick.value = `show_resultado(this.id,`+processo+`)`;
+          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.id.value = `cancelar_form_resultado_esperado`+processo;
+          tempClone.getElementsByClassName("form-group")[0].parentElement.attributes[0].nodeValue = `/cadastroResultado/incluir_resultado`;
+          tempDestiny.appendChild(tempClone);
+          addEventListenerToForm();
+
+        }
+
+      }
+    }
+
+    function show_todos_resultados(form_id,processo){
+      
+      if((form_id == (`processo_`+processo+`_icon`)) && (document.getElementById(form_id).classList == "icon-plus")){
+        document.getElementById(`processo_child_`+processo).classList.remove('hidden');
+        document.getElementById(form_id).classList.remove('icon-plus');
+        document.getElementById(form_id).classList.add('icon-minus');
+      } else if ((form_id == (`processo_`+processo+`_icon`)) && (document.getElementById(form_id).classList == "icon-minus")) {
+        document.getElementById(`processo_child_`+processo).classList.add('hidden');
+        document.getElementById(form_id).classList.remove('icon-minus');
+        document.getElementById(form_id).classList.add('icon-plus');
+      }
+    }
+
+    function show_processo_salvar(form_id,dimensao,descricao){
+      if (form_id == `cancelar_form_processo`+dimensao){
+        var classExcluir = `#form_salvar_processo_novo_clone`+dimensao;
+        document.querySelector(classExcluir).remove();
+        document.getElementById(`form_resultado_esperado_`+dimensao).classList.add("hidden");
+      
+      } else if(form_id == `abrir_salvar_processo_`+dimensao){
+        
+        var element = document.getElementById(`form_salvar_processo_novo_clone`+dimensao);
+        var element2 = document.getElementById(`form_resultado_esperado_novo_clone`+dimensao);
+
+        if(!element && !element2){
+        
+          var temp = document.getElementById('form_processo_novo');
+          var tempClone = temp.cloneNode(true);
+          tempClone.classList.remove('hidden');
+          tempClone.classList.add(`form_processo_novo_clone`+dimensao);                    
+          var destino = `form_resultado_esperado_`+dimensao;
+          document.getElementById(destino).classList.remove('hidden');
+          var tempDestiny = document.getElementById(destino);
+          tempClone.id = `form_salvar_processo_novo_clone`+dimensao;
+          tempClone.getElementsByClassName("inputDimensao")[0].remove();
+          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.onclick.value = `show_processo_salvar(this.id,`+dimensao+`)`;
+          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.id.value = `cancelar_form_processo`+dimensao;
+          tempClone.getElementsByClassName("form-group")[0].parentElement.attributes[0].nodeValue = `/cadastroProcesso/`+dimensao+`/salvar_processo`;
+          tempClone.getElementsByClassName("inputDescricao")[0].value = descricao;
+          tempClone.getElementsByClassName("hero-form-cadastrar")[0].innerHTML = "Salvar";
+          tempDestiny.appendChild(tempClone);
+          addEventListenerToForm();
+        }
+      }
+    }
+
+    function show_dimensao_salvar(form_id,dimensao,descricao){
+      if (form_id == `cancelar_form_dimensao`+dimensao){
+
+        var classExcluir = `#form_salvar_dimensao_novo_clone`+dimensao;
+        document.querySelector(classExcluir).remove();
+        document.getElementById(`form_processo_`+dimensao).classList.add("hidden");
+      
+      } else if(form_id == `abrir_salvar_dimensao_`+dimensao){
+        
+        var element = document.getElementById(`form_salvar_dimensao_novo_clone`+dimensao);
+        var element2 = document.getElementById(`form_processo_novo_clone`+dimensao);
+
+        if(!element && !element2){
+        
+          var temp = document.getElementById('form_dimensao_novo');
+          var tempClone = temp.cloneNode(true);
+          tempClone.classList.remove('hidden');
+          tempClone.classList.add(`form_dimensao_novo_clone`+dimensao);                    
+          var destino = `form_processo_`+dimensao;
+          document.getElementById(destino).classList.remove('hidden');
+          var tempDestiny = document.getElementById(destino);
+          tempClone.id = `form_salvar_dimensao_novo_clone`+dimensao;
+          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.onclick.value = `show_dimensao_salvar(this.id,`+dimensao+`)`;
+          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.id.value = `cancelar_form_dimensao`+dimensao;
+          tempClone.getElementsByClassName("form-group")[0].parentElement.attributes[0].nodeValue = `/cadastro/`+dimensao+`/salvar_dimensao`;
+          tempClone.getElementsByClassName("inputDescricao")[0].value = descricao;
+          tempClone.getElementsByClassName("hero-form-cadastrar")[0].innerHTML = "Salvar";
+          tempDestiny.appendChild(tempClone);
+          addEventListenerToForm();
+        }
+      }
+    }
+
+    function show_resultado_esperado_salvar(form_id,dimensao,descricao){
+      if (form_id == `cancelar_form_resultado_esperado`+dimensao){
+
+        var classExcluir = `#form_salvar_resultado_esperado_novo_clone`+dimensao;
+        document.querySelector(classExcluir).remove();
+        document.getElementById(`form_resultado_esperado_salvar_`+dimensao).classList.add("hidden");
+      
+      } else if(form_id == `abrir_salvar_resultado_esperado_`+dimensao){
+        
+        var element = document.getElementById(`form_salvar_resultado_esperado_novo_clone`+dimensao);
+
+        if(!element){
+        
+          var temp = document.getElementById('form_resultado_esperado_novo');
+          var tempClone = temp.cloneNode(true);
+          tempClone.classList.remove('hidden');
+          tempClone.classList.add(`form_resultado_esperado_novo_clone`+dimensao);                    
+          var destino = `form_resultado_esperado_salvar_`+dimensao;
+          document.getElementById(destino).classList.remove('hidden');
+          var tempDestiny = document.getElementById(destino);
+          tempClone.id = `form_salvar_resultado_esperado_novo_clone`+dimensao;
+          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.onclick.value = `show_resultado_esperado_salvar(this.id,`+dimensao+`)`;
+          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.id.value = `cancelar_form_resultado_esperado`+dimensao;
+          tempClone.getElementsByClassName("form-group")[0].parentElement.attributes[0].nodeValue = `/cadastroResultado/`+dimensao+`/salvar_resultado`;
+          tempClone.getElementsByClassName("inputDescricao")[0].value = descricao;
+          tempClone.getElementsByClassName("hero-form-cadastrar")[0].innerHTML = "Salvar";
+          tempDestiny.appendChild(tempClone);
+          addEventListenerToForm();
+        }
+      }
+    }
+
+    
+    
+    $(document).ready(function(){
+
+      $(".header-select #maturidade_id").change(function(){
+        var opcaoSelecionada = this.value;
+        
+        axios.post("/cadastro/atualizar_opcao", { opcao: opcaoSelecionada })
+        .then(function(response) {
+          // Lógica para sucesso na resposta
+          console.log(response.data);
+        })
+        .catch(function(error) {
+          // Lógica para erro na resposta
+          console.error(error);
+        });
+
+      });
+    
+    });
+
+
+    
+
+
+  </script>
+</body>
+</html>
