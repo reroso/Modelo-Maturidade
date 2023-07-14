@@ -4,6 +4,8 @@ class CadastroController < ApplicationController
         @processos = Processo.all
         @resultados = Resultado.all
         @maturidades = Maturidade.all
+        @opcao = params[:opcao].to_i
+        
     end
 
     #dimensao
@@ -141,8 +143,8 @@ class CadastroController < ApplicationController
 
     def atualizar_opcao
 
-        novoModelo = params[:opcao]
-        enviar_opcao(novoModelo)
+        @opcao = params[:opcao]
+        render json: { redirect_url: root_path(opcao: @opcao) }
 
     end
 

@@ -291,6 +291,10 @@
             <%= select_tag "maturidade_id", options_from_collection_for_select(@maturidades, "id", "nome"), prompt: "Escolha um modelo", class: "modelo corpo_texto_select" %>
           </div>
         </div>
+        <%if @opcao != 0%>
+          <% maturidade_selecionada = Maturidade.find(@opcao)%>
+        <%end%>
+        <div id="mudancaResultado" class="<%=maturidade_selecionada.resultadoEscolha%>"> </div>
 
         <div class="header-cadastrar">
           <button class="header-cadastrar-btn" id="abrir_form" onclick="show_dimensao(this.id)"><strong><i class="icon-plus-sign"></i>Cadastrar Nova Dimensão</strong></button>
@@ -304,7 +308,7 @@
             <div class="form-group">
               <label for="nome_dimensao">Nome:</label>
               <input name="descricao" type="text" id="nome_dimensao">
-              <input name="maturidade_id" type="text" id="maturidade_dimensao">
+              <input name="maturidade_id" type="text" id="maturidade_dimensao" class="hidden" value="<%= @opcao%>">
             </div>
             <div class="from-group-btn">
               <button type="submit" class="hero-form-cadastrar">Cadastrar</button>
@@ -313,7 +317,6 @@
           </form>
         </div>
       </div>
-      
       <!--x Corpo do Modelo Atual -->
       <div class="main-right-main">
         <!--x Dimenção -->
@@ -337,36 +340,69 @@
             <% contadorProcessos = 1 %>
             <% @processos.each do |processo| %>
               <%if dimensao.id == processo.dimensao_id%>
+                
             <div class="main-expand processo">
               <div class="processo-header">
                 <i class="icon-plus" id="processo_<%= processo.id %>_icon" onclick="show_todos_resultados(this.id,<%= processo.id %>)"></i><!-- o 1 do id é o id do processo-->
                 <p><%=contadorDimensaos%>.<%=contadorProcessos%> <%= processo.descricao %></p>
                 <i class="icon-pencil" id="abrir_salvar_processo_<%= processo.id %>" onclick="show_processo_salvar(this.id,<%= processo.id %>,'<%= processo.descricao %>')"></i> <!-- o 1 do id é o id do processo e o textoDoProcesso é a descrição-->
-                <i class="icon-plus-sign" id="abrir_form_resultado_esperado_<%= processo.id %>" onclick="show_resultado(this.id,<%= processo.id %>)"></i> <!-- o 1 do id e do onclick são o id do processo-->
+                <i class="icon-plus-sign" class="abrir_form_resultado_esperado" id="abrir_form_resultado_esperado_<%= processo.id %>" onclick="show_resultado(this.id,<%= processo.id %>)"></i> <!-- o 1 do id e do onclick são o id do processo-->
                 <a href="/cadastroProcesso/<%= processo.id %>/excluir_processo"><i class="icon-remove-sign"></i></a>
-                <select name="select">
-                  <option value="valor1">a</option>
-                  <option value="valor1">b</option>
-                  <option value="valor2" selected>c</option>
-                  <option value="valor3">d</option>
-                  <option value="valor1">e</option>
-                  <option value="valor2" >f</option>
-                </select>
+                <%if maturidade_selecionada.nivelEscolha == "1"%>
+                  <select name="select">
+                    <%if maturidade_selecionada.tipoNivel == "1"%>
+                      <% contador = maturidade_selecionada.menorNivel.to_i %>
+                      <% contador = contador.to_i %>
+                      <% while contador <= maturidade_selecionada.maiorNivel.to_i do %>
+                        <option value="<%= contador %>"><%= contador %></option>
+                        <% contador += 1 %>
+                      <% end %>
+                    <% else %>
+                      <% contador = maturidade_selecionada.menorNivel.to_s %>
+                      <% contador = contador.to_s %>
+                      <% while contador <= maturidade_selecionada.maiorNivel.to_s do %>
+                        <option value="<%= contador %>"><%= contador %></option>
+                        <% contador = contador.next %>
+                      <% end %>
+                    <% end %>
+                  </select>
+                <% end %>
               </div>
               <!--! Form criação novo resultado esperado -->
               <div class="processo-form hidden"  id="form_resultado_esperado_<%= processo.id %>"> <!-- o 1 do id é o id do processo-->
               </div>
               <div class="processo-child hidden" id="processo_child_<%= processo.id %>"> <!-- o 1 do id é o id do processo-->
                 <!--! Resultados esperados do Processo -->
+                <%if maturidade_selecionada.resultadoEscolha == "2"%>
                 <% contadorResultados = 1 %>
                 <% @resultados.each do |resultado| %>
                   <%if processo.id == resultado.processo_id%>
+                
                 <div class="main-expand resultado-esperado">
                   <div class="resultado-header">
                     <i class="icon-caret-right"></i>
                     <p><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> <%= resultado.descricao %></p>
                     <i class="icon-pencil"  id="abrir_salvar_resultado_esperado_<%= resultado.id %>" onclick="show_resultado_esperado_salvar(this.id,<%= resultado.id %>,'<%= resultado.descricao %>')"></i> <!-- o 1 do id é o id do resultado esperado e o textoDoProcesso é a descrição-->
                     <a href="/cadastroResultado/<%= resultado.id %>/excluir_resultado"><i class="icon-remove-sign"></i></a>
+                    <%if maturidade_selecionada.nivelEscolha == "2"%>
+                      <select name="select">
+                        <%if maturidade_selecionada.tipoNivel == "1"%>
+                          <% contador = maturidade_selecionada.menorNivel.to_i %>
+                          <% contador = contador.to_i %>
+                          <% while contador <= maturidade_selecionada.maiorNivel.to_i do %>
+                            <option value="<%= contador %>"><%= contador %></option>
+                            <% contador += 1 %>
+                          <% end %>
+                        <% else %>
+                          <% contador = maturidade_selecionada.menorNivel.to_s %>
+                          <% contador = contador.to_s %>
+                          <% while contador <= maturidade_selecionada.maiorNivel.to_s do %>
+                            <option value="<%= contador %>"><%= contador %></option>
+                            <% contador = contador.next %>
+                          <% end %>
+                        <% end %>
+                      </select>
+                    <% end %>
                   </div>
                   <!--! Form criação novo resultado esperado -->
                   <div class="resultado-esperado-form hidden"  id="form_resultado_esperado_salvar_<%= resultado.id %>"> <!-- o 1 do id é o id do resultado esperado-->
@@ -374,6 +410,7 @@
                 </div>
                     <%contadorResultados = contadorResultados + 1%>
                   <%end%>
+                <%end%>
                 <%end%>
               </div>
             </div>
@@ -637,6 +674,8 @@
         axios.post("/cadastro/atualizar_opcao", { opcao: opcaoSelecionada })
         .then(function(response) {
           // Lógica para sucesso na resposta
+          const redirectUrl = response.data.redirect_url;
+          window.location.href = redirectUrl;
           console.log(response.data);
         })
         .catch(function(error) {
@@ -645,6 +684,13 @@
         });
 
       });
+
+      var test = document.getElementById("mudancaResultado");
+      
+      if (test.classList.value == "1") {
+        test = document.getElementsByClassName(".abrir_form_resultado_esperado");
+        console.log(test);
+      }
     
     });
 
