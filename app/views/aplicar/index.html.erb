@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<title>Modelo de Maturidade</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+
+<!-- Icons -->
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@3.2.1/css/font-awesome.min.css" rel="stylesheet">
+<style>
+body {
+    background-color: #8eb729;
+    margin: 0;
+}
+main {
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+}
+
+.hidden {
+    display: none!important;
+}
+
+.main-left {
+    width: 15%;
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+.nav-bar {
+    width: 80%;
+    height: fit-content;
+    padding: 5px 0 0 0;
+    margin: 4.5vw 0 0 0 ;
+    background-color: white;
+    border-radius: 6px;
+    border-radius: 6px 0 0 6px;
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.nav-bar-cadastrar-modelo, .nav-bar-escolher-modelo {
+    width: 100%;
+    padding: 0.25vw;
+    border: 0;
+    border-radius: 5px;
+    color: white;
+    margin-bottom: 5px;
+}
+.nav-bar-cadastrar-modelo {
+    background: -webkit-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
+    background: -o-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
+    background: -moz-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
+    background: linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
+}
+.nav-bar-escolher-modelo {
+    background: -webkit-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
+    background: -o-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
+    background: -moz-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
+    background: linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
+}
+
+.main-right {
+    width: 85%;
+    padding: 1vw 1.5vw 1.5vw 0;
+}
+.main-right-header {
+    height: 3.5vw;
+    background: rgb(227,227,227);
+    background: linear-gradient(180deg, rgba(227,227,227,1) 0%, rgba(236,236,236,1) 52%, rgba(204,204,204,1) 100%);
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    align-items: center;
+    padding: 0 2vw 0 1vw;
+    justify-content: space-between;
+    border-radius: 0 15px 0 0 ; 
+}
+
+.header-title-wrapper {
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    align-items: center;
+}
+.header-title-h2 {
+    margin-right: 0.8vw;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+#modelo_maturidade {
+    height: 26px;
+    width: 100px;
+    border: 1px solid white;
+    border-radius: 2px;
+}
+
+.header-cadastrar {
+    margin-left: auto;
+    background-color: white;
+    height: 65%;
+    width: 14vw;
+    border-radius: 6px;
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.header-cadastrar-btn {
+    border: white;
+    background-color: white;
+    font-size: 0.85rem;
+    color: #5e7e0f;
+}
+.header-cadastrar-btn i {
+    margin-right: 0.4vw;
+    color: #5e7e0f!important;
+}
+.main-right-hero {
+    padding: 1vw 1.2vw 0.8vw 1.2vw;
+    background-color: white;
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hero-form, .dimensao-form, .processo-form, .resultado-esperado-form {
+    background-color: #f7f7f7;
+    width: 100%;
+    padding: 1vw 0;
+    border-radius: 8px;
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hero-form form, .dimensao-form form, .processo-form form, .resultado-esperado-form form {
+    width: 30vw;
+    padding: 1vw 1.2vw .5vw 1.2vw;
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.hero-form-cancelar {
+    text-decoration: none;
+    color: #5b8911;
+    border: 1px solid #f7f7f7;
+    background-color: #f7f7f7;
+}
+.form-group {
+    margin-bottom: 0.5vw;
+}
+.form-group input {
+    width: 25vw;
+    height: 1.6vw;
+    border: 1px solid #cccccc!important;
+    border-radius: 3px;
+}
+.hero-form-cadastrar{
+    height: 2vw;
+    width: 6vw;
+    background-color: #8eb729;
+    border: 1px solid white;
+    border-radius: 6px;
+}
+.hero-form-cancelar {
+    margin-left: 0.5vw;
+}
+.main-right-main {
+    padding: 1vw 1.2vw 2.5vw 1.2vw;
+    background-color: white;
+}
+.dimensao-header {
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    align-items: center;
+    margin-top: 1%;
+}
+.icon-minus, .icon-plus, .icon-caret-right {
+    margin-right: 0.8vw;
+    color: #7cbb16;
+}
+.icon-pencil {
+    color:rgb(226, 187, 12);
+}
+.icon-plus-sign {
+    color: rgb(11, 25, 212);
+}
+.icon-remove-sign {
+    color: rgb(211, 8, 8);
+}
+.dimensao-header i, .processo-header i, .resultado-header i  {
+    margin-right: 0.3vw;
+}
+.dimensao-header p, .processo-header p, .resultado-header p {
+    font-weight: 600;
+    margin-right: 0.8vw;
+}
+
+.dimensao-form {
+    margin-left: 1.5vw;
+    width: 98%;
+}
+.dimensao-form form {
+    margin-right: 2vw;
+}
+
+.dimensao-childen {
+    margin-left: 2.5vw;
+}
+
+.processo-header {
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    align-items: center;
+    margin-top: 1%;
+}
+
+.resultado-esperado {
+    margin-left: 2.5vw;
+}
+.resultado-header {
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    align-items: center;
+    margin-top: 1%;
+}
+.absolute{
+    position: absolute;
+}
+
+</style>
+
+</head>
+<body>
+
+<main>
+
+<!-- Parte Esquerda -->
+<section class="main-left">
+    <div class="nav-bar">
+    <a style="width: 96%;"href="/main_screen"><button class="btn nav-bar-cadastrar-modelo" >Cadastrar Modelo</button></a>
+    <a style="width: 96%;"href="/cadastro"><button class="btn nav-bar-escolher-modelo" >Cadastrar Estrutura</button></a>
+    <a style="width: 96%;"href="/aplicar"><button class="btn nav-bar-cadastrar-modelo" >Utilizar Modelo</button></a>
+    </div>
+</section>
+
+<!-- Parte Direita -->
+<section class="main-right">
+
+    <!-- Cabeçalho Modelo -->
+    <div class="main-right-header">
+    <div class="header-title-wrapper">
+        <div class="header-title">
+        <h2 class="header-title-h2">Aplicar Modelo</h2>
+        </div>
+        <div class="header-select">
+        <%= select_tag "maturidade_id", options_from_collection_for_select(@maturidades, "id", "nome"), prompt: "Escolha um modelo", class: "modelo corpo_texto_select" %>
+        </div>
+    </div>
+    <%if @opcao != 0%>
+        <% maturidade_selecionada = Maturidade.find(@opcao)%>
+        <div id="mudancaResultado" class="<%=maturidade_selecionada.resultadoEscolha%>"> </div>
+    <%end%>
+    </div>
+    
+    <!--x Corpo do Modelo Atual -->
+    <div class="main-right-main">
+    <div>
+        <label for="areas" style="margin-bottom: 15px; display: inline-block;">Selecione um Domínio:</label>
+        <select id="areas" name="areas">
+            <option value="" disabled selected>Escolha uma opção</option>
+            <option value="saude">Saúde</option>
+            <option value="ensino">Ensino</option>
+            <option value="industria">Indústria</option>
+            <option value="agricultura">Agricultura</option>
+            <option value="cultura">Cultura</option>
+        </select>
+        <div>
+            <label style="margin-bottom: 15px; display: inline-block;">O modelo vai possuir priorização</label><br>
+                <input type="radio" id="escolha_resultado_sim" name="resultado_escolha" value="1">
+                <label style="margin-bottom: 15px; display: inline-block;">Não</label><br>
+                <input type="radio" id="escolha_resultado_nao" name="resultado_escolha" value="2">
+                <label style="margin-bottom: 15px; display: inline-block;">Sim</label><br>
+                <input type="text" name="resultadoEscolha" class="resultado_escolha hidden" value="1">
+        </div>
+        <div id="nivel_escolha" class="hidden">
+            <label style="margin-bottom: 15px; display: inline-block;">Escolha a range da priorização</label><br>
+                <label style="margin-bottom: 15px; display: inline-block;">Menor Nivel</label>
+                <input type="text" name="menorNivel" aria-label="Recipient's username" aria-describedby="button-addon2" style="display: block;"><br>
+                <label style="margin-bottom: 15px; display: inline-block;">Maior Nivel</label>
+                <input type="text" name="maiorNivel" aria-label="Recipient's username" aria-describedby="button-addon2" style="display: block;">
+        </div>
+    </div>
+    <!--x Dimenção -->
+    <% contadorDimensaos = 1 %>
+    <% @dimensaos.each do |dimensao| %>
+    <%if dimensao.maturidade_id == @opcao%>
+    <div class="main-expand dimensao">
+        <!--x Cabeçalho Dimenção -->
+        <div class="dimensao-header"> 
+        <i class="icon-plus" id="dimensao_<%= dimensao.id %>_icon" onclick="show_todos_processos(this.id,<%= dimensao.id %>)"></i><!-- o 1 do id é o id da dimensão-->
+        <p><%=contadorDimensaos%>. <%= dimensao.descricao %></p>
+        </div>
+        <!--* Form novo Processo -->
+        <div class="dimensao-form hidden" id="form_processo_<%= dimensao.id %>"> <!-- o 1 do id é o id da dimensão-->
+        </div>
+        <!--* Processos Filhos da Dimensão -->
+        <div class="dimensao-childen hidden" id="dimensao_child_<%= dimensao.id %>"> <!-- o 1 do id é o id da dimensão-->
+        <% contadorProcessos = 1 %>
+        <% @processos.each do |processo| %>
+            <%if dimensao.id == processo.dimensao_id%>
+            
+        <div class="main-expand processo">
+            <div class="relative">
+            <div class="processo-header">
+            <i class="icon-plus abrir_form_resultado_esperado" id="processo_<%= processo.id %>_icon" onclick="show_todos_resultados(this.id,<%= processo.id %>)"></i><!-- o 1 do id é o id do processo-->
+            <p><%=contadorDimensaos%>.<%=contadorProcessos%> <%= processo.descricao %></p>
+            <%if @opcao != 0%>
+            <%if maturidade_selecionada.nivelEscolha == "1"%>
+                <select name="select">
+                <%if maturidade_selecionada.tipoNivel == "1"%>
+                    <% contador = maturidade_selecionada.menorNivel.to_i %>
+                    <% contador = contador.to_i %>
+                    <% while contador <= maturidade_selecionada.maiorNivel.to_i do %>
+                    <option value="<%= contador %>"><%= contador %></option>
+                    <% contador += 1 %>
+                    <% end %>
+                <% else %>
+                    <% contador = maturidade_selecionada.menorNivel.to_s %>
+                    <% contador = contador.to_s %>
+                    <% while contador <= maturidade_selecionada.maiorNivel.to_s do %>
+                    <option value="<%= contador %>"><%= contador %></option>
+                    <% contador = contador.next %>
+                    <% end %>
+                <% end %>
+                </select>
+                </div>
+                <div class="absolute">
+                    <input type="file" />
+                        <select id="arquivo_opcoes">
+                            <option value="Atende Totalmente">Atende Totalmente</option>
+                            <option value="Atende Parcialmente">Atende Parcialmente</option>
+                            <option value="Não Atende">Não Atende</option>
+                        </select>
+                    </div>
+            <% end %>
+            <%end%>
+            </div>
+            <div class="processo-child hidden" id="processo_child_<%= processo.id %>"> <!-- o 1 do id é o id do processo-->
+            <!--! Resultados esperados do Processo -->
+            <%if maturidade_selecionada.resultadoEscolha == "2"%>
+            <% contadorResultados = 1 %>
+            <% @resultados.each do |resultado| %>
+                <%if processo.id == resultado.processo_id%>
+            
+            <div class="main-expand resultado-esperado">
+                <div class="relative">
+                <div class="resultado-header">
+                <i class="icon-caret-right"></i>
+                <p><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> <%= resultado.descricao %></p>
+                <%if maturidade_selecionada.nivelEscolha == "2"%>
+                
+                    <select name="select">
+                    <%if maturidade_selecionada.tipoNivel == "1"%>
+                        <%if maturidade_selecionada.menorNivel.to_i < maturidade_selecionada.maiorNivel.to_i%>
+                        <%menorContador = maturidade_selecionada.menorNivel.to_i%>
+                        <%maiorContador = maturidade_selecionada.maiorNivel.to_i%>
+                        <%menorContador = menorContador.to_i%>
+                        <%maiorContador = maiorContador.to_i%>
+                        <%else%>
+                        <%maiorContador = maturidade_selecionada.menorNivel.to_i%>
+                        <%menorContador = maturidade_selecionada.maiorNivel.to_i%>
+                        <%menorContador = menorContador.to_i%>
+                        <%maiorContador = maiorContador.to_i%>
+                        <%end%>
+                        <% while menorContador <= maiorContador do %>
+                        <option value="<%= menorContador %>"><%= menorContador %></option>
+                        <% menorContador += 1 %>
+                        <% end %>
+                    <% else %>
+                        <%if maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s%>
+                        <%menorContador = maturidade_selecionada.menorNivel.to_s%>
+                        <%maiorContador = maturidade_selecionada.maiorNivel.to_s%>
+                        <%menorContador = menorContador.to_s%>
+                        <%maiorContador = maiorContador.to_s%>
+                        <%else%>
+                        <%maiorContador = maturidade_selecionada.menorNivel.to_s%>
+                        <%menorContador = maturidade_selecionada.maiorNivel.to_s%>
+                        <%menorContador = menorContador.to_s%>
+                        <%maiorContador = maiorContador.to_s%>
+                        <%end%>
+                        <% while menorContador <= maiorContador do %>
+                        <option value="<%= menorContador %>"><%= menorContador %></option>
+                        <% menorContador = menorContador.next %>
+                        <% end %>
+                    <% end %>
+                    </select>
+                    </div>
+                    <div class="absolute">
+                    <input type="file" />
+                        <select id="arquivo_opcoes">
+                            <option value="Atende Totalmente">Atende Totalmente</option>
+                            <option value="Atende Parcialmente">Atende Parcialmente</option>
+                            <option value="Não Atende">Não Atende</option>
+                        </select>
+                    </div>
+                <% end %>
+                </div>
+            </div>
+                <%contadorResultados = contadorResultados + 1%>
+                <%end%>
+            <%end%>
+            <%end%>
+            </div>
+        </div>
+            <%contadorProcessos = contadorProcessos + 1%>
+            <%end%>
+        <%end%>
+        </div>
+        <%contadorDimensaos = contadorDimensaos + 1%>
+    <%end%>
+    <%end%>
+    </div>
+    </div>
+    
+</section>
+
+</main>
+
+<script>
+
+function show_todos_processos(form_id,dimensao){
+    
+    if((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-plus")){
+    document.getElementById(`dimensao_child_`+dimensao).classList.remove('hidden');
+    document.getElementById(form_id).classList.remove('icon-plus');
+    document.getElementById(form_id).classList.add('icon-minus');
+    } else if ((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-minus")) {
+    document.getElementById(`dimensao_child_`+dimensao).classList.add('hidden');
+    document.getElementById(form_id).classList.remove('icon-minus');
+    document.getElementById(form_id).classList.add('icon-plus');
+    }
+}
+
+function show_todos_resultados(form_id,processo){
+    
+    if((form_id == (`processo_`+processo+`_icon`)) && (document.getElementById(form_id).classList == "icon-plus abrir_form_resultado_esperado")){
+    document.getElementById(`processo_child_`+processo).classList.remove('hidden');
+    document.getElementById(form_id).classList.remove('icon-plus');
+    document.getElementById(form_id).classList.remove('abrir_form_resultado_esperado');
+    document.getElementById(form_id).classList.add('icon-minus');
+    document.getElementById(form_id).classList.add('abrir_form_resultado_esperado');
+    } else if ((form_id == (`processo_`+processo+`_icon`)) && (document.getElementById(form_id).classList == "icon-minus abrir_form_resultado_esperado")) {
+    document.getElementById(`processo_child_`+processo).classList.add('hidden');
+    document.getElementById(form_id).classList.remove('icon-minus');
+    document.getElementById(form_id).classList.remove('abrir_form_resultado_esperado');
+    document.getElementById(form_id).classList.add('icon-plus');
+    document.getElementById(form_id).classList.add('abrir_form_resultado_esperado');
+    }
+}    
+
+$(document).ready(function(){
+
+    $(".header-select #maturidade_id").change(function(){
+    var opcaoSelecionada = this.value;
+    
+    axios.post("/aplicar/atualizar_opcao", { opcao: opcaoSelecionada })
+    .then(function(response) {
+        // Lógica para sucesso na resposta
+        const redirectUrl = response.data.redirect_url;
+        window.location.href = redirectUrl;
+        console.log(response.data);
+    })
+    .catch(function(error) {
+        // Lógica para erro na resposta
+        console.error(error);
+    });
+
+    });
+    if(document.getElementById("mudancaResultado")) {
+    var test = document.getElementById("mudancaResultado");
+    
+    if (test.classList.value == "1") {
+        var elementos = document.querySelectorAll(".abrir_form_resultado_esperado");
+        
+        for (var i = 0; i < elementos.length; i++) {
+        elementos[i].classList.remove('icon-plus');
+        elementos[i].classList.add('icon-caret-right');
+        elementos[i].nextElementSibling.nextElementSibling.nextElementSibling.remove();
+        }
+    }
+    }
+});
+
+const escolha_sim =  document.getElementById("escolha_resultado_sim");
+const escolha_nao =  document.getElementById("escolha_resultado_nao");
+
+escolha_sim.addEventListener("click",function(){
+    if(escolha_sim.checked){
+        resultado_escolha(1); 
+    }
+})
+
+escolha_nao.addEventListener("click",function(){
+    if(escolha_nao.checked){
+        resultado_escolha(2); 
+    }
+})
+
+function resultado_escolha(escolha){
+    if(escolha == "2"){
+        document.getElementById("nivel_escolha").classList.remove("hidden");
+        
+    } else if(escolha == "1"){
+        document.getElementById("nivel_escolha").classList.add("hidden");
+    }
+}
+
+
+
+</script>
+</body>
+</html>

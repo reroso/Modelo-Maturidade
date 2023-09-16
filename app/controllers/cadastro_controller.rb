@@ -148,13 +148,4 @@ class CadastroController < ApplicationController
 
     end
 
-    def enviar_opcao(opcao)
-        @opcao = opcao.to_i
-        @dimensaos = Dimensao.all
-        @processos = Processo.all
-        @resultados = Resultado.all
-        @maturidades = Maturidade.all
-        
-        render 'index'
-    end
 end

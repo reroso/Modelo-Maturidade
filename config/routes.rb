@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get "/cadastroProcesso", to: "cadastro#indexProcesso"
   get "/cadastroResultado", to: "cadastro#indexResultado"
   get "/cadastroMaturidade", to: "cadastro#indexmaturidade"
+  get "/aplicar", to: "aplicar#index"
 
   #dimensaos
 
@@ -41,6 +42,6 @@ Rails.application.routes.draw do
   #rotas auxiliares
   
   post "cadastro/atualizar_opcao", to:"cadastro#atualizar_opcao"
-  get "cadastro/enviar_opcao", to:"cadastro#enviar_opcao"
+  post "aplicar/atualizar_opcao", to:"aplicar#atualizar_opcao"
 end
 

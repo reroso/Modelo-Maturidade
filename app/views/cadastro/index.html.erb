@@ -273,8 +273,9 @@
     <!-- Parte Esquerda -->
     <section class="main-left">
       <div class="nav-bar">
-        <a style="width: 96%;"href="/main_screen"><button class="btn nav-bar-cadastrar-modelo" onClick="recarregarAPagina()">Cadastrar Modelo</button></a>
-        <a style="width: 96%;"href="/cadastro"><button class="btn nav-bar-escolher-modelo" onClick="recarregarAPagina()">Cadastrar Estrutura</button></a>
+        <a style="width: 96%;"href="/main_screen"><button class="btn nav-bar-cadastrar-modelo" >Cadastrar Modelo</button></a>
+        <a style="width: 96%;"href="/cadastro"><button class="btn nav-bar-escolher-modelo" >Cadastrar Estrutura</button></a>
+        <a style="width: 96%;"href="/aplicar"><button class="btn nav-bar-cadastrar-modelo" >Utilizar Modelo</button></a>
       </div>
     </section>
 
@@ -386,6 +387,7 @@
                     <i class="icon-pencil"  id="abrir_salvar_resultado_esperado_<%= resultado.id %>" onclick="show_resultado_esperado_salvar(this.id,<%= resultado.id %>,'<%= resultado.descricao %>')"></i> <!-- o 1 do id é o id do resultado esperado e o textoDoProcesso é a descrição-->
                     <a href="/cadastroResultado/<%= resultado.id %>/excluir_resultado"><i class="icon-remove-sign"></i></a>
                     <%if maturidade_selecionada.nivelEscolha == "2"%>
+                    
                       <select name="select">
                         <%if maturidade_selecionada.tipoNivel == "1"%>
                           <%if maturidade_selecionada.menorNivel.to_i < maturidade_selecionada.maiorNivel.to_i%>
