@@ -73,6 +73,21 @@ class CadastroController < ApplicationController
         processo.save
     end
 
+    def salvar_processo_docs
+        processo = Processo.find(params[:id])
+        processo.docs.attach(params[:docs])
+        
+        redirect_to "/aplicar"
+    end
+
+    def salvar_processo_nivel
+        processo = Processo.find(params[:id])
+        processo.nivel_selecionado = params[:nivel_selecionado]
+        processo.save
+
+        redirect_to "/cadastro"
+    end
+
         #resultados
 
     def incluir_resultado
@@ -104,7 +119,22 @@ class CadastroController < ApplicationController
         resultado.save
     end
 
-      #maturidades
+    def salvar_resultado_docs
+        resultado = Resultado.find(params[:id])
+        resultado.docs.attach(params[:docs])
+        
+        redirect_to "/aplicar"
+    end
+
+    def salvar_resultado_nivel
+        resultado = Resultado.find(params[:id])
+        resultado.nivel_selecionado = params[:nivel_selecionado]
+        resultado.save
+
+        redirect_to "/cadastro"
+    end
+
+    #maturidades
 
     def incluir_maturidade
         maturidade = Maturidade.new

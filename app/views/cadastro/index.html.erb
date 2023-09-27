@@ -350,23 +350,43 @@
                 <a href="/cadastroProcesso/<%= processo.id %>/excluir_processo"><i class="icon-remove-sign"></i></a>
                 <%if @opcao != 0%>
                 <%if maturidade_selecionada.nivelEscolha == "1"%>
-                  <select name="select">
+                
+                <form id="meu_formulario_processos" action="/cadastroProcesso/<%= processo.id %>/salvar_processo_nivel" method="post">
+                  <select name="nivel_selecionado" onchange="submitForm(this)">
                     <%if maturidade_selecionada.tipoNivel == "1"%>
                       <% contador = maturidade_selecionada.menorNivel.to_i %>
                       <% contador = contador.to_i %>
+                      <% nivel_processo_selecionado = processo.nivel_selecionado %>
+                      <% nivel_processo_selecionado = nivel_processo_selecionado.to_i %>
+                      
                       <% while contador <= maturidade_selecionada.maiorNivel.to_i do %>
-                        <option value="<%= contador %>"><%= contador %></option>
-                        <% contador += 1 %>
+                        <%if nivel_processo_selecionado == contador %>
+                          <option selected value="<%= contador %>"><%= contador %></option>
+                          <% contador += 1 %>
+                        <% else %>
+                          <option value="<%= contador %>"><%= contador %></option>
+                          <% contador += 1 %>
+                        <% end %>
+                        
                       <% end %>
                     <% else %>
                       <% contador = maturidade_selecionada.menorNivel.to_s %>
                       <% contador = contador.to_s %>
+                      <% nivel_processo_selecionado = processo.nivel_selecionado.to_s %>
+                      <% nivel_processo_selecionado = nivel_processo_selecionado.to_s %>
                       <% while contador <= maturidade_selecionada.maiorNivel.to_s do %>
-                        <option value="<%= contador %>"><%= contador %></option>
-                        <% contador = contador.next %>
+                        <%if nivel_processo_selecionado == contador %>
+                          <option value="<%= contador %>"selected><%= contador %></option>
+                          <% contador = contador.next %>
+                        <% else %>
+                          <option value="<%= contador %>"><%= contador %></option>
+                          <% contador = contador.next %>
+                        <% end %>
+                        
                       <% end %>
                     <% end %>
                   </select>
+                </form>
                 <% end %>
                 <%end%>
               </div>
@@ -387,8 +407,8 @@
                     <i class="icon-pencil"  id="abrir_salvar_resultado_esperado_<%= resultado.id %>" onclick="show_resultado_esperado_salvar(this.id,<%= resultado.id %>,'<%= resultado.descricao %>')"></i> <!-- o 1 do id é o id do resultado esperado e o textoDoProcesso é a descrição-->
                     <a href="/cadastroResultado/<%= resultado.id %>/excluir_resultado"><i class="icon-remove-sign"></i></a>
                     <%if maturidade_selecionada.nivelEscolha == "2"%>
-                    
-                      <select name="select">
+                    <form id="meu_formulario_resultados" action="/cadastroResultado/<%= resultado.id %>/salvar_resultado_nivel" method="post">
+                      <select name="nivel_selecionado" onchange="submitForm(this)">
                         <%if maturidade_selecionada.tipoNivel == "1"%>
                           <%if maturidade_selecionada.menorNivel.to_i < maturidade_selecionada.maiorNivel.to_i%>
                             <%menorContador = maturidade_selecionada.menorNivel.to_i%>
@@ -401,9 +421,16 @@
                             <%menorContador = menorContador.to_i%>
                             <%maiorContador = maiorContador.to_i%>
                           <%end%>
+                          <% nivel_resultado_selecionado = resultado.nivel_selecionado %>
+                          <% nivel_resultado_selecionado = nivel_resultado_selecionado.to_i %>
                           <% while menorContador <= maiorContador do %>
-                            <option value="<%= menorContador %>"><%= menorContador %></option>
-                            <% menorContador += 1 %>
+                            <%if nivel_resultado_selecionado == menorContador %>
+                              <option value="<%= menorContador%>" selected><%= menorContador %></option>
+                              <% menorContador += 1 %>
+                            <% else %>
+                              <option value="<%= menorContador %>"><%= menorContador %></option>
+                              <% menorContador += 1 %>
+                            <% end %>
                           <% end %>
                         <% else %>
                           <%if maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s%>
@@ -417,12 +444,20 @@
                             <%menorContador = menorContador.to_s%>
                             <%maiorContador = maiorContador.to_s%>
                           <%end%>
+                          <% nivel_resultado_selecionado = resultado.nivel_selecionado.to_s %>
+                          <% nivel_resultado_selecionado = nivel_resultado_selecionado.to_s %>
                           <% while menorContador <= maiorContador do %>
-                            <option value="<%= menorContador %>"><%= menorContador %></option>
-                            <% menorContador = menorContador.next %>
+                            <%if nivel_resultado_selecionado == menorContador %>
+                              <option value="<%= menorContador%>" selected><%= menorContador %></option>
+                              <% menorContador = menorContador.next %>
+                            <% else %>
+                              <option value="<%= menorContador %>"><%= menorContador %></option>
+                              <% menorContador = menorContador.next %>
+                            <% end %>  
                           <% end %>
                         <% end %>
                       </select>
+                    </form>
                     <% end %>
                   </div>
                   <!--! Form criação novo resultado esperado -->
@@ -722,7 +757,10 @@
         }
     });
 
-
+    function submitForm(selectElement) {
+      const form = selectElement.closest("form");
+      form.submit();
+    }
     
 
 

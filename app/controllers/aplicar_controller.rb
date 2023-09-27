@@ -16,5 +16,15 @@ class AplicarController < ApplicationController
         render json: { redirect_url: redirect_url } 
 
     end
+
+    #resultados
+
+    def salvar_resultado_docs
+        resultado = Resultado.find(params[:id])
+        resultado.arquivo.attach(params[:docs])
+        
+        redirect_to "/aplicar"
+    end
+
     
 end

@@ -22,6 +22,8 @@ Rails.application.routes.draw do
   post "/cadastroProcesso/:id/salvar_processo", to: "cadastro#salvar_processo"
   get "/cadastroProcesso/:id/excluir_processo", to: "cadastro#excluir_processo"
   get '/cadastroProcesso/:id', to: 'cadastro#mostrar_processo'
+  post "/cadastroProcesso/:id/salvar_processo_docs", to: "cadastro#salvar_processo_docs"
+  post "/cadastroProcesso/:id/salvar_processo_nivel", to: "cadastro#salvar_processo_nivel"
 
   #resultados
   
@@ -30,7 +32,9 @@ Rails.application.routes.draw do
   post "/cadastroResultado/:id/salvar_resultado", to: "cadastro#salvar_resultado"
   get "/cadastroResultado/:id/excluir_resultado", to: "cadastro#excluir_resultado"
   get '/cadastroResultado/:id', to: 'cadastro#mostrar_resultado'
-
+  post "/cadastroResultado/:id/salvar_resultado_docs", to: "cadastro#salvar_resultado_docs"
+  post "/cadastroResultado/:id/salvar_resultado_nivel", to: "cadastro#salvar_resultado_nivel"
+  
   #maturidades
   
   post "/cadastroMaturidade/incluir_maturidade", to: "cadastro#incluir_maturidade"

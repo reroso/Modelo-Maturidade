@@ -1,0 +1,2 @@
+class Notum < ApplicationRecord
+end

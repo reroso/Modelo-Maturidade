@@ -268,6 +268,11 @@ main {
 .absolute{
     position: absolute;
 }
+.download-link {
+  color: inherit;
+  text-decoration: none; 
+  
+}
 
 </style>
 
@@ -356,34 +361,35 @@ main {
             <div class="processo-header">
             <i class="icon-plus abrir_form_resultado_esperado" id="processo_<%= processo.id %>_icon" onclick="show_todos_resultados(this.id,<%= processo.id %>)"></i><!-- o 1 do id é o id do processo-->
             <p><%=contadorDimensaos%>.<%=contadorProcessos%> <%= processo.descricao %></p>
+            <h1><%= processo.nivel_selecionado%></h1>
             <%if @opcao != 0%>
             <%if maturidade_selecionada.nivelEscolha == "1"%>
-                <select name="select">
-                <%if maturidade_selecionada.tipoNivel == "1"%>
-                    <% contador = maturidade_selecionada.menorNivel.to_i %>
-                    <% contador = contador.to_i %>
-                    <% while contador <= maturidade_selecionada.maiorNivel.to_i do %>
-                    <option value="<%= contador %>"><%= contador %></option>
-                    <% contador += 1 %>
-                    <% end %>
-                <% else %>
-                    <% contador = maturidade_selecionada.menorNivel.to_s %>
-                    <% contador = contador.to_s %>
-                    <% while contador <= maturidade_selecionada.maiorNivel.to_s do %>
-                    <option value="<%= contador %>"><%= contador %></option>
-                    <% contador = contador.next %>
-                    <% end %>
-                <% end %>
-                </select>
+                
                 </div>
-                <div class="absolute">
-                    <input type="file" />
-                        <select id="arquivo_opcoes">
-                            <option value="Atende Totalmente">Atende Totalmente</option>
-                            <option value="Atende Parcialmente">Atende Parcialmente</option>
-                            <option value="Não Atende">Não Atende</option>
-                        </select>
-                    </div>
+                <% if processo.docs.attached? %>
+                    <table>
+                    <% processo.docs.each do |doc| %>
+                        <tr>
+                            <td>
+                                <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
+                            </td>
+                            <td>
+                                <select id="arquivo_opcoes">
+                                    <option value="Atende Totalmente">Atende Totalmente</option>
+                                    <option value="Atende Parcialmente">Atende Parcialmente</option>
+                                    <option value="Não Atende">Não Atende</option>
+                                </select>
+                            </td>
+                        </tr>
+                    <% end %> 
+                    </table>
+                <% end %>
+
+                <form action="/cadastroProcesso/<%=processo.id%>/salvar_processo_docs" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="docs"/>
+                    <button type="submit">Cadastrar</button>
+                </form>
+
             <% end %>
             <%end%>
             </div>
@@ -399,52 +405,35 @@ main {
                 <div class="resultado-header">
                 <i class="icon-caret-right"></i>
                 <p><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> <%= resultado.descricao %></p>
+                <h1><%= resultado.nivel_selecionado%></h1>
                 <%if maturidade_selecionada.nivelEscolha == "2"%>
-                
-                    <select name="select">
-                    <%if maturidade_selecionada.tipoNivel == "1"%>
-                        <%if maturidade_selecionada.menorNivel.to_i < maturidade_selecionada.maiorNivel.to_i%>
-                        <%menorContador = maturidade_selecionada.menorNivel.to_i%>
-                        <%maiorContador = maturidade_selecionada.maiorNivel.to_i%>
-                        <%menorContador = menorContador.to_i%>
-                        <%maiorContador = maiorContador.to_i%>
-                        <%else%>
-                        <%maiorContador = maturidade_selecionada.menorNivel.to_i%>
-                        <%menorContador = maturidade_selecionada.maiorNivel.to_i%>
-                        <%menorContador = menorContador.to_i%>
-                        <%maiorContador = maiorContador.to_i%>
-                        <%end%>
-                        <% while menorContador <= maiorContador do %>
-                        <option value="<%= menorContador %>"><%= menorContador %></option>
-                        <% menorContador += 1 %>
-                        <% end %>
-                    <% else %>
-                        <%if maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s%>
-                        <%menorContador = maturidade_selecionada.menorNivel.to_s%>
-                        <%maiorContador = maturidade_selecionada.maiorNivel.to_s%>
-                        <%menorContador = menorContador.to_s%>
-                        <%maiorContador = maiorContador.to_s%>
-                        <%else%>
-                        <%maiorContador = maturidade_selecionada.menorNivel.to_s%>
-                        <%menorContador = maturidade_selecionada.maiorNivel.to_s%>
-                        <%menorContador = menorContador.to_s%>
-                        <%maiorContador = maiorContador.to_s%>
-                        <%end%>
-                        <% while menorContador <= maiorContador do %>
-                        <option value="<%= menorContador %>"><%= menorContador %></option>
-                        <% menorContador = menorContador.next %>
-                        <% end %>
+
+                    </div>
+                    
+                    <% if resultado.docs.attached? %>
+                        <table>
+                        <% resultado.docs.each do |doc| %>
+                            <tr>
+                                <td>
+                                    <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
+                                </td>
+                                <td>
+                                    <select id="arquivo_opcoes">
+                                        <option value="Atende Totalmente">Atende Totalmente</option>
+                                        <option value="Atende Parcialmente">Atende Parcialmente</option>
+                                        <option value="Não Atende">Não Atende</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        <% end %> 
+                        </table>
                     <% end %>
-                    </select>
-                    </div>
-                    <div class="absolute">
-                    <input type="file" />
-                        <select id="arquivo_opcoes">
-                            <option value="Atende Totalmente">Atende Totalmente</option>
-                            <option value="Atende Parcialmente">Atende Parcialmente</option>
-                            <option value="Não Atende">Não Atende</option>
-                        </select>
-                    </div>
+
+                    <form action="/cadastroResultado/<%=resultado.id%>/salvar_resultado_docs" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="docs"/>
+                        <button type="submit">Cadastrar</button>
+                    </form>
+                        
                 <% end %>
                 </div>
             </div>
@@ -556,8 +545,6 @@ function resultado_escolha(escolha){
         document.getElementById("nivel_escolha").classList.add("hidden");
     }
 }
-
-
 
 </script>
 </body>
