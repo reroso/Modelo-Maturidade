@@ -269,9 +269,23 @@ main {
     position: absolute;
 }
 .download-link {
-  color: inherit;
-  text-decoration: none; 
-  
+    color: inherit;
+    text-decoration: none; 
+}
+.div-redonda {
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: #a6200f; 
+    color: white;
+    display: flex;
+    align-items: center;
+    
+
+}
+.div-redonda p {
+    font-size: 12px;
+    margin-left: 5px;
 }
 
 </style>
@@ -313,14 +327,22 @@ main {
     <div class="main-right-main">
     <div>
         <label for="areas" style="margin-bottom: 15px; display: inline-block;">Selecione um Domínio:</label>
-        <select id="areas" name="areas">
-            <option value="" disabled selected>Escolha uma opção</option>
-            <option value="saude">Saúde</option>
-            <option value="ensino">Ensino</option>
-            <option value="industria">Indústria</option>
-            <option value="agricultura">Agricultura</option>
-            <option value="cultura">Cultura</option>
-        </select>
+        <%= select_tag "dominio_id", options_from_collection_for_select(@dominios, "id", "nome"), prompt: "Escolha um dominio", class: "corpo_texto_select" %>
+        <button class="header-cadastrar-btn" id="abrir_form" onclick="show_dimensao(this.id)"><i class="icon-plus-sign"></i></button>
+        <div class="main-right-hero hidden" id="form_dimensao_1">
+            <div class="hero-form">
+                <form action="/cadastroDominio/incluir_dominio" method="post" >
+                    <div class="form-group">
+                        <label for="nome_dimensao">Nome:</label>
+                        <input name="nome" type="text" >
+                    </div>
+                    <div class="from-group-btn">
+                        <button type="submit" class="hero-form-cadastrar">Cadastrar</button>
+                        <button type="button" class="hero-form-cancelar" id="cancelar_form" onclick="show_dimensao(this.id)">cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div>
             <label style="margin-bottom: 15px; display: inline-block;">O modelo vai possuir priorização</label><br>
                 <input type="radio" id="escolha_resultado_sim" name="resultado_escolha" value="1">
@@ -338,9 +360,11 @@ main {
         </div>
     </div>
     <!--x Dimenção -->
+
     <% contadorDimensaos = 1 %>
     <% @dimensaos.each do |dimensao| %>
     <%if dimensao.maturidade_id == @opcao%>
+    
     <div class="main-expand dimensao">
         <!--x Cabeçalho Dimenção -->
         <div class="dimensao-header"> 
@@ -361,10 +385,11 @@ main {
             <div class="processo-header">
             <i class="icon-plus abrir_form_resultado_esperado" id="processo_<%= processo.id %>_icon" onclick="show_todos_resultados(this.id,<%= processo.id %>)"></i><!-- o 1 do id é o id do processo-->
             <p><%=contadorDimensaos%>.<%=contadorProcessos%> <%= processo.descricao %></p>
-            <h1><%= processo.nivel_selecionado%></h1>
             <%if @opcao != 0%>
             <%if maturidade_selecionada.nivelEscolha == "1"%>
-                
+                <div class="div-redonda">
+                    <p><%= processo.nivel_selecionado%></p>
+                </div>
                 </div>
                 <% if processo.docs.attached? %>
                     <table>
@@ -379,6 +404,9 @@ main {
                                     <option value="Atende Parcialmente">Atende Parcialmente</option>
                                     <option value="Não Atende">Não Atende</option>
                                 </select>
+                            </td>
+                            <td>
+                                <a href="/cadastroProcesso/<%= doc.id %>/excluir_processo_docs"><i class="icon-remove-sign"></i></a>  
                             </td>
                         </tr>
                     <% end %> 
@@ -405,7 +433,11 @@ main {
                 <div class="resultado-header">
                 <i class="icon-caret-right"></i>
                 <p><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> <%= resultado.descricao %></p>
-                <h1><%= resultado.nivel_selecionado%></h1>
+                
+                <div class="div-redonda">
+                    <p><%= resultado.nivel_selecionado %></p>
+                </div>
+                
                 <%if maturidade_selecionada.nivelEscolha == "2"%>
 
                     </div>
@@ -418,11 +450,15 @@ main {
                                     <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
                                 </td>
                                 <td>
+                                    
                                     <select id="arquivo_opcoes">
                                         <option value="Atende Totalmente">Atende Totalmente</option>
                                         <option value="Atende Parcialmente">Atende Parcialmente</option>
                                         <option value="Não Atende">Não Atende</option>
                                     </select>
+                                </td>
+                                <td>
+                                    <a href="/cadastroResultado/<%= doc.id %>/excluir_resultado_docs"><i class="icon-remove-sign"></i></a>  
                                 </td>
                             </tr>
                         <% end %> 
@@ -546,6 +582,14 @@ function resultado_escolha(escolha){
     }
 }
 
+function show_dimensao(form_id){
+    if (form_id == "abrir_form") {
+    document.getElementById("form_dimensao_1").classList.remove('hidden');
+    } else if (form_id == "cancelar_form") {
+    document.getElementById("form_dimensao_1").classList.add('hidden');
+    }
+    
+}
 </script>
 </body>
 </html>

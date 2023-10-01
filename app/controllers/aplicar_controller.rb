@@ -6,6 +6,7 @@ class AplicarController < ApplicationController
         @resultados = Resultado.all
         @maturidades = Maturidade.all
         @opcao = params[:opcao].to_i
+        @dominios = Dominio.all
         
     end
 

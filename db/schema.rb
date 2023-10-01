@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_09_25_210719) do
+ActiveRecord::Schema.define(version: 2023_09_30_224531) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -39,6 +39,12 @@ ActiveRecord::Schema.define(version: 2023_09_25_210719) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "maturidade_id", null: false
     t.index ["maturidade_id"], name: "index_dimensaos_on_maturidade_id"
+  end
+
+  create_table "dominios", force: :cascade do |t|
+    t.string "nome"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "maturidades", force: :cascade do |t|

@@ -4,7 +4,8 @@ Rails.application.routes.draw do
   get "/cadastro", to: "cadastro#index"
   get "/cadastroProcesso", to: "cadastro#indexProcesso"
   get "/cadastroResultado", to: "cadastro#indexResultado"
-  get "/cadastroMaturidade", to: "cadastro#indexmaturidade"
+  get "/cadastroMaturidade", to: "cadastro#indexMaturidade"
+  get "/cadastroDominio", to: "cadastro#indexDominio"
   get "/aplicar", to: "aplicar#index"
 
   #dimensaos
@@ -24,6 +25,7 @@ Rails.application.routes.draw do
   get '/cadastroProcesso/:id', to: 'cadastro#mostrar_processo'
   post "/cadastroProcesso/:id/salvar_processo_docs", to: "cadastro#salvar_processo_docs"
   post "/cadastroProcesso/:id/salvar_processo_nivel", to: "cadastro#salvar_processo_nivel"
+  get "/cadastroProcesso/:id/excluir_processo_docs", to: "cadastro#excluir_processo_docs"
 
   #resultados
   
@@ -34,6 +36,7 @@ Rails.application.routes.draw do
   get '/cadastroResultado/:id', to: 'cadastro#mostrar_resultado'
   post "/cadastroResultado/:id/salvar_resultado_docs", to: "cadastro#salvar_resultado_docs"
   post "/cadastroResultado/:id/salvar_resultado_nivel", to: "cadastro#salvar_resultado_nivel"
+  post "/cadastroResultado/:id/excluir_resultado_docs", to: "cadastro#excluir_resultado_docs"
   
   #maturidades
   
@@ -42,6 +45,10 @@ Rails.application.routes.draw do
   post "/cadastroMaturidade/:id/salvar_maturidade", to: "cadastro#salvar_maturidade"
   get "/cadastroMaturidade/:id/excluir_maturidade", to: "cadastro#excluir_maturidade"
   get '/cadastroMaturidade/:id', to: 'cadastro#mostrar_maturidade'
+
+  #dominio
+
+  post "/cadastroDominio/incluir_dominio", to: "cadastro#incluir_dominio"
 
   #rotas auxiliares
   

@@ -5,7 +5,7 @@ class CadastroController < ApplicationController
         @resultados = Resultado.all
         @maturidades = Maturidade.all
         @opcao = params[:opcao].to_i
-        
+        @dominios = Dominio.all
     end
 
     #dimensao
@@ -88,6 +88,14 @@ class CadastroController < ApplicationController
         redirect_to "/cadastro"
     end
 
+    def excluir_processo_docs
+
+        attachment = ActiveStorage::Attachment.find(params[:id])  # Substitua params[:id] pelo ID correto
+        attachment.purge
+
+        redirect_to "/aplicar"
+    end
+
         #resultados
 
     def incluir_resultado
@@ -134,6 +142,14 @@ class CadastroController < ApplicationController
         redirect_to "/cadastro"
     end
 
+    def excluir_resultado_docs
+
+        attachment = ActiveStorage::Attachment.find(params[:id])  # Substitua params[:id] pelo ID correto
+        attachment.purge
+
+        redirect_to "/aplicar"
+    end
+
     #maturidades
 
     def incluir_maturidade
@@ -176,6 +192,16 @@ class CadastroController < ApplicationController
         @opcao = params[:opcao]
         render json: { redirect_url: root_path(opcao: @opcao) }
 
+    end
+
+    #dominio
+
+    def incluir_dominio
+        dominio = Dominio.new
+        dominio.nome = params[:nome]
+        dominio.save
+        
+        redirect_to "/aplicar"
     end
 
 end
