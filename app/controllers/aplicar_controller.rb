@@ -7,7 +7,7 @@ class AplicarController < ApplicationController
         @maturidades = Maturidade.all
         @opcao = params[:opcao].to_i
         @dominios = Dominio.all
-        
+        @modelo_aplicados = ModeloAplicado.all
     end
 
     def atualizar_opcao
@@ -18,14 +18,6 @@ class AplicarController < ApplicationController
 
     end
 
-    #resultados
-
-    def salvar_resultado_docs
-        resultado = Resultado.find(params[:id])
-        resultado.arquivo.attach(params[:docs])
-        
-        redirect_to "/aplicar"
-    end
-
     
+
 end

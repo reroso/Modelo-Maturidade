@@ -220,9 +220,9 @@
     <!-- Parte Esquerda -->
     <section class="main-left">
       <div class="nav-bar">
-        <a style="width: 96%;"href="/main_screen"><button class="btn nav-bar-cadastrar-modelo" onClick="recarregarAPagina()">Cadastrar Modelo</button></a>
-        <a style="width: 96%;"href="/cadastro"><button class="btn nav-bar-escolher-modelo" onClick="recarregarAPagina()">Cadastrar Estrutura</button></a>
-        <a style="width: 96%;"href="/aplicar"><button class="btn nav-bar-cadastrar-modelo" onClick="recarregarAPagina()">Utilizar Modelo</button></a>
+        <a style="width: 96%;"href="/main_screen"><button class="btn nav-bar-cadastrar-modelo" >Cadastrar Modelo</button></a>
+        <a style="width: 96%;"href="/cadastro"><button class="btn nav-bar-escolher-modelo" >Cadastrar Estrutura</button></a>
+        <a style="width: 96%;"href="/aplicar"><button class="btn nav-bar-cadastrar-modelo" >Utilizar Modelo</button></a>
       </div>
     </section>
 
@@ -251,7 +251,7 @@
                 
                 <label>Descrição</label>
                 
-                <textarea id="w3review" name="w3review" rows="4" cols="50"></textarea>
+                <textarea id="w3review" name="descricao" rows="4" cols="50"></textarea>
                 
                 <div>
                     <h3>Selecione o tipo de nível do modelo</h3><br>
@@ -294,12 +294,12 @@
   <script>
    
 
-    const escolha_sim =  document.getElementById("escolha_resultado_sim");
-    const escolha_nao =  document.getElementById("escolha_resultado_nao");
-    const nivel_processo = document.getElementById("nivel_processo");
-    const nivel_resultado_esperado = document.getElementById("nivel_resultado_esperado");   
-    const tipo_nivel_numerico = document.getElementById("tipo_nivel_numerico");     
-    const tipo_nivel_alfanumerico = document.getElementById("tipo_nivel_alfanumerico");
+   var escolha_sim =  document.getElementById("escolha_resultado_sim");
+   var escolha_nao =  document.getElementById("escolha_resultado_nao");
+   var nivel_processo = document.getElementById("nivel_processo");
+   var nivel_resultado_esperado = document.getElementById("nivel_resultado_esperado");   
+   var tipo_nivel_numerico = document.getElementById("tipo_nivel_numerico");     
+   var tipo_nivel_alfanumerico = document.getElementById("tipo_nivel_alfanumerico");
 
     escolha_sim.addEventListener("click",function(){
         if(escolha_sim.checked){

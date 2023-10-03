@@ -6,6 +6,7 @@ class CadastroController < ApplicationController
         @maturidades = Maturidade.all
         @opcao = params[:opcao].to_i
         @dominios = Dominio.all
+        @modelo_aplicados = ModeloAplicado.all
     end
 
     #dimensao
@@ -150,8 +151,6 @@ class CadastroController < ApplicationController
         redirect_to "/aplicar"
     end
 
-    #maturidades
-
     def incluir_maturidade
         maturidade = Maturidade.new
         maturidade.nome = params[:nome]
@@ -161,7 +160,6 @@ class CadastroController < ApplicationController
         maturidade.maiorNivel = params[:maiorNivel]
         maturidade.resultadoEscolha = params[:resultadoEscolha]
         maturidade.nivelEscolha = params[:nivelEscolha]
-        
         maturidade.save
         
         redirect_to "/main_screen"
@@ -192,6 +190,19 @@ class CadastroController < ApplicationController
         @opcao = params[:opcao]
         render json: { redirect_url: root_path(opcao: @opcao) }
 
+    end
+
+    #modelos aplicados
+
+    def incluir_modelo_aplicado
+        modelo_aplicado = ModeloAplicado.new
+        modelo_aplicado.metodo = params[:metodo]
+        modelo_aplicado.instituicao = params[:instituicao]
+        modelo_aplicado.dominio_id = params[:dominio_id]
+        modelo_aplicado.maturidade_id = params[:maturidade_id]
+        modelo_aplicado.save
+
+        redirect_to "/aplicar"
     end
 
     #dominio

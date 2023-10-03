@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_09_30_224531) do
+ActiveRecord::Schema.define(version: 2023_10_02_160933) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -59,6 +59,17 @@ ActiveRecord::Schema.define(version: 2023_09_30_224531) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "modelo_aplicados", force: :cascade do |t|
+    t.string "metodo"
+    t.string "instituicao"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "dominio_id", null: false
+    t.integer "maturidade_id", null: false
+    t.index ["dominio_id"], name: "index_modelo_aplicados_on_dominio_id"
+    t.index ["maturidade_id"], name: "index_modelo_aplicados_on_maturidade_id"
+  end
+
   create_table "nota", force: :cascade do |t|
     t.string "descricao"
     t.datetime "created_at", precision: 6, null: false
@@ -85,6 +96,8 @@ ActiveRecord::Schema.define(version: 2023_09_30_224531) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "dimensaos", "maturidades"
+  add_foreign_key "modelo_aplicados", "dominios"
+  add_foreign_key "modelo_aplicados", "maturidades"
   add_foreign_key "processos", "dimensaos"
   add_foreign_key "resultados", "processos"
 end

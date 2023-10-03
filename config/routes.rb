@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get "/cadastroMaturidade", to: "cadastro#indexMaturidade"
   get "/cadastroDominio", to: "cadastro#indexDominio"
   get "/aplicar", to: "aplicar#index"
+  get "/cadastroModeloAplicado", to: "aplicar#indexModeloAplicado"
 
   #dimensaos
 
@@ -49,6 +50,10 @@ Rails.application.routes.draw do
   #dominio
 
   post "/cadastroDominio/incluir_dominio", to: "cadastro#incluir_dominio"
+
+  #modelos aplicados
+
+  post "/cadastroModeloAplicado/incluir_modelo_aplicado", to: "cadastro#incluir_modelo_aplicado"
 
   #rotas auxiliares
   

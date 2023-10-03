@@ -732,7 +732,7 @@
         axios.post("/cadastro/atualizar_opcao", { opcao: opcaoSelecionada })
         .then(function(response) {
           // Lógica para sucesso na resposta
-          const redirectUrl = response.data.redirect_url;
+          var redirectUrl = response.data.redirect_url;
           window.location.href = redirectUrl;
           console.log(response.data);
         })
@@ -758,7 +758,7 @@
     });
 
     function submitForm(selectElement) {
-      const form = selectElement.closest("form");
+      var form = selectElement.closest("form");
       form.submit();
     }
     

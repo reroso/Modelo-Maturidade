@@ -1,2 +1,3 @@
 class Dominio < ApplicationRecord
+    
 end
