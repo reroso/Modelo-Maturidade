@@ -249,7 +249,6 @@ main {
     display: -ms-flexbox;
     display: -webkit-flex; 
     display: flex;
-    align-items: center;
     margin-top: 1%;
 }
 
@@ -262,7 +261,6 @@ main {
     display: -ms-flexbox;
     display: -webkit-flex; 
     display: flex;
-    align-items: center;
     margin-top: 1%;
 }
 .absolute{
@@ -423,6 +421,7 @@ main {
     <%if @opcao != 0%>
         <% maturidade_selecionada = Maturidade.find(@opcao)%>
         <div id="mudancaResultado" class="<%=maturidade_selecionada.resultadoEscolha%>"> </div>
+        <div id="maturidadeSelecionadaNivelEscolha" class="<%= maturidade_selecionada.nivelEscolha%>"></div>
     <%end%>
     </div>
     
@@ -474,13 +473,12 @@ main {
         </div>
     </div>
     <!--x Dimenção -->
-
     <% contadorDimensaos = 1 %>
     <% @dimensaos.each do |dimensao| %>
     <%if dimensao.maturidade_id == @opcao%>
     <div class="main-expand dimensao">
         <!--x Cabeçalho Dimenção -->
-        <div class="dimensao-header"> 
+        <div class="dimensao-header">
         <i class="icon-plus" id="dimensao_<%= dimensao.id %>_icon" onclick="show_todos_processos(this.id,<%= dimensao.id %>)"></i><!-- o 1 do id é o id da dimensão-->
         <p><%=contadorDimensaos%>. <%= dimensao.descricao %></p>
         </div>
@@ -492,18 +490,18 @@ main {
         <% contadorProcessos = 1 %>
         <% @processos.each do |processo| %>
             <%if dimensao.id == processo.dimensao_id%>
-            
-        <div class="main-expand processo">
-            <div class="relative">
-            <div class="processo-header">
-            <i class="icon-plus abrir_form_resultado_esperado" id="processo_<%= processo.id %>_icon" onclick="show_todos_resultados(this.id,<%= processo.id %>)"></i><!-- o 1 do id é o id do processo-->
-            <p><%=contadorDimensaos%>.<%=contadorProcessos%> <%= processo.descricao %></p>
-            <%if @opcao != 0%>
-            <%if maturidade_selecionada.nivelEscolha == "1"%>
-                <div class="div-redonda">
+        <div class="main-expand processo"> 
+            <div class="processo-header" style="display: flex; flex-direction: column;">
+            <div style="display: flex; flex-direction: row;">
+                <i class="icon-plus abrir_form_resultado_esperado" id="processo_<%= processo.id %>_icon" onclick="show_todos_resultados(this.id,<%= processo.id %>)"></i><!-- o 1 do id é o id do processo-->
+                <p style="margin-top: 0px;"><%=contadorDimensaos%>.<%=contadorProcessos%> <%= processo.descricao %></p>
+                <div class="div-redonda processoNivelSelecionado hidden">
                     <p><%= processo.nivel_selecionado%></p>
                 </div>
-                </div>
+            </div>
+            <%if @opcao != 0%>
+            <%if maturidade_selecionada.nivelEscolha == "1"%> <!--x ESTAMOS AQUI -->
+            <div style="display: flex; flex-direction: column;">    
                 <% if processo.docs.attached? %>
                     <table>
                     <% processo.docs.each do |doc| %>
@@ -529,6 +527,7 @@ main {
                     <input type="file" name="docs"/>
                     <button type="submit">Cadastrar</button>
                 </form>
+            </div>
             <% end %>
             <%end%>
             </div>
@@ -538,48 +537,40 @@ main {
             <% contadorResultados = 1 %>
             <% @resultados.each do |resultado| %>
                 <%if processo.id == resultado.processo_id%>
-            
             <div class="main-expand resultado-esperado">
-                <div class="relative">
-                <div class="resultado-header">
-                <i class="icon-caret-right"></i>
-                <p><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> <%= resultado.descricao %></p>
-                
-                <div class="div-redonda">
-                    <p><%= resultado.nivel_selecionado %></p>
-                </div>
-                
-                <%if maturidade_selecionada.nivelEscolha == "2"%>
+                <div class="resultado-header" style="display: flex; flex-direction: column;">
+                    <div style="display: flex; flex-direction: row;">
+                        <i class="icon-caret-right"></i>
+                        <p style="margin-top: 0px;"><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> <%= resultado.descricao %></p>
+                        <div class="div-redonda resultadoNivelSelecionado hidden">
+                            <p><%= resultado.nivel_selecionado %></p>
+                        </div>
                     </div>
-                    
-                    <% if resultado.docs.attached? %>
-                        <table>
-                        <% resultado.docs.each do |doc| %>
-                            <tr>
-                                <td>
-                                    <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
-                                </td>
-                                <td>
-                                    
-                                    <select id="arquivo_opcoes">
-                                        <option value="Atende Totalmente">Atende Totalmente</option>
-                                        <option value="Atende Parcialmente">Atende Parcialmente</option>
-                                        <option value="Não Atende">Não Atende</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <a href="/cadastroResultado/<%= doc.id %>/excluir_resultado_docs"><i class="icon-remove-sign"></i></a>  
-                                </td>
-                            </tr>
-                        <% end %> 
-                        </table>
+                    <%if maturidade_selecionada.nivelEscolha == "2"%> 
+                        <div style="display: flex; flex-direction: column;">
+                            <% if resultado.docs.attached? %>
+                                <table>
+                                <% resultado.docs.each do |doc| %>
+                                    <tr>
+                                        <td>
+                                            <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
+                                            <select id="arquivo_opcoes">
+                                                <option value="Atende Totalmente">Atende Totalmente</option>
+                                                <option value="Atende Parcialmente">Atende Parcialmente</option>
+                                                <option value="Não Atende">Não Atende</option>
+                                            </select>
+                                            <a href="/cadastroResultado/<%= doc.id %>/excluir_resultado_docs"><i class="icon-remove-sign"></i></a>  
+                                        </td>
+                                    </tr>
+                                <% end %> 
+                                </table>
+                            <% end %>
+                            <form action="/cadastroResultado/<%=resultado.id%>/salvar_resultado_docs" method="POST" enctype="multipart/form-data">
+                                <input type="file" name="docs"/>
+                                <button type="submit">Cadastrar</button>
+                            </form>
+                        </div>
                     <% end %>
-                    <form action="/cadastroResultado/<%=resultado.id%>/salvar_resultado_docs" method="POST" enctype="multipart/form-data">
-                        <input type="file" name="docs"/>
-                        <button type="submit">Cadastrar</button>
-                    </form>
-                        
-                <% end %>
                 </div>
             </div>
                 <%contadorResultados = contadorResultados + 1%>
@@ -596,7 +587,7 @@ main {
     <%end%>
     <%end%>
     </div>
-    </div>    
+    
 </section>
 
 <div id="screen-fade" class="screen-fade hidden">
@@ -689,6 +680,25 @@ $(document).ready(function(){
         var inputDominio = document.getElementById("inputDominio");
         inputDominio.value = this.value;
     });
+
+    var maturidadeSelecionadaNivelEscolha = document.getElementById("maturidadeSelecionadaNivelEscolha");
+
+    if(maturidadeSelecionadaNivelEscolha.classList.value == "1")
+    {
+        var elementos = document.querySelectorAll('.processoNivelSelecionado');
+        console.log(elementos);
+        elementos.forEach(elemento => {
+            elemento.classList.remove('hidden');
+        });
+    }
+    else if(maturidadeSelecionadaNivelEscolha.classList.value == "2")
+    {
+        var elementos = document.querySelectorAll('.resultadoNivelSelecionado');
+        console.log(elementos);
+        elementos.forEach(elemento => {
+            elemento.classList.remove('hidden');
+        });
+    }
 });
 
 var escolha_sim =  document.getElementById("escolha_resultado_sim");
@@ -739,6 +749,7 @@ function mostraModelosSalvos() {
         div_ModelosSalvos.classList.add('hidden');
     }
 }
+
 </script>
 </body>
 </html>
