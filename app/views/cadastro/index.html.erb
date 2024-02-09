@@ -289,11 +289,12 @@
             <h2 class="header-title-h2">Cadastrar Estrutura do Modelo</h2>
           </div>
           <div class="header-select">
-            <%= select_tag "maturidade_id", options_from_collection_for_select(@maturidades, "id", "nome"), prompt: "Escolha um modelo", class: "modelo corpo_texto_select" %>
+            <%= select_tag "maturidade_id", options_from_collection_for_select(@maturidades, "id", "nome", @opcao), prompt: "Escolha um modelo", class: "modelo corpo_texto_select"%>
           </div>
         </div>
         <%if @opcao != 0%>
           <% maturidade_selecionada = Maturidade.find(@opcao)%>
+
           <div id="mudancaResultado" class="<%=maturidade_selecionada.resultadoEscolha%>"> </div>
         <%end%>
         <div class="header-cadastrar">

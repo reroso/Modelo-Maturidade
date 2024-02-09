@@ -151,6 +151,15 @@ class CadastroController < ApplicationController
         redirect_to "/aplicar"
     end
 
+    def salvar_classificacao_docs
+
+        attachment = ActiveStorage::Attachment.find(params[:id])
+        blob = attachment.blob  # Obtém o blob associado ao attachment
+        blob.update(classificacao: params[:classificacao])
+        
+        redirect_to "/aplicar"
+    end
+
     def incluir_maturidade
         maturidade = Maturidade.new
         maturidade.nome = params[:nome]

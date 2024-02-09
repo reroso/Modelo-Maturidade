@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_10_02_160933) do
+ActiveRecord::Schema.define(version: 2024_02_08_225619) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 2023_10_02_160933) do
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
     t.datetime "created_at", null: false
+    t.integer "classificacao"
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -39,6 +40,9 @@ ActiveRecord::Schema.define(version: 2023_10_02_160933) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "maturidade_id", null: false
     t.index ["maturidade_id"], name: "index_dimensaos_on_maturidade_id"
+  end
+
+  create_table "documentos_opcoes", force: :cascade do |t|
   end
 
   create_table "dominios", force: :cascade do |t|
@@ -57,6 +61,13 @@ ActiveRecord::Schema.define(version: 2023_10_02_160933) do
     t.string "nivelEscolha"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "minhas_opcoes", force: :cascade do |t|
+    t.integer "active_storage_blob_id", null: false
+    t.integer "opcao", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "modelo_aplicados", force: :cascade do |t|

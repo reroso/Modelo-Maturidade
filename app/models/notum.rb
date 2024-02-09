@@ -1,2 +1,0 @@
-class Notum < ApplicationRecord
-end

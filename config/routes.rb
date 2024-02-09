@@ -38,7 +38,8 @@ Rails.application.routes.draw do
   post "/cadastroResultado/:id/salvar_resultado_docs", to: "cadastro#salvar_resultado_docs"
   post "/cadastroResultado/:id/salvar_resultado_nivel", to: "cadastro#salvar_resultado_nivel"
   post "/cadastroResultado/:id/excluir_resultado_docs", to: "cadastro#excluir_resultado_docs"
-  
+  post "/cadastroResultado/:id/salvar_classificacao_docs", to: "cadastro#salvar_classificacao_docs"  
+
   #maturidades
   
   post "/cadastroMaturidade/incluir_maturidade", to: "cadastro#incluir_maturidade"
