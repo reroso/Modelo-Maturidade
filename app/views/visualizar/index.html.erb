@@ -1,0 +1,325 @@
+        <%= select_tag "maturidade_id", options_from_collection_for_select(@maturidades, "id", "nome", @opcao), prompt: "Escolha um modelo", class: "modelo corpo_texto_select" %>
+    </div>
+    <%= puts @opcao %>
+    <%if @opcao != 0%>
+      <% maturidade_selecionada = Maturidade.find(@opcao)%>
+      <div id="mudancaResultado" class="<%=maturidade_selecionada.resultadoEscolha%>"> </div>
+    <% else %>
+      <% maturidade_selecionada = Maturidade.new %>
+    <%end%>
+    <button onclick="showModalInfos()" class="header-title-info d-flex-center-center h-100">
+        <%= image_tag('icons/info.svg', width: '25px', height: '25px') %>
+        
+    </button>
+    </div>
+    <div class="header-links d-flex-center-start h-100 w-fit">
+    <div class="header-links-wrapper d-flex-center-center">
+        <div onclick="mostra_CalcularNivel()" class="header-link d-flex-center-start h-fit">
+        <img src="https://icons.iconarchive.com/icons/fatcow/farm-fresh/32/calculator-icon.png" width="20" height="20" alt="Calculator Icon">
+        <a href="#">Calcular Nivel</a>
+        </div>
+    </div>
+    </div>
+</header>
+<!-- <div class="main-config-priorizacao w-93" style="visibility: hidden;" id="config-priorizacao-options" class="">
+    <label class="priorizacao-label">Escolha o range da priorização</label>
+    <div class="d-flex-center-start w-93">
+    <input class="main-config-mini-input" type="number" placeholder="Menor Nível">
+    <input class="main-config-mini-input" type="number" placeholder="Maior Nível">
+    </div>
+</div> -->
+<section class="main-content main-visualizar-item">
+  <%if maturidade_selecionada.tipoNivel == "1"%>
+    <%if maturidade_selecionada.menorNivel.to_i < maturidade_selecionada.maiorNivel.to_i%>
+      <%menorContador = maturidade_selecionada.menorNivel.to_i%>
+      <%maiorContador = maturidade_selecionada.maiorNivel.to_i%>
+      <%menorContador = menorContador.to_i%>
+      <%maiorContador = maiorContador.to_i%>
+    <%else%>
+      <%maiorContador = maturidade_selecionada.menorNivel.to_i%>
+      <%menorContador = maturidade_selecionada.maiorNivel.to_i%>
+      <%menorContador = menorContador.to_i%>
+      <%maiorContador = maiorContador.to_i%>
+    <%end%>
+    <% while menorContador <= maiorContador do %>
+      <!--S== Nivel -->
+      <div id="Nivel-<%=menorContador%>" class="nivel">
+      <!--A== Header-Nivel -->
+      <div id="header-Nivel-<%=menorContador%>" class="expandable-header header-nivel d-flex-center-between nivel w-100">
+        <!-- expandeMain(grau do modelo + '-' + id) -->
+        <div class="expandable-header-left d-flex-center-start" style="min-width: 100%!important;" onclick="show_todos_processos(1)">
+        <!-- o 1 do id é o id da Nivel-->
+        <div onclick="expandeMain('Nivel-<%=menorContador%>')">
+            <i id="plus-Nivel-<%=menorContador%>" class="fa-solid fa-plus hidden"></i>
+            <i id="minus-Nivel-<%=menorContador%>" class="fa-solid fa-minus"></i>
+        </div>
+        <h3 id="titulo-Nivel-<%=menorContador%>" style="max-height: 25px;" onclick="mostra_titulo('1')">Nível <%=menorContador%></h3>
+        </div>
+      </div>
+      <!-- maturidade_selecionada.nivelEscolha = 1 é em processos = 2 em resultados -->
+      <%if maturidade_selecionada.nivelEscolha == "2"%>
+        <% @dimensaos.each do |dimensao| %>
+        <%if dimensao.maturidade_id == @opcao%>
+          <% @processos.each do |processo| %>
+          <%if dimensao.id == processo.dimensao_id%>
+            <% @resultados.each do |resultado| %>
+            <%if processo.id == resultado.processo_id%>
+              <%if resultado.nivel_selecionado.to_i == menorContador%>
+                <!--A== Main-Nivel-F -->
+                <div id="main-Nivel-<%=menorContador%>" class="expandable-main nivel">
+                    <!--S== Processo-1 -->
+                    <div id="Processo-<%=resultado.id%>" class="resultado">
+                    <!--A== Header-Processo-1 -->
+                    <div id="header-Processo-<%=resultado.id%>" class="expandable-header d-flex-center-between resultado w-100">
+                        <div class="expandable-header-left d-flex-center-start" style="min-width: 100%!important;" onclick="show_todos_processos(1)">
+                        <!-- o 1 do id é o id da Nivel-->
+                        <div onclick="expandeMain('Processo-<%=resultado.id%>')">
+                            <i id="plus-Processo-<%=resultado.id%>" class="fa-solid fa-plus"></i>
+                            <i id="minus-Processo-<%=resultado.id%>" class="fa-solid fa-minus hidden"></i>
+                        </div>
+                        <h3 id="titulo-Nivel-<%=menorContador%>-1" style="max-height: 25px;" onclick="mostra_titulo('1')"><%=resultado.descricao%></h3>
+                        </div>
+                    </div>
+                    <div id="main-Processo-<%=resultado.id%>" class="expandable-main resultado hidden">
+                      <div class="file-galery-wrapper nivel">
+                      <div class="table">
+                          <div class="table-content">	
+                            <div class="table-row">		
+                                <div class="table-data d-flex-center-start"><a href="#">Artefato-02.xlsx</a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
+                                <div class="table-data d-flex-center-end"><p>Atende parcialmente</p></div>
+                            </div>                  
+                          </div>	
+                      </div>
+                      </div>
+                  </div>
+                    </div>
+                </div>
+              <%end%>
+            <%end%>
+            <%end%>
+          <%end%>
+          <%end%>  
+        <%end%>
+        <%end%>
+      <%end%>  
+      </div>
+      <% menorContador += 1 %>
+    <%end%>
+  <%end%>
+</section>
+</main>
+
+<!-- Fim do conteúdo central -->
+
+<section id="infos_modal" class="infos-modal d-flex-center-center hidden">
+<div class="infos-modal-main">
+    <div class="infos-modal-main-header d-flex-center-between">
+    <h1>Ajuda - Utilizar Modelo</h1>
+    <button onclick="showModalInfos()" class="infos-modal-main-header-close">X</button>
+    </div>
+    <div class="infos-modal-main-center">
+    <h3><strong>01 - </strong>Selecionando o modelo:</h3>
+    <hr>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod posuere arcu, nec egestas dolor consequat at. Donec nec ligula feugiat, porta leo vulputate, dictum leo...
+    </p>
+    <h3><strong>02 - </strong>Árvore do modelo de maturidade:</h3>
+    <hr>
+    <p>
+        Nam imperdiet elementum felis, eget dictum velit ullamcorper quis. Aenean dui justo, accumsan at nulla non, semper dignissim metus. Nam dictum augue et nisl varius tempus. Duis vel maximus massa. Donec lacinia quam id interdum porta...
+    </p>  
+    <h4><strong>02.1 - </strong>Visualizando descrições grandes:</h4>
+    <hr>
+    <p>
+        Donec vulputate quam neque, nec egestas nibh maximus pharetra. Donec ut lorem est. Phasellus libero magna, facilisis a rutrum vel, dapibus nec turpis...
+    </p>
+    <h4><strong>02.2 - </strong>Fazendo upload de arquivos:</h4>
+    <hr>
+    <p>
+        Vivamus aliquam dui vel venenatis congue. Morbi eu luctus felis. Curabitur condimentum, risus sed feugiat ullamcorper, justo nulla varius enim, in imperdiet ex mauris et erat...
+    </p>
+    </div>
+    <div class="infos-modal-main-footer d-flex-center-end">
+    <button onclick="showModalInfos()" class="infos-modal-main-footer-voltar">Voltar</button>
+    </div>
+</div>
+</section>
+
+<section class="pop-up-calcularNivel d-flex-center-center hidden" id="popup_CalcularNivel">
+<div class="popup-main d-flex-center-between flex-column" id="popup_CalcularNivelMain">
+    <div>
+    <div class="popup-titulo">
+        <h2>O nível deste modelo é Muito Ruim</h2>
+    </div>
+    <div class="popup-padding" style="overflow: hidden;max-height: 80px;">
+        <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris finibus eget metus quis dignissim.Lorem ipsum dolor sit amet.</span>
+    </div>
+    </div>
+    <div class="popup-btn popup-padding d-flex-center-end w-100">
+    <button onclick="mostra_CalcularNivel()">Fechar</button>
+    </div>
+</div>
+</section>
+
+
+
+<script>
+    //*Função de expandir e retrair as camadas dos modelos
+function expandeMain(id_expandir) {
+  var div_expandir = document.getElementById('main-' + id_expandir);
+  var plus_trocar = document.getElementById('plus-' + id_expandir);
+  var minus_trocar = document.getElementById('minus-' + id_expandir);
+
+  if (div_expandir.classList.contains('hidden')) {
+    div_expandir.classList.remove('hidden');
+    plus_trocar.classList.add('hidden');
+    minus_trocar.classList.remove('hidden');
+
+  } else {
+    div_expandir.classList.add('hidden');
+    plus_trocar.classList.remove('hidden');
+    minus_trocar.classList.add('hidden');
+  }
+}
+//* Fim ---
+
+//* Mostrar titulo de um nível nas telas de Utilizar modelo e cadastrar estrutura:
+function mostra_titulo(id) {
+  let titulo = document.getElementById('titulo-nivel-'+id);
+  if(titulo.style.maxHeight == '25px') {
+    titulo.style.maxHeight = 'none';
+  } else {
+    titulo.style.maxHeight = '25px';
+  }
+}
+//* Fim ---
+
+//* Mostrar Caixa de Criação de nova estrutura para um modelo ja criado:
+function showNewStructure(id) {
+  let div_criacao = document.getElementById('create_new_'+id);
+
+  if(div_criacao.classList.contains('hidden'))
+    div_criacao.classList.remove('hidden');
+  else
+    div_criacao.classList.add('hidden');
+}
+//* Fim ---
+
+//* Mostrar Modal de informações sobre a página:
+function showModalInfos() {
+  let modalInfos = document.getElementById('infos_modal');
+
+  if(modalInfos.classList.contains('hidden'))
+    modalInfos.classList.remove('hidden');
+  else
+    modalInfos.classList.add('hidden');
+}
+//* Fim ---
+
+//* Mostrar Modal de confirmação de exclusão:
+function showModalConfirmacao() {
+  let modalConfirmacao = document.getElementById('modal_confirmacao');
+  let inputConfirmaExclusao = document.getElementById('input_confirmation_exclusao');
+  let btnConfirmaExclusao = document.getElementById('btn_confirma_exclusao');
+
+  if(modalConfirmacao.classList.contains('hidden')) {
+    modalConfirmacao.classList.remove('hidden');
+    inputConfirmaExclusao.value = '';
+    btnConfirmaExclusao.disabled = true;
+  }
+  else
+    modalConfirmacao.classList.add('hidden');
+}
+//* Fim ---
+
+//* Retira o disabled do botao de exclusão do modal de confirmação de exclusão
+function liberaBotaoExclusao() {
+  let inputConfirmaExclusao = document.getElementById('input_confirmation_exclusao');
+  let btnConfirmaExclusao = document.getElementById('btn_confirma_exclusao');
+
+  if(inputConfirmaExclusao.value == 'confirmo')
+    btnConfirmaExclusao.disabled = false;
+  else
+    btnConfirmaExclusao.disabled = true;
+}
+//* Fim ---
+
+//* Utilziar modelo: mostra os inputs de nivel a serem escolhidos
+function mostraRangePriorizacao() {
+  let checkboxPriorizacao = document.getElementById('config-priorizacao');
+  let divInputsPriorizacao = document.getElementById('config-priorizacao-options');
+  let btnSubmitConfigPrimaria = document.getElementById('config_primaria_submitBtn');
+
+  if(checkboxPriorizacao.checked == true) {
+    divInputsPriorizacao.style.visibility = "visible";
+    btnSubmitConfigPrimaria.style.alignSelf = "end";
+  } else {
+    divInputsPriorizacao.style.visibility = "hidden";
+    btnSubmitConfigPrimaria.style.alignSelf = "start";
+  }
+    
+
+}
+//* Fim ---
+
+//* Utilizar Modelo: mostrar a configuração inicial do modelo:
+function mostraOpcoesPrimariasModelo() {
+  var divConfigPrimariaModelo = document.getElementById("config_primaria_modelo");
+
+  if(divConfigPrimariaModelo.classList.contains("hidden")) {
+    divConfigPrimariaModelo.classList.remove("hidden");
+  } else {
+    divConfigPrimariaModelo.classList.add("hidden");
+  }
+}
+//* Fim ---
+
+
+
+//* Abrir pop up de calcular nivel de modelo
+function mostra_CalcularNivel() {
+  const divPopUp = document.getElementById("popup_CalcularNivel");
+
+  if(divPopUp.classList.contains("hidden")) {
+    divPopUp.classList.remove("hidden");
+  } else {
+    divPopUp.classList.add("hidden");
+  }
+}
+//* Fim ---
+
+$(document).ready(function(){
+  console.log("Test");
+  $(".header-select #maturidade_id").change(function(){
+    console.log("Test1");
+    var opcaoSelecionada = this.value;
+    axios.post("/visualizar/atualizar_opcao", { opcao: opcaoSelecionada })
+    .then(function(response) {
+      // Lógica para sucesso na resposta
+      var redirectUrl = response.data.redirect_url;
+      window.location.href = redirectUrl;
+      console.log(response.data);
+    })
+    .catch(function(error) {
+      // Lógica para erro na resposta
+      console.error(error);
+    });
+  });
+  if(document.getElementById("mudancaResultado")) {
+    var test = document.getElementById("mudancaResultado");
+    
+    if (test.classList.value == "1") {
+      var elementos = document.querySelectorAll(".abrir_form_resultado_esperado");
+      
+      for (var i = 0; i < elementos.length; i++) {
+        elementos[i].classList.remove('icon-plus');
+        elementos[i].classList.add('icon-caret-right');
+        elementos[i].nextElementSibling.nextElementSibling.nextElementSibling.remove();
+      }
+    }
+  }
+});
+
+
+</script>
+

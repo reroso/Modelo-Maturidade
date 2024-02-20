@@ -1,0 +1,108 @@
+.main-content {
+  margin: 15px 35px;
+}
+form{
+  flex-wrap: wrap;
+}
+.main-content form input[type='text'],
+.main-content form textarea  {
+  padding-left: 10px;
+}
+.main-content form input[type='text']:focus,
+.main-content form textarea:focus {
+  outline: none;
+  border: 1px solid #66831d;
+}
+
+.main-name,
+.main-desc {
+  margin-bottom: 10px;
+}
+.main-name input,
+.main-desc textarea,
+.form-range-control input
+{
+  height: 35px;
+  border: 1px solid #d1d1d1;
+  border-radius: 5px;
+}
+.main-desc textarea{
+  height: 45px;
+}
+.main-name label,
+.main-desc label
+{
+  margin-bottom: 6px;
+  font-size: 18px;
+}
+.main-level, .main-range,
+.main-result {
+  margin-bottom: 15px;
+}
+
+.form-title-wrapper {
+  border-bottom: 1px solid #d1d1d1;
+  margin: 15px 0 20px 0;
+}
+.form-title-wrapper h3 {
+  font-size: 20px;
+}
+.main-level label,
+.main-result label,
+.main-who label {
+  margin-right: 50px;
+  font-size: 18px;
+}
+
+input[type='radio']{
+  display: none;
+}
+input[type='radio'] + label:before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: white;
+  border: 1px solid gray;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+  margin-bottom: 3px;
+}
+input[type='radio']:checked + label:before {
+  background-color: white;
+  box-sizing: border-box;
+  border: 4px solid #8eb729;
+  padding: 4px;
+}
+
+.form-range-control {
+  margin-right: 50px;
+}
+.form-range-control input {
+  height: 27px;
+  margin-top: 4px;
+}
+
+.main-button {
+  margin-top: 15px;
+  align-self: baseline;
+}
+.main-button button {
+  padding: 8px 40px;
+  border-radius: 6px;
+  color:  white;
+  font-size: 16px;
+  font-weight: 600;
+  background: -webkit-linear-gradient(180deg, #8eb729 50%, #81a523 50%);
+  background: -o-linear-gradient(180deg, #8eb729 50%, #81a523 50%);
+  background: -moz-linear-gradient(180deg, #8eb729 50%, #81a523 50%);
+  background: linear-gradient(180deg, #8eb729 50%, #81a523 50%);
+}
+.main-button button:hover {
+  outline: 1px solid #648219;
+  background: -webkit-linear-gradient(180deg, #87ae27 50%, #73941f 50%);
+  background: -o-linear-gradient(180deg, #87ae27 50%, #73941f 50%);
+  background: -moz-linear-gradient(180deg, #87ae27 50%, #73941f 50%);
+  background: linear-gradient(180deg, #87ae27 50%, #73941f 50%);
+}

@@ -1,415 +1,142 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset='utf-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <title>Modelo de Maturidade</title>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-
-  <!-- Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome@3.2.1/css/font-awesome.min.css" rel="stylesheet">
-  <style>
-    body {
-      background-color: #8eb729;
-      margin: 0;
-    }
-    main {
-      display: -webkit-box; 
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex; 
-      display: flex;
-    }
-
-    .hidden {
-      display: none!important;
-    }
-
-    .main-left {
-      width: 15%;
-      display: -webkit-box; 
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex; 
-      display: flex;
-      flex-direction: column;
-      align-items: end;
-    }
-    .nav-bar {
-      width: 80%;
-      height: fit-content;
-      padding: 5px 0 0 0;
-      margin: 4.5vw 0 0 0 ;
-      background-color: white;
-      border-radius: 6px;
-      border-radius: 6px 0 0 6px;
-      display: -webkit-box; 
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex; 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-evenly;
-    }
-    .nav-bar-cadastrar-modelo, .nav-bar-escolher-modelo {
-      width: 100%;
-      padding: 0.25vw;
-      border: 0;
-      border-radius: 5px;
-      color: white;
-      margin-bottom: 5px;
-    }
-    .nav-bar-cadastrar-modelo {
-      background: -webkit-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
-      background: -o-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
-      background: -moz-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
-      background: linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
-    }
-    .nav-bar-escolher-modelo {
-      background: -webkit-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
-      background: -o-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
-      background: -moz-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
-      background: linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
-    }
-
-    .main-right {
-      width: 85%;
-      padding: 1vw 1.5vw 1.5vw 0;
-    }
-    .main-right-header {
-      height: 3.5vw;
-      background: rgb(227,227,227);
-      background: linear-gradient(180deg, rgba(227,227,227,1) 0%, rgba(236,236,236,1) 52%, rgba(204,204,204,1) 100%);
-      display: -webkit-box; 
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex; 
-      display: flex;
-      align-items: center;
-      padding: 0 2vw 0 1vw;
-      justify-content: space-between;
-      border-radius: 0 15px 0 0 ; 
-    }
-
-    .header-title-wrapper {
-      display: -webkit-box; 
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex; 
-      display: flex;
-      align-items: center;
-    }
-    .header-title-h2 {
-      margin-right: 0.8vw;
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-    #modelo_maturidade {
-      height: 26px;
-      width: 100px;
-      border: 1px solid white;
-      border-radius: 2px;
-    }
-
-    .header-cadastrar {
-      margin-left: auto;
-      background-color: white;
-      height: 65%;
-      width: 14vw;
-      border-radius: 6px;
-      display: -webkit-box; 
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex; 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .header-cadastrar-btn {
-      border: white;
-      background-color: white;
-      font-size: 0.85rem;
-      color: #5e7e0f;
-    }
-    .header-cadastrar-btn i {
-      margin-right: 0.4vw;
-      color: #5e7e0f!important;
-    }
-    .main-right-hero {
-      padding: 1vw 1.2vw 0.8vw 1.2vw;
-      background-color: white;
-      display: -webkit-box; 
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex; 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .hero-form, .dimensao-form, .processo-form, .resultado-esperado-form {
-      background-color: #f7f7f7;
-      width: 100%;
-      padding: 1vw 0;
-      border-radius: 8px;
-      display: -webkit-box; 
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex; 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .hero-form form, .dimensao-form form, .processo-form form, .resultado-esperado-form form {
-      width: 30vw;
-      padding: 1vw 1.2vw .5vw 1.2vw;
-      display: -webkit-box; 
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex; 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-    }
-    .hero-form-cancelar {
-      text-decoration: none;
-      color: #5b8911;
-      border: 1px solid #f7f7f7;
-      background-color: #f7f7f7;
-    }
-    .form-group {
-      margin-bottom: 0.5vw;
-    }
-    .form-group input {
-      width: 25vw;
-      height: 1.6vw;
-      border: 1px solid #cccccc!important;
-      border-radius: 3px;
-    }
-    .hero-form-cadastrar{
-      height: 2vw;
-      width: 6vw;
-      background-color: #8eb729;
-      border: 1px solid white;
-      border-radius: 6px;
-    }
-    .hero-form-cancelar {
-      margin-left: 0.5vw;
-    }
-    .main-right-main {
-      padding: 1vw 1.2vw 2.5vw 1.2vw;
-      background-color: white;
-    }
-    .dimensao-header {
-      display: -webkit-box; 
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex; 
-      display: flex;
-      align-items: center;
-    }
-    .icon-minus, .icon-plus, .icon-caret-right {
-      margin-right: 0.8vw;
-      color: #7cbb16;
-    }
-    .icon-pencil {
-      color:rgb(226, 187, 12);
-    }
-    .icon-plus-sign {
-      color: rgb(11, 25, 212);
-    }
-    .icon-remove-sign {
-      color: rgb(211, 8, 8);
-    }
-    .dimensao-header i, .processo-header i, .resultado-header i  {
-      margin-right: 0.3vw;
-    }
-    .dimensao-header p, .processo-header p, .resultado-header p {
-      font-weight: 600;
-      margin-right: 0.8vw;
-    }
-
-    .dimensao-form {
-      margin-left: 1.5vw;
-      width: 98%;
-    }
-    .dimensao-form form {
-      margin-right: 2vw;
-    }
-
-    .dimensao-childen {
-      margin-left: 2.5vw;
-    }
-
-    .processo-header {
-      display: -webkit-box; 
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex; 
-      display: flex;
-      align-items: center;
-    }
-
-    .resultado-esperado {
-      margin-left: 2.5vw;
-    }
-    .resultado-header {
-      display: -webkit-box; 
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex; 
-      display: flex;
-      align-items: center;
-    }
-
-  </style>
-
-</head>
-<body>
-  
-  <main>
-    
-    <!-- Parte Esquerda -->
-    <section class="main-left">
-      <div class="nav-bar">
-        <a style="width: 96%;"href="/main_screen"><button class="btn nav-bar-cadastrar-modelo" >Cadastrar Modelo</button></a>
-        <a style="width: 96%;"href="/cadastro"><button class="btn nav-bar-escolher-modelo" >Cadastrar Estrutura</button></a>
-        <a style="width: 96%;"href="/aplicar"><button class="btn nav-bar-cadastrar-modelo" >Utilizar Modelo</button></a>
-      </div>
-    </section>
-
-    <!-- Parte Direita -->
-    <section class="main-right">
-
-      <!-- Cabeçalho Modelo -->
-      <div class="main-right-header">
-        <div class="header-title-wrapper">
-          <div class="header-title">
-            <h2 class="header-title-h2">Cadastrar Estrutura do Modelo</h2>
-          </div>
-          <div class="header-select">
-            <%= select_tag "maturidade_id", options_from_collection_for_select(@maturidades, "id", "nome", @opcao), prompt: "Escolha um modelo", class: "modelo corpo_texto_select"%>
-          </div>
+          <%= select_tag "maturidade_id", options_from_collection_for_select(@maturidades, "id", "nome", @opcao), prompt: "Escolha um modelo", class: "modelo corpo_texto_select" %>
         </div>
+        <%= puts @opcao %>
         <%if @opcao != 0%>
           <% maturidade_selecionada = Maturidade.find(@opcao)%>
-
           <div id="mudancaResultado" class="<%=maturidade_selecionada.resultadoEscolha%>"> </div>
+        <% else %>
+          <% maturidade_selecionada = Maturidade.new %>
         <%end%>
-        <div class="header-cadastrar">
-          <button class="header-cadastrar-btn" id="abrir_form" onclick="show_dimensao(this.id)"><strong><i class="icon-plus-sign"></i>Cadastrar Nova Dimensão</strong></button>
+        <button onclick="showModalInfos()" class="header-title-info d-flex-center-center h-100">
+          <%= image_tag('icons/info.svg', width: '25px', height: '25px') %>
+        </button>
+      </div>
+      <div class="header-links d-flex-center-start h-100 w-fit">
+        <div class="header-links-wrapper d-flex-center-center">
+          <!-- <div class="header-link d-flex-center-start h-fit">
+            <%= image_tag('icons/folder_full.svg', width: '20px', height: '20px') %>
+            <a href="#">Modelo Salvo 01</a>
+          </div>
+          <div class="header-link d-flex-center-start h-fit">
+            <%= image_tag('icons/folder_full.svg', width: '20px', height: '20px') %>
+            <a href="#">Modelo Salvo 02</a>
+          </div>
+          <div class="header-link d-flex-center-start h-fit">
+            <%= image_tag('icons/folder_full.svg', width: '20px', height: '20px') %>
+            <a href="#">Modelo Salvo 03</a>
+          </div> -->
+          <div onclick="openDimensaoForm()" style="cursor: pointer" class="header-link d-flex-center-start h-fit">
+            <%= image_tag('icons/add_to_folder.svg', width: '25px', height: '25px') %>
+            <a>Adicionar nova Dimensão</a>
+          </div>
         </div>
       </div>
-      
-      <!--x Form criação nova Dimensão -->
-      <div class="main-right-hero hidden" id="form_dimensao_1">
-        <div class="hero-form">
-          <form action="/cadastro/incluir_dimensao" method="post">
-            <div class="form-group">
-              <label for="nome_dimensao">Nome:</label>
-              <input name="descricao" type="text" id="nome_dimensao">
-              <input name="maturidade_id" type="text" id="maturidade_dimensao" class="hidden" value="<%= @opcao%>">
+    </header>
+    <section class="main-content main-utlizar-modelo">
+
+
+    <!-- #Div de criação de nova dimensão-->
+    <div id="create_new_dimencao" class="main-create-level w-100 create-dimencao hidden">
+        <p>Nova Dimensão:</p>
+        <form action="/cadastro/incluir_dimensao" method="post" class="d-flex-center-center flex-column h-100">
+          <div class="form-control d-flex-center-center">
+            <label for="nome_dimensao">Nome:</label>
+            <textarea type="text" id="nome_dimensao" name="descricao"></textarea>
+            <input name="maturidade_id" type="text" id="maturidade_dimensao" class="hidden" value="<%= @opcao%>">
+          </div>
+          <div class="main-create-level-buttons">
+            <button class="main-create-level-submit">Cadastrar</button>
+            <a onclick="openDimensaoForm()" class="main-create-level-cancel">cancelar</a>
+          </div>
+        </form>
+      </div> 
+    <!-- #Fim da Div de criação de nova dimensão-->
+
+
+    <!--# Início do loop de dimensões -->
+    <% contadorDimensaos = 1 %>
+    <% @dimensaos.each do |dimensao| %>
+    <%if dimensao.maturidade_id == @opcao%>
+    <!--# Início da Dimensão X -->
+      <div id="dimencao-<%= dimensao.id %>" class="dimencao">
+        <!--# Início do Header da Dimensão X -->
+        <div id="header-dimencao-<%= dimensao.id %>" class="expandable-header d-flex-center-between dimencao w-100">
+          <!-- #expandeMain(grau do modelo + '-' + id) -->
+          <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(<%= dimensao.id %>)">
+            <div class="h-100" onclick="expandeMain('dimencao-<%= dimensao.id %>')">
+              <i id="plus-dimencao-<%= dimensao.id %>"  class="icon-plus"></i>
+              <i id="minus-dimencao-<%= dimensao.id %>"  class="icon-minus hidden"></i>
             </div>
-            <div class="from-group-btn">
-              <button type="submit" class="hero-form-cadastrar">Cadastrar</button>
-              <button type="button" class="hero-form-cancelar" id="cancelar_form" onclick="show_dimensao(this.id)">cancelar</button>
-            </div>
-          </form>
+            <h3 id="titulo-nivel-<%= dimensao.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>')"><strong><%=contadorDimensaos%> - </strong><%= dimensao.descricao %></h3>
+          </div>
+          <div class="expandable-header-right">
+            <button onclick="biuldProcessoForm(<%= dimensao.id %>)" id="novo-dimencao-<%= dimensao.id %>" class="expandable-header-btn"><%= image_tag("icons/plus.svg", width: 16, height: 16) %></button>
+            <button id="editar-dimencao-<%= dimensao.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
+            <button id="excluir-dimencao-<%= dimensao.id %>" onclick="location.href='/cadastro/<%= dimensao.id %>/excluir_dimensao'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
+          </div>
         </div>
-      </div>
-      <!--x Corpo do Modelo Atual -->
-      <div class="main-right-main">
-        <!--x Dimenção -->
-        <% contadorDimensaos = 1 %>
-        <% @dimensaos.each do |dimensao| %>
-        <%if dimensao.maturidade_id == @opcao%>
-        <div class="main-expand dimensao">
-          <!--x Cabeçalho Dimenção -->
-          <div class="dimensao-header"> 
-            <i class="icon-plus" id="dimensao_<%= dimensao.id %>_icon" onclick="show_todos_processos(this.id,<%= dimensao.id %>)"></i><!-- o 1 do id é o id da dimensão-->
-            <p><%=contadorDimensaos%>. <%= dimensao.descricao %></p>
-            <i class="icon-pencil" id="abrir_salvar_dimensao_<%= dimensao.id %>" onclick="show_dimensao_salvar(this.id,<%= dimensao.id %>,'<%= dimensao.descricao %>')"></i><!-- o 1 do id é o id da dimensao e o textoDoProcesso é a descrição-->
-            <i class="icon-plus-sign" id="abrir_form_processo_<%= dimensao.id %>" onclick="show_processo(this.id,<%= dimensao.id %>)"></i> <!-- o 1 do id e do onclick são o id da dimensão-->
-            <a href="/cadastro/<%= dimensao.id %>/excluir_dimensao"><i class="icon-remove-sign"></i></a>
-          </div>
-          <!--* Form novo Processo -->
-          <div class="dimensao-form hidden" id="form_processo_<%= dimensao.id %>"> <!-- o 1 do id é o id da dimensão-->
-          </div>
-          <!--* Processos Filhos da Dimensão -->
-          <div class="dimensao-childen hidden" id="dimensao_child_<%= dimensao.id %>"> <!-- o 1 do id é o id da dimensão-->
-            <% contadorProcessos = 1 %>
-            <% @processos.each do |processo| %>
-              <%if dimensao.id == processo.dimensao_id%>
-                
-            <div class="main-expand processo">
-              <div class="processo-header">
-                <i class="icon-plus abrir_form_resultado_esperado" id="processo_<%= processo.id %>_icon" onclick="show_todos_resultados(this.id,<%= processo.id %>)"></i><!-- o 1 do id é o id do processo-->
-                <p><%=contadorDimensaos%>.<%=contadorProcessos%> <%= processo.descricao %></p>
-                <i class="icon-pencil" id="abrir_salvar_processo_<%= processo.id %>" onclick="show_processo_salvar(this.id,<%= processo.id %>,'<%= processo.descricao %>')"></i> <!-- o 1 do id é o id do processo e o textoDoProcesso é a descrição-->
-                <i class="icon-plus-sign" id="abrir_form_resultado_esperado_<%= processo.id %>" onclick="show_resultado(this.id,<%= processo.id %>)"></i> <!-- o 1 do id e do onclick são o id do processo-->
-                <a href="/cadastroProcesso/<%= processo.id %>/excluir_processo"><i class="icon-remove-sign"></i></a>
-                <%if @opcao != 0%>
-                <%if maturidade_selecionada.nivelEscolha == "1"%>
-                
-                <form id="meu_formulario_processos" action="/cadastroProcesso/<%= processo.id %>/salvar_processo_nivel" method="post">
-                  <select name="nivel_selecionado" onchange="submitForm(this)">
-                    <%if maturidade_selecionada.tipoNivel == "1"%>
-                      <% contador = maturidade_selecionada.menorNivel.to_i %>
-                      <% contador = contador.to_i %>
-                      <% nivel_processo_selecionado = processo.nivel_selecionado %>
-                      <% nivel_processo_selecionado = nivel_processo_selecionado.to_i %>
-                      
-                      <% while contador <= maturidade_selecionada.maiorNivel.to_i do %>
-                        <%if nivel_processo_selecionado == contador %>
-                          <option selected value="<%= contador %>"><%= contador %></option>
-                          <% contador += 1 %>
-                        <% else %>
-                          <option value="<%= contador %>"><%= contador %></option>
-                          <% contador += 1 %>
-                        <% end %>
-                        
-                      <% end %>
-                    <% else %>
-                      <% contador = maturidade_selecionada.menorNivel.to_s %>
-                      <% contador = contador.to_s %>
-                      <% nivel_processo_selecionado = processo.nivel_selecionado.to_s %>
-                      <% nivel_processo_selecionado = nivel_processo_selecionado.to_s %>
-                      <% while contador <= maturidade_selecionada.maiorNivel.to_s do %>
-                        <%if nivel_processo_selecionado == contador %>
-                          <option value="<%= contador %>"selected><%= contador %></option>
-                          <% contador = contador.next %>
-                        <% else %>
-                          <option value="<%= contador %>"><%= contador %></option>
-                          <% contador = contador.next %>
-                        <% end %>
-                        
-                      <% end %>
-                    <% end %>
-                  </select>
-                </form>
-                <% end %>
-                <%end%>
+        <!--# Fim do Header da Dimensão X -->
+
+        <!--# Início do Main expandível da Dimensão X -->
+        <div id="main-dimencao-<%= dimensao.id %>" class="expandable-main dimencao hidden">
+
+
+          <!-- SE ESTIVER PROCURANDO O FORM DE CRIAÇÃO DE PROCESSOS, VEJA O SCRIPT AO FIM DA PÁGINA -->
+
+
+          <!--# Início do loop de processos da dimensão X -->
+          <% contadorProcessos = 1 %>
+          <% @processos.each do |processo| %>
+          <%if dimensao.id == processo.dimensao_id%>
+
+          <!--# Início do Processo Y da Dimensão X -->
+          <div id="processo-<%= dimensao.id %>-<%= processo.id %>" class="processo">
+
+            <!--# Início do cabeçalho do Processo Y da Dimensão X -->
+            <div id="header-processo-<%= dimensao.id %>-<%= processo.id %>" class="expandable-header d-flex-center-between processo w-100">
+              <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(<%= processo.id %>)"><!-- o 1 do id é o id da dimensão-->
+                <div class="h-100" onclick="expandeMain('processo-<%= dimensao.id %>-<%= processo.id %>')">
+                  <i id="plus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid icon-plus abrir_form_resultado_esperado"></i>
+                  <i id="minus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid icon-minus hidden"></i>
+                </div>
+                <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>')"><strong><%=contadorDimensaos%>.<%=contadorProcessos%> - </strong><%= processo.descricao %></h3>
               </div>
-              <!--! Form criação novo resultado esperado -->
-              <div class="processo-form hidden"  id="form_resultado_esperado_<%= processo.id %>"> <!-- o 1 do id é o id do processo-->
+              <div class="processo-header-right">
+                <div class="expandable-header-right">
+                  <button id="novo-resultado-<%= processo.id %>" onclick="biuldResultadoForm(<%= dimensao.id %>, <%= processo.id %>)" class="expandable-header-btn"><%= image_tag("icons/plus.svg", width: 16, height: 16) %></images></button>
+                  <button id="editar-processo-<%= processo.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
+                  <button id="excluir-processo-<%= processo.id %>" onclick="location.href='/cadastroProcesso/<%= processo.id %>/excluir_processo'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
+                </div>
               </div>
-              <div class="processo-child hidden" id="processo_child_<%= processo.id %>"> <!-- o 1 do id é o id do processo-->
-                <!--! Resultados esperados do Processo -->
-                <%if maturidade_selecionada.resultadoEscolha == "2"%>
-                <% contadorResultados = 1 %>
-                <% @resultados.each do |resultado| %>
-                  <%if processo.id == resultado.processo_id%>
+            </div>  
+            <!--# Fim do cabeçalho do Processo Y da Dimensão X -->
+
+            <!--# Início do main expansível do Processo Y da Dimensão X -->
+            <div id="main-processo-<%= dimensao.id %>-<%= processo.id %>" class="expandable-main processo hidden">
+
+              <!-- SE ESTIVER PROCURANDO O FORM DE CRIAÇÃO DE RESULTADOS ESPERADOS, VEJA O SCRIPT AO FIM DA PÁGINA -->
+
+              <!--# Início do loop de resultados do processo Y da dimensão X-->
+              <%if maturidade_selecionada.resultadoEscolha == "2"%>
+              <% contadorResultados = 1 %>
+              <% @resultados.each do |resultado| %>
+              <%if processo.id == resultado.processo_id%>
                 
-                <div class="main-expand resultado-esperado">
-                  <div class="resultado-header">
-                    <i class="icon-caret-right"></i>
-                    <p><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> <%= resultado.descricao %></p>
-                    <i class="icon-pencil"  id="abrir_salvar_resultado_esperado_<%= resultado.id %>" onclick="show_resultado_esperado_salvar(this.id,<%= resultado.id %>,'<%= resultado.descricao %>')"></i> <!-- o 1 do id é o id do resultado esperado e o textoDoProcesso é a descrição-->
-                    <a href="/cadastroResultado/<%= resultado.id %>/excluir_resultado"><i class="icon-remove-sign"></i></a>
+
+              <!--# Início do resultado Z do processo Y da dimensão X -->
+              <div id="resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="resultado">
+                <!--# Início do header do resultado Z do processo Y da dimensão X -->
+                <div id="header-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-header d-flex-center-between resultado w-100">
+                  <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(1)"><!-- o 1 do id é o id da dimensão-->
+                    <div class="h-100" onclick="expandeMain('resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')">
+                      <i id="plus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid icon-plus"></i>
+                      <i id="minus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid icon-minus hidden"></i>
+                    </div>
+                    <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')"><strong><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> - </strong><%= resultado.descricao %></h3>
+
                     <%if maturidade_selecionada.nivelEscolha == "2"%>
                     <form id="meu_formulario_resultados" action="/cadastroResultado/<%= resultado.id %>/salvar_resultado_nivel" method="post">
-                      <select name="nivel_selecionado" onchange="submitForm(this)">
+                      <select class="nivel_maturidade_select" style="font-size: 13px!important; padding: 2px 6px" name="nivel_selecionado" onchange="submitForm(this)">
                         <%if maturidade_selecionada.tipoNivel == "1"%>
                           <%if maturidade_selecionada.menorNivel.to_i < maturidade_selecionada.maiorNivel.to_i%>
                             <%menorContador = maturidade_selecionada.menorNivel.to_i%>
@@ -459,111 +186,152 @@
                         <% end %>
                       </select>
                     </form>
-                    <% end %>
+                  <% end %>
+
                   </div>
-                  <!--! Form criação novo resultado esperado -->
-                  <div class="resultado-esperado-form hidden"  id="form_resultado_esperado_salvar_<%= resultado.id %>"> <!-- o 1 do id é o id do resultado esperado-->
+                  <div class="resultado-header-right">
+                    <div class="expandable-header-right">
+                      <button id="editar-resultado-<%= resultado.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
+                      <button id="excluir-resultado-<%= resultado.id %>" onclick="location.href='/cadastroResultado/<%= resultado.id %>/excluir_resultado'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
+                    </div>
                   </div>
                 </div>
-                    <%contadorResultados = contadorResultados + 1%>
-                  <%end%>
-                <%end%>
-                <%end%>
+                <!--# Fim do header do resultado Z do processo Y da dimensão X -->
+
+                <!--# Início do main expansivel do resultado Z do processo Y da dimensão X -->
+                <div id="main-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-main resultado hidden">
+
+                </div>
+                <!--# Fim do main expansivel do resultado Z do processo Y da dimensão X -->
+
               </div>
-            </div>
-                <%contadorProcessos = contadorProcessos + 1%>
+              <!--# Fim do resultado Z do processo Y da dimensão X -->
+              <%contadorResultados = contadorResultados + 1%>
               <%end%>
-            <%end%>
+              <%end%>
+              <%end%>
+              <!--# Fim do Loop de resultados do processo Y da dimensão X -->
+            </div>
+            <!--# Fim do main expansível do processo Y da dimensão X -->
           </div>
-          <%contadorDimensaos = contadorDimensaos + 1%>
-        <%end%>
-        <%end%>
+          <!--# Fim do Processo Y da Dimensão X -->
+          <%contadorProcessos = contadorProcessos + 1%>
+          <%end%>
+          <%end%>
+          <!--# Fim do Loop de processos da dimensão X -->
         </div>
+        <!--# Fim do Main expandível da Dimensão X -->
       </div>
-      
+      <!--# Fim da Dimensão X -->
+      <%contadorDimensaos = contadorDimensaos + 1%>
+      <%end%>
+      <%end%>
+      <!--# Fim do Loop de dimensões -->
+
     </section>
-
   </main>
+  <!--# Fim do conteúdo central -->
 
-  <form action="/cadastroProcesso/incluir_processo" method="post" id="form_dimensao_novo" class="hidden">
-    <div class="form-group">
-      <label for="nome_processo">Descricao:</label>
-      <input type="text" name="descricao" id="nome_processo" class="inputDescricao">
-    </div>
-    <div class="from-group-btn">
-      <button type="submit" class="hero-form-cadastrar">Cadastrar</button>
-  </form>
-      <button type="button" class="hero-form-cancelar" id="cancelar_form_dimensao" onclick="show_dimensao(this.id)">cancelar</button>
-    </div>
-    
-  <form action="/cadastroProcesso/incluir_processo" method="post" id="form_processo_novo" class="hidden">
-    <div class="form-group">
-      <label for="nome_processo">Descricao:</label>
-      <input type="text" name="descricao" id="nome_processo" class="inputDescricao">
-      <input type="text" name="dimensao_id" class="inputDimensao hidden">
-    </div>
-    <div class="from-group-btn">
-      <button type="submit" class="hero-form-cadastrar">Cadastrar</button>
-  </form>
-      <button type="button" class="hero-form-cancelar" id="cancelar_form_processo" onclick="show_processo(this.id)">cancelar</button>
-    </div>
-
-  <form action="/cadastroResultado/incluir_resultado" method="post" id="form_resultado_esperado_novo" class="hidden">
-    <div class="form-group">
-      <label for="nome_resultado_esperado">Descricao:</label>
-      <input type="text" name="descricao" id="nome_resultado_esperado" class="inputDescricao">
-    </div>
-    <div class="from-group-btn">
-      <button type="submit" class="hero-form-cadastrar">Cadastrar</button>
-  </form>
-      <button type="button" class="hero-form-cancelar" id="cancelar_form_resultado_esperado" onclick="show_resultado(this.id)">cancelar</button>
-    </div>
-  
+  <!--# Função de expandir e retrair as camadas dos modelos -->
   <script>
+    function expandeMain(id_expandir) {
+      var div_expandir = document.getElementById('main-' + id_expandir);
+      var plus_trocar = document.getElementById('plus-' + id_expandir);
+      var minus_trocar = document.getElementById('minus-' + id_expandir);
 
-    function show_dimensao(form_id){
-      
-      if (form_id == "abrir_form") {
-        document.getElementById("form_dimensao_1").classList.remove('hidden');
-      } else if (form_id == "cancelar_form") {
-        document.getElementById("form_dimensao_1").classList.add('hidden');
+      if (div_expandir.classList.contains('hidden')) {
+        div_expandir.classList.remove('hidden');
+        plus_trocar.classList.add('hidden');
+        minus_trocar.classList.remove('hidden');
+
+      } else {
+        div_expandir.classList.add('hidden');
+        plus_trocar.classList.remove('hidden');
+        minus_trocar.classList.add('hidden');
       }
-      
     }
+  </script>
 
-    function show_processo(form_id,dimensao){
-      
-      if (form_id == `cancelar_form_processo`+dimensao){
-        var classExcluir = `.form_processo_novo_clone`+dimensao;
-        document.querySelector(classExcluir).remove();
-        document.getElementById(`form_processo_`+dimensao).classList.add("hidden");
-      } else if(form_id == `abrir_form_processo_`+dimensao){
-        
-        var element = document.getElementById(`form_processo_novo_clone`+dimensao);
-        var element2 = document.getElementById(`form_salvar_dimensao_novo_clone`+dimensao);
-        
-        if(!element && !element2){
-        
-          var temp = document.getElementById('form_processo_novo');
-          var tempClone = temp.cloneNode(true);
-          tempClone.classList.remove('hidden');
-          tempClone.classList.add(`form_processo_novo_clone`+dimensao);
-          var destino = `form_processo_`+dimensao;
-          document.getElementById(destino).classList.remove('hidden');
-          var tempDestiny = document.getElementById(destino);
-          tempClone.id = `form_processo_novo_clone`+dimensao;
-          tempClone.getElementsByClassName("inputDimensao")[0].value = dimensao;
-          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.onclick.value = `show_processo(this.id,`+dimensao+`)`;
-          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.id.value = `cancelar_form_processo`+dimensao;
-          tempDestiny.appendChild(tempClone);
-          addEventListenerToForm();
 
-        }
+  <script>
+    //Função de abrir e fechar o form de criação de nova dimensão
+    function openDimensaoForm() {
+      const formDimensao = document.getElementById("create_new_dimencao");
+
+      if(formDimensao.classList.contains("hidden")) {
+        formDimensao.classList.remove("hidden");
+      } else {
+        formDimensao.classList.add("hidden");
       }
     }
 
+
+    //Função de abrir e fechar o form de criação de novos processos
+    function biuldProcessoForm(dimensao) {
+
+      const templateNovoProcesso = `
+        <div id="create_new_processo_${dimensao}" class="main-create-level d-flex-center-center dimencao w-100">
+          <p>Novo Processo:</p>
+          <form method="post" action="/cadastroProcesso/incluir_processo" class="d-flex-center-center flex-column">
+            <div class="form-control d-flex-center-center">
+              <label for="nome-novo">Nome:</label>
+              <textarea type="text" id="nome-novo-processo-${dimensao}" name="descricao"></textarea>
+              <input type="text" name="dimensao_id" value="${dimensao}" class="inputDimensao hidden">
+            </div>
+            <div class="main-create-level-buttons">
+              <button class="main-create-level-submit">Cadastrar</button>
+              <button class="main-create-level-cancel" onclick="biuldProcessoForm(${dimensao})">cancelar</button>
+            </div>
+          </form>
+        </div> 
+      `;
+
+      if(!document.getElementById("create_new_processo_"+dimensao)) {
+        const elementoPai = document.getElementById("main-dimencao-"+dimensao);
+        elementoPai.insertAdjacentHTML("afterbegin", templateNovoProcesso);
+      } else {
+        const elementoDescartado = document.getElementById("create_new_processo_"+dimensao);
+        elementoDescartado.remove();
+      }
+    }
+
+
+    //Função de abrir e fechar o form de criação de novos resultados esperados
+    function biuldResultadoForm(dimensao, processo) {
+
+      const templateNovoResultadoEsperado = `
+        <div id="create_new_resultado_${dimensao}_${processo}" class="main-create-level d-flex-center-center dimencao w-100">
+          <p>Novo Resultado Esperado:</p>
+          <form method="post" action="/cadastroResultado/incluir_resultado" method="post" class="d-flex-center-center flex-column">
+            <div class="form-control d-flex-center-center">
+              <label for="nome-novo">Nome:</label>
+              <textarea type="text" id="nome-novo-resultado-${dimensao}-${processo}" name="descricao"></textarea>
+              <input type="text" name="processo_id" value="${processo}" class="inputDimensao hidden">
+            </div>
+            <div class="main-create-level-buttons">
+              <button class="main-create-level-submit">Cadastrar</button>
+              <button class="main-create-level-cancel" onclick="biuldResultadoForm(${dimensao}, ${processo})">cancelar</button>
+            </div>
+          </form>
+        </div> 
+      `;
+
+      if(!document.getElementById("create_new_resultado_" + dimensao + "_" + processo)) {
+        const elementoPai = document.getElementById("main-processo-" + dimensao + "-" + processo);
+        elementoPai.insertAdjacentHTML("afterbegin", templateNovoResultadoEsperado);
+      } else {
+        const elementoDescartado = document.getElementById("create_new_resultado_" + dimensao + "_" + processo);
+        elementoDescartado.remove();
+      }
+    }
+  </script>
+
+
+
+
+  <!-- Scripts ja existentes que por algum motivo seguram a página funcionando -->
+  <script>
     function show_todos_processos(form_id,dimensao){
-      
       if((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-plus")){
         document.getElementById(`dimensao_child_`+dimensao).classList.remove('hidden');
         document.getElementById(form_id).classList.remove('icon-plus');
@@ -575,43 +343,7 @@
       }
     }
 
-    function show_resultado(form_id,processo){
-      
-      if (form_id == "cancelar_form_resultado_esperado"+processo){
-        
-        var classExcluir = `#form_resultado_esperado_novo_clone`+processo;
-        document.querySelector(classExcluir).remove();
-        document.getElementById(`form_resultado_esperado_`+processo).classList.add("hidden");
-      } else if(form_id == `abrir_form_resultado_esperado_`+processo){
-        
-        var element = document.getElementById(`form_resultado_esperado_novo_clone`+processo);
-        var element2 = document.getElementById(`form_salvar_processo_novo_clone`+processo);
-
-        if(!element && !element2){
-        
-          var temp = document.getElementById('form_processo_novo');
-          var tempClone = temp.cloneNode(true);
-          tempClone.classList.remove('hidden');
-          tempClone.classList.add(`form_resultado_esperado_novo_clone`+processo);
-          var destino = `form_resultado_esperado_`+processo;
-          document.getElementById(destino).classList.remove('hidden');
-          var tempDestiny = document.getElementById(destino);
-          tempClone.id = `form_resultado_esperado_novo_clone`+processo;
-          tempClone.getElementsByClassName("inputDimensao")[0].value = processo;
-          tempClone.getElementsByClassName("inputDimensao")[0].name = "processo_id"
-          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.onclick.value = `show_resultado(this.id,`+processo+`)`;
-          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.id.value = `cancelar_form_resultado_esperado`+processo;
-          tempClone.getElementsByClassName("form-group")[0].parentElement.attributes[0].nodeValue = `/cadastroResultado/incluir_resultado`;
-          tempDestiny.appendChild(tempClone);
-          addEventListenerToForm();
-
-        }
-
-      }
-    }
-
     function show_todos_resultados(form_id,processo){
-      
       if((form_id == (`processo_`+processo+`_icon`)) && (document.getElementById(form_id).classList == "icon-plus abrir_form_resultado_esperado")){
         document.getElementById(`processo_child_`+processo).classList.remove('hidden');
         document.getElementById(form_id).classList.remove('icon-plus');
@@ -627,109 +359,9 @@
       }
     }
 
-    function show_processo_salvar(form_id,dimensao,descricao){
-      if (form_id == `cancelar_form_processo`+dimensao){
-        var classExcluir = `#form_salvar_processo_novo_clone`+dimensao;
-        document.querySelector(classExcluir).remove();
-        document.getElementById(`form_resultado_esperado_`+dimensao).classList.add("hidden");
-      
-      } else if(form_id == `abrir_salvar_processo_`+dimensao){
-        
-        var element = document.getElementById(`form_salvar_processo_novo_clone`+dimensao);
-        var element2 = document.getElementById(`form_resultado_esperado_novo_clone`+dimensao);
-
-        if(!element && !element2){
-        
-          var temp = document.getElementById('form_processo_novo');
-          var tempClone = temp.cloneNode(true);
-          tempClone.classList.remove('hidden');
-          tempClone.classList.add(`form_processo_novo_clone`+dimensao);                    
-          var destino = `form_resultado_esperado_`+dimensao;
-          document.getElementById(destino).classList.remove('hidden');
-          var tempDestiny = document.getElementById(destino);
-          tempClone.id = `form_salvar_processo_novo_clone`+dimensao;
-          tempClone.getElementsByClassName("inputDimensao")[0].remove();
-          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.onclick.value = `show_processo_salvar(this.id,`+dimensao+`)`;
-          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.id.value = `cancelar_form_processo`+dimensao;
-          tempClone.getElementsByClassName("form-group")[0].parentElement.attributes[0].nodeValue = `/cadastroProcesso/`+dimensao+`/salvar_processo`;
-          tempClone.getElementsByClassName("inputDescricao")[0].value = descricao;
-          tempClone.getElementsByClassName("hero-form-cadastrar")[0].innerHTML = "Salvar";
-          tempDestiny.appendChild(tempClone);
-          addEventListenerToForm();
-        }
-      }
-    }
-
-    function show_dimensao_salvar(form_id,dimensao,descricao){
-      if (form_id == `cancelar_form_dimensao`+dimensao){
-
-        var classExcluir = `#form_salvar_dimensao_novo_clone`+dimensao;
-        document.querySelector(classExcluir).remove();
-        document.getElementById(`form_processo_`+dimensao).classList.add("hidden");
-      
-      } else if(form_id == `abrir_salvar_dimensao_`+dimensao){
-        
-        var element = document.getElementById(`form_salvar_dimensao_novo_clone`+dimensao);
-        var element2 = document.getElementById(`form_processo_novo_clone`+dimensao);
-
-        if(!element && !element2){
-        
-          var temp = document.getElementById('form_dimensao_novo');
-          var tempClone = temp.cloneNode(true);
-          tempClone.classList.remove('hidden');
-          tempClone.classList.add(`form_dimensao_novo_clone`+dimensao);                    
-          var destino = `form_processo_`+dimensao;
-          document.getElementById(destino).classList.remove('hidden');
-          var tempDestiny = document.getElementById(destino);
-          tempClone.id = `form_salvar_dimensao_novo_clone`+dimensao;
-          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.onclick.value = `show_dimensao_salvar(this.id,`+dimensao+`)`;
-          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.id.value = `cancelar_form_dimensao`+dimensao;
-          tempClone.getElementsByClassName("form-group")[0].parentElement.attributes[0].nodeValue = `/cadastro/`+dimensao+`/salvar_dimensao`;
-          tempClone.getElementsByClassName("inputDescricao")[0].value = descricao;
-          tempClone.getElementsByClassName("hero-form-cadastrar")[0].innerHTML = "Salvar";
-          tempDestiny.appendChild(tempClone);
-          addEventListenerToForm();
-        }
-      }
-    }
-
-    function show_resultado_esperado_salvar(form_id,dimensao,descricao){
-      if (form_id == `cancelar_form_resultado_esperado`+dimensao){
-
-        var classExcluir = `#form_salvar_resultado_esperado_novo_clone`+dimensao;
-        document.querySelector(classExcluir).remove();
-        document.getElementById(`form_resultado_esperado_salvar_`+dimensao).classList.add("hidden");
-      
-      } else if(form_id == `abrir_salvar_resultado_esperado_`+dimensao){
-        
-        var element = document.getElementById(`form_salvar_resultado_esperado_novo_clone`+dimensao);
-
-        if(!element){
-        
-          var temp = document.getElementById('form_resultado_esperado_novo');
-          var tempClone = temp.cloneNode(true);
-          tempClone.classList.remove('hidden');
-          tempClone.classList.add(`form_resultado_esperado_novo_clone`+dimensao);                    
-          var destino = `form_resultado_esperado_salvar_`+dimensao;
-          document.getElementById(destino).classList.remove('hidden');
-          var tempDestiny = document.getElementById(destino);
-          tempClone.id = `form_salvar_resultado_esperado_novo_clone`+dimensao;
-          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.onclick.value = `show_resultado_esperado_salvar(this.id,`+dimensao+`)`;
-          tempClone.getElementsByClassName("hero-form-cancelar")[0].attributes.id.value = `cancelar_form_resultado_esperado`+dimensao;
-          tempClone.getElementsByClassName("form-group")[0].parentElement.attributes[0].nodeValue = `/cadastroResultado/`+dimensao+`/salvar_resultado`;
-          tempClone.getElementsByClassName("inputDescricao")[0].value = descricao;
-          tempClone.getElementsByClassName("hero-form-cadastrar")[0].innerHTML = "Salvar";
-          tempDestiny.appendChild(tempClone);
-          addEventListenerToForm();
-        }
-      }
-    }    
-    
     $(document).ready(function(){
-
       $(".header-select #maturidade_id").change(function(){
         var opcaoSelecionada = this.value;
-        
         axios.post("/cadastro/atualizar_opcao", { opcao: opcaoSelecionada })
         .then(function(response) {
           // Lógica para sucesso na resposta
@@ -741,7 +373,6 @@
           // Lógica para erro na resposta
           console.error(error);
         });
-
       });
       if(document.getElementById("mudancaResultado")) {
         var test = document.getElementById("mudancaResultado");
@@ -755,16 +386,11 @@
             elementos[i].nextElementSibling.nextElementSibling.nextElementSibling.remove();
           }
         }
-        }
+      }
     });
 
     function submitForm(selectElement) {
       var form = selectElement.closest("form");
       form.submit();
     }
-    
-
-
   </script>
-</body>
-</html>

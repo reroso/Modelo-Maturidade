@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get "/cadastroDominio", to: "cadastro#indexDominio"
   get "/aplicar", to: "aplicar#index"
   get "/cadastroModeloAplicado", to: "aplicar#indexModeloAplicado"
+  get "/visualizar", to: "visualizar#index"
 
   #dimensaos
 
@@ -60,5 +61,6 @@ Rails.application.routes.draw do
   
   post "cadastro/atualizar_opcao", to:"cadastro#atualizar_opcao"
   post "aplicar/atualizar_opcao", to:"aplicar#atualizar_opcao"
+  post "visualizar/atualizar_opcao", to:"visualizar#atualizar_opcao"
 end
 

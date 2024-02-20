@@ -1,17 +1,82 @@
+<% 
+  @valor_personalizado = case controller_name
+    when 'main_screen'
+      'Cadastro de Modelo'
+    when 'cadastro'
+      'Cadastro de Estrutura'
+    when 'aplicar'
+      'Utilizar modelo'
+    else 
+      'Visualizar Maturidade'
+    end
+%>
+
 <!DOCTYPE html>
 <html>
   <head>
-    <title>ModeloMaturidade</title>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Modelo de Maturidade</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <% case controller_name
+        when 'main_screen' %>
+          <%= stylesheet_link_tag 'cadastrar_modelo.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%  when 'cadastro' %>
+          <%= stylesheet_link_tag 'utilizar_modelo.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+          <%= stylesheet_link_tag 'cadastrar_estrutura.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%  when 'aplicar' %>
+          <%= stylesheet_link_tag 'utilizar_modelo.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%  when 'visualizar' %>
+          <%= stylesheet_link_tag 'utilizar_modelo.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <% end %>
+
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
   
   <body>
+
+  <!-- #Início da Barra lateral -->
+  <aside class="base-sidebar h-100">
+    <div class="aside-buttons w-100 h-fit">
+      <button onclick="location.href='/main_screen'" class="aside-button w-100">Cadastrar Modelo</button>
+      <button onclick="location.href='/cadastro'" class="aside-button w-100">Cadastrar Estrutura</button>
+      <button onclick="location.href='/aplicar'" class="aside-button w-100">Utilizar Modelo</button>
+      <button onclick="location.href='/visualizar'" class="aside-button w-100">Visualizar Modelo</button>
+    </div>
+  </aside>
+  <!-- # Fim da Barra lateral -->
+  
+  <!-- #Início do Main -->
+  <main>
+  <!-- #Início do cabeçalho do main -->
+    <header class="base-main-header d-flex-center-between">
+      <div class="header-title d-flex-center-start h-100">
+        <div class="header-title-text header-select d-flex-center-start">
+          <h2><%= @valor_personalizado %></h2>
+
+
     <%= yield %>
+    
+
+    <!-- #Mostrar Modal de informações sobre a página: -->
+    <script>
+      function showModalInfos() {
+        let modalInfos = document.getElementById('infos_modal');
+      
+        if(modalInfos.classList.contains('hidden'))
+          modalInfos.classList.remove('hidden');
+        else
+          modalInfos.classList.add('hidden');
+      }
+    </script>
+    
+
   </body>
 </html>
-
-

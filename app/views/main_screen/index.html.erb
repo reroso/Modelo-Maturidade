@@ -1,372 +1,220 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset='utf-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <title>Modelo de Maturidade</title>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-
-  <!-- Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome@3.2.1/css/font-awesome.min.css" rel="stylesheet">
-  <style>
-    body {
-        background-color: #8eb729;
-        margin: 0;
-    }
-    main {
-        display: -webkit-box; 
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex; 
-        display: flex;
-    }
-
-    .hidden {
-        display: none!important;
-    }
-
-    .main-left {
-        width: 15%;
-        display: -webkit-box; 
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex; 
-        display: flex;
-        flex-direction: column;
-        align-items: end;
-    }
-    .nav-bar {
-        width: 80%;
-        height: fit-content;
-        padding: 5px 0 0 0;
-        margin: 4.5vw 0 0 0 ;
-        background-color: white;
-        border-radius: 6px;
-        border-radius: 6px 0 0 6px;
-        display: -webkit-box; 
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex; 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-evenly;
-    }
-    .nav-bar-cadastrar-modelo, .nav-bar-escolher-modelo {
-        width: 100%;
-        padding: 0.25vw;
-        border: 0;
-        border-radius: 5px;
-        color: white;
-        margin-bottom: 5px;
-    }
-    .nav-bar-cadastrar-modelo {
-        background: -webkit-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
-        background: -o-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
-        background: -moz-linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
-        background: linear-gradient(180deg, #d4aa0d 50%, #bf9b15 50%);
-    }
-    .nav-bar-escolher-modelo {
-        background: -webkit-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
-        background: -o-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
-        background: -moz-linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
-        background: linear-gradient(180deg, #9f100f 50%, #8f1110 50%);
-    }
-
-    .main-right {
-        width: 85%;
-        padding: 1vw 1.5vw 1.5vw 0;
-    }
-    .main-right-header {
-        height: 3.5vw;
-        background: rgb(227,227,227);
-        background: linear-gradient(180deg, rgba(227,227,227,1) 0%, rgba(236,236,236,1) 52%, rgba(204,204,204,1) 100%);
-        display: -webkit-box; 
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex; 
-        display: flex;
-        align-items: center;
-        padding: 0 2vw 0 1vw;
-        justify-content: space-between;
-        border-radius: 0 15px 0 0 ; 
-    }
-
-    .header-title-wrapper {
-        display: -webkit-box; 
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex; 
-        display: flex;
-        align-items: center;
-    }
-    .header-title-h2 {
-        margin-right: 0.8vw;
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-    #modelo_maturidade {
-        height: 26px;
-        width: 100px;
-        border: 1px solid white;
-        border-radius: 2px;
-    }
-
-    .header-cadastrar {
-        margin-left: auto;
-        background-color: white;
-        height: 65%;
-        width: 14vw;
-        border-radius: 6px;
-        display: -webkit-box; 
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex; 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .header-cadastrar-btn {
-        border: white;
-        background-color: white;
-        font-size: 0.85rem;
-        color: #5e7e0f;
-    }
-    .header-cadastrar-btn i {
-        margin-right: 0.4vw;
-        color: #5e7e0f!important;
-    }
-    .main-right-hero {
-        padding: 1vw 1.2vw 0.8vw 1.2vw;
-        background-color: white;
-        display: -webkit-box; 
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex; 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .hero-form, .dimensao-form, .processo-form, .resultado-esperado-form {
-        background-color: #f7f7f7;
-        width: 100%;
-        padding: 1vw 0;
-        border-radius: 8px;
-        display: -webkit-box; 
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex; 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .hero-form form, .dimensao-form form, .processo-form form, .resultado-esperado-form form {
-        width: 30vw;
-        padding: 1vw 1.2vw .5vw 1.2vw;
-        display: -webkit-box; 
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex; 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-    }
-    .form-group {
-        margin-bottom: 0.5vw;
-    }
-    .form-group input {
-        width: 25vw;
-        height: 1.6vw;
-        border: 1px solid #cccccc!important;
-        border-radius: 3px;
-    }
-    .main-right-main {
-        padding: 1vw 1.2vw 2.5vw 1.2vw;
-        background-color: white;
-    }
-
-    label{
-        margin-bottom: 15px;
-        display: inline-block;
-    }
-    textarea{
-        margin-bottom: 15px;
-        display: inline-block;
-        display: block;
-    }
-    input[type=text]{
-        display: block;
-    }
-    H3{
-        margin-bottom: 15px;
-        display: inline-block;
-    }
-    .btn-submit {
-        margin-top: 5px;
-        color: #ffffff;
-        background-color: #365e02;
-        font-size: 15px;
-        border: 1px solid #365e02;
-        padding: 15px 50px;
-        cursor: pointer
-    }
-
-  </style>
-
-</head>
-<body>
-  <main>
-    <!-- Parte Esquerda -->
-    <section class="main-left">
-      <div class="nav-bar">
-        <a style="width: 96%;"href="/main_screen"><button class="btn nav-bar-cadastrar-modelo" >Cadastrar Modelo</button></a>
-        <a style="width: 96%;"href="/cadastro"><button class="btn nav-bar-escolher-modelo" >Cadastrar Estrutura</button></a>
-        <a style="width: 96%;"href="/aplicar"><button class="btn nav-bar-cadastrar-modelo" >Utilizar Modelo</button></a>
-      </div>
-    </section>
-
-    <!-- Parte Direita -->
-    <section class="main-right">
-
-      <!-- Cabeçalho Modelo -->
-      <div class="main-right-header">
-        <div class="header-title-wrapper">
-          <div class="header-title">
-            <h2 class="header-title-h2">Cadastrar Modelo</h2>
-          </div>
-          <div class="header-select">
-          </div>
+    </div>
+    <button onclick="showModalInfos()" class="header-title-info d-flex-center-center h-100">
+        <%= image_tag('icons/info.svg', width: '25px', height: '25px') %>
+    </button>
+    </div>
+    <div class="header-links d-flex-center-start h-100 w-fit">
+    <div class="header-links-wrapper d-flex-center-center">
+        <div class="header-link d-flex-center-start h-fit">
+        <%= image_tag('icons/folder_full.svg', width: '20px', height: '20px') %>
+        <a href="#">Modelo Salvo 01</a>
         </div>
-      </div>
-
-      <!--x Corpo do Modelo Atual -->
-      <div class="main-right-main">
-        <!--x Dimenção -->
-        <div class="main-expand dimensao">
-            <form action="/cadastroMaturidade/incluir_maturidade" method="post">  
-                <label>Nome</label>
-                
-                <input type="text" name="nome" aria-label="Recipient's username" aria-describedby="button-addon2"><br>
-                
-                <label>Descrição</label>
-                
-                <textarea id="w3review" name="descricao" rows="4" cols="50"></textarea>
-                
-                <div>
-                    <h3>Selecione o tipo de nível do modelo</h3><br>
-                    <input type="radio" id="tipo_nivel_numerico" name="tipo_nivel" value="1" > 
-                    <label>Numerico</label><br>
-                    <input type="radio" id="tipo_nivel_alfanumerico" name="tipo_nivel" value="2" >
-                    <label style="margin-bottom: 3px;">Alfanumerico</label><br>
-                    <h3>Escolha a range do nível do modelo</h3>
-                    <input type="text" name="tipoNivel" class="tipo_nivel hidden" value="1"><br>
-                    <label>Menor Nivel</label>
-                    <input type="text" name="menorNivel" aria-label="Recipient's username" aria-describedby="button-addon2"><br>
-                    <label>Maior Nivel</label>
-                    <input type="text" name="maiorNivel" aria-label="Recipient's username" aria-describedby="button-addon2">
-                </div>
-
-                <div>
-                    <h3>O modelo vai possuir resultados esperados ?</h3><br>
-                        <input type="radio" id="escolha_resultado_sim" name="resultado_escolha" value="1">
-                        <label>Não</label><br>
-                        <input type="radio" id="escolha_resultado_nao" name="resultado_escolha" value="2">
-                        <label style="margin-bottom: 3px;">Sim</label><br>
-                        <input type="text" name="resultadoEscolha" class="resultado_escolha hidden" value="1">
-                </div>
-                
-                <div id="nivel_escolha" class="hidden">
-                    <h3>Escolha quem usará o nivel de maturidade: </h3><br>
-                        <input type="radio" id="nivel_processo" name="nivel_escolha" value="1" >
-                        <label>Processos</label><br>
-                        <input type="radio" id="nivel_resultado_esperado" name="nivel_escolha" value="2" >
-                        <label>Resultados Esperados</label><br>
-                        <input type="text" name="nivelEscolha" class="nivel_escolha hidden" value="1">
-                </div>
-                <button class="btn-submit" type="submit" id="button-addon2">Cadastrar</button>
-            </form>
+        <div class="header-link d-flex-center-start h-fit">
+        <%= image_tag('icons/folder_full.svg', width: '20px', height: '20px') %>
+        <a href="#">Modelo Salvo 02</a>
         </div>
-      </div> 
-    </section>
-  </main>
-  
-  <script>
-   
-
-   var escolha_sim =  document.getElementById("escolha_resultado_sim");
-   var escolha_nao =  document.getElementById("escolha_resultado_nao");
-   var nivel_processo = document.getElementById("nivel_processo");
-   var nivel_resultado_esperado = document.getElementById("nivel_resultado_esperado");   
-   var tipo_nivel_numerico = document.getElementById("tipo_nivel_numerico");     
-   var tipo_nivel_alfanumerico = document.getElementById("tipo_nivel_alfanumerico");
-
-    escolha_sim.addEventListener("click",function(){
-        if(escolha_sim.checked){
-            resultado_escolha(1); 
-        }
-    })
-
-    escolha_nao.addEventListener("click",function(){
-        if(escolha_nao.checked){
-            resultado_escolha(2); 
-        }
-    })
-
-    nivel_processo.addEventListener("click",function(){
-        if(nivel_processo.checked){
-            nivel_escolha(1); 
-        }
-    })
-
-    nivel_resultado_esperado.addEventListener("click",function(){
-        if(nivel_resultado_esperado.checked){
-            nivel_escolha(2); 
-        }
-    })
-    
-    tipo_nivel_numerico.addEventListener("click",function(){
-        if(tipo_nivel_numerico.checked){
-            tipo_nivel(1); 
-        }
-    })
-
-    tipo_nivel_alfanumerico.addEventListener("click",function(){
-        if(tipo_nivel_alfanumerico.checked){
-            tipo_nivel(2); 
-        }
-    })
+        <div class="header-link d-flex-center-start h-fit">
+        <%= image_tag('icons/folder_full.svg', width: '20px', height: '20px') %>
+        <a href="#">Modelo Salvo 03</a>
+        </div>
+    </div>
+    </div>
+</header>
+<!-- #Fim do cabeçalho do main -->
 
 
-    function resultado_escolha(escolha){
-        if(escolha == "2"){
-            document.getElementById("nivel_escolha").classList.remove("hidden");
-            document.getElementsByClassName("resultado_escolha")[0].value = 2;
-        } else if(escolha == "1"){
-            document.getElementById("nivel_escolha").classList.add("hidden");
-            document.getElementById("nivel_processo").checked = true;
-            document.getElementById("nivel_resultado_esperado").checked = false;
-            document.getElementsByClassName("nivel_escolha")[0].value = 1;
-            document.getElementsByClassName("resultado_escolha")[0].value = 1;
-        }
+<!-- #Início do conteúdo central -->
+<section class="main-content">
+    <form method="post" action="/cadastroMaturidade/incluir_maturidade" class="d-flex-center-between w-100">
+        <!-- #Input "Nome"  -->
+        <div class="main-name d-flex-stretch-start flex-column w-100">
+        <label for="idName">Nome</label>
+        <input type="text" id="idName" name="nome"/>
+        </div>
+
+        <!-- #Input "descrição"  -->
+        <div class="main-desc d-flex-stretch-start flex-column w-100">
+        <label for="idDesc">Descrição</label>
+        <textarea  id="idDesc" name="descricao"></textarea>
+        </div>
+
+        <!-- #Input "Nível do Modelo"  -->
+        <div class="main-level w-100">
+        <div class="form-title-wrapper w-100 h-fit">
+            <h3>Selecione o tipo de nível do modelo</h3>
+        </div>
+        <input type="radio" id="tipo_nivel_numerico" name="tipo_nivel" value="1" checked> 
+            <label for="tipo_nivel_numerico">Numérico</label>
+        <input type="radio" id="tipo_nivel_alfanumerico" name="tipo_nivel" value="2"> 
+            <label for="tipo_nivel_alfanumerico">Alfanumérico</label>
+        </div>
+
+        <!-- #Input "Range do Nível do Modelo"  -->
+        <div class="main-range w-100">
+        <div class="form-title-wrapper w-100 h-fit">
+            <h3>Escolha a range do nível do modelo</h3>
+        </div>
+        <div class="main-range-wrapper d-flex-stretch-start">
+            <input type="text" name="tipoNivel" class="tipo_nivel hidden" value="1"><br>  <!-- #Hidden-->
+            <!-- #Menor Range  -->
+            <div class="form-range-control d-flex-stretch-start flex-column w-25">
+            <label for="idLowRange">Menor Nivel</label>
+            <input type="text" id="idMenorNivel" name="menorNivel" />
+            </div>
+            <!-- #Maior Range  -->
+            <div class="form-range-control d-flex-stretch-start flex-column w-25">
+            <label for="idHighRange">Maior Nivel</label>
+            <input type="text" id="idMaiorNivel" name="maiorNivel" />
+            </div>
+        </div>
+        </div>
+
+        <!-- #Input "Resultados esperados"  -->
+        <div class="main-result w-100">
+        <div class="form-title-wrapper w-100 h-fit">
+            <h3>O modelo vai possuir resultados esperados ?</h3>
+        </div>
+        <input type="radio" id="escolha_resultado_sim" name="resultado_escolha" value="1" checked>
+            <label for="escolha_resultado_sim">Não</label>
+        <input type="radio" id="escolha_resultado_nao" name="resultado_escolha" value="2"> 
+            <label for="escolha_resultado_nao">Sim</label>
+        <input type="text" name="resultadoEscolha" class="resultado_escolha hidden" value="1">  <!-- #Hidden-->
+        </div>
+
+        <!-- #Input "Quem usará o nível"  -->
+        <div class="main-who  w-100 hidden" id="nivel_escolha">  
+        <div class="form-title-wrapper w-100 h-fit">
+            <h3>Escolha quem usará o nivel de maturidade:</h3>
+        </div>
+        <input type="radio" id="nivel_processo" name="nivel_escolha" value="1" checked> 
+            <label for="nivel_processo">Processos</label>
+        <input type="radio" id="nivel_resultado_esperado" name="nivel_escolha" value="2"> 
+            <label for="nivel_resultado_esperado">Resultados Esperados</label>
+        <input type="text" name="nivelEscolha" class="nivel_escolha hidden" value="1">  <!-- #Hidden-->
+        </div>
+
+        
+        <div class="main-button d-flex-center-center w-100">
+        <button type="submit">Cadastrar</button>
+        </div>
+
+    </form>
+
+</section>
+<!-- #Fim do conteúdo central -->
+</main>
+<!-- #Início do Main -->
+
+
+<section id="infos_modal" class="infos-modal d-flex-center-center hidden">
+<div class="infos-modal-main">
+    <div class="infos-modal-main-header d-flex-center-between">
+    <h1>Ajuda - Cadastrar Modelo</h1>
+    <button onclick="showModalInfos()" class="infos-modal-main-header-close">X</button>
+    </div>
+    <div class="infos-modal-main-center">
+    <h3><strong>01 - </strong>Dados Principais:</h3>
+    <hr>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod posuere arcu, nec egestas dolor consequat at. Donec nec ligula feugiat, porta leo vulputate, dictum leo. Cras sodales, nunc eu congue aliquam, quam sapien mollis nunc, venenatis suscipit arcu nibh ac ipsum. Quisque id lacus elit. Cras sagittis sollicitudin lobortis. Donec nunc mauris, condimentum id tincidunt id, rutrum sed libero. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris sollicitudin gravida euismod. Donec quam odio, fermentum tincidunt faucibus ac, suscipit non augue. Nunc ultricies leo ut arcu consectetur, id tincidunt odio sodales. Fusce in diam mauris. Vestibulum mollis, magna a vulputate pretium, quam ante tempus nisl, id venenatis est neque vitae est. Nullam tempor blandit justo, ac dignissim enim blandit non.
+    </p>
+    <h3><strong>02 - </strong>Escolhendo o modelo a ser utilizado:</h3>
+    <hr>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod posuere arcu, nec egestas dolor consequat at. Donec nec ligula feugiat, porta leo vulputate, dictum leo. Cras sodales, nunc eu congue aliquam, quam sapien mollis nunc, venenatis suscipit arcu nibh ac ipsum. Quisque id lacus elit. Cras sagittis sollicitudin lobortis. Donec nunc mauris, condimentum id tincidunt id, rutrum sed libero. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris sollicitudin gravida euismod. Donec quam odio, fermentum tincidunt faucibus ac, suscipit non augue. Nunc ultricies leo ut arcu consectetur, id tincidunt odio sodales. Fusce in diam mauris. Vestibulum mollis, magna a vulputate pretium, quam ante tempus nisl, id venenatis est neque vitae est. Nullam tempor blandit justo, ac dignissim enim blandit non.
+    </p>
+    <h3><strong>03 - </strong>Tipo de nível de maturidade:</h3>
+    <hr>
+    <p>
+        Nam imperdiet elementum felis, eget dictum velit ullamcorper quis. Aenean dui justo, accumsan at nulla non, semper dignissim metus. Nam dictum augue et nisl varius tempus. Duis vel maximus massa. Donec lacinia quam id interdum porta. Maecenas ultricies, enim ac ultricies consectetur, mi urna viverra mauris, quis vestibulum felis magna luctus massa. Donec semper lobortis tempor. Morbi hendrerit, ipsum id aliquet dapibus, magna nisi iaculis elit, sed pulvinar libero augue vel ex. Proin iaculis est lacus, a ultrices arcu volutpat non. Integer sodales metus et eros fermentum, eget eleifend augue molestie. Pellentesque id pulvinar sapien. Vestibulum orci nisi, venenatis et arcu at, vehicula viverra mauris.
+    </p>  
+    <h3><strong>04 - </strong>Range do nível do modelo:</h3>
+    <hr>
+    <p>
+        Donec vulputate quam neque, nec egestas nibh maximus pharetra. Donec ut lorem est. Phasellus libero magna, facilisis a rutrum vel, dapibus nec turpis. Duis congue pretium tortor, vel elementum quam blandit in. Pellentesque metus justo, porttitor vitae feugiat eget, aliquet id purus. Proin commodo efficitur nunc volutpat luctus. Fusce in purus sodales, dictum enim quis, malesuada ex. In sit amet ornare justo. Morbi feugiat ligula eget euismod porttitor. Quisque est odio, varius et accumsan consectetur, euismod id erat. Etiam ullamcorper ultricies ligula at malesuada.
+    </p>
+    <h3><strong>05 - </strong>Resultados esperados:</h3>
+    <hr>
+    <p>
+        Vivamus aliquam dui vel venenatis congue. Morbi eu luctus felis. Curabitur condimentum, risus sed feugiat ullamcorper, justo nulla varius enim, in imperdiet ex mauris et erat. Vestibulum malesuada interdum blandit. Morbi dictum erat sit amet nibh fermentum pharetra. Morbi fermentum augue lorem, at scelerisque mi lacinia ut. Fusce ut consequat lectus. Pellentesque viverra nec purus eget sodales. Fusce sodales turpis in ligula tincidunt vestibulum. In sed lectus quam. Vivamus vel tellus nisl. Suspendisse semper lacus tellus, at vulputate ipsum accumsan nec. Etiam ac leo lectus.
+    </p>
+    <h3><strong>06 - </strong>Nivel de maturidade:</h3>
+    <hr>
+    <p>
+        Vivamus aliquam dui vel venenatis congue. Morbi eu luctus felis. Curabitur condimentum, risus sed feugiat ullamcorper, justo nulla varius enim, in imperdiet ex mauris et erat. Vestibulum malesuada interdum blandit. Morbi dictum erat sit amet nibh fermentum pharetra. Morbi fermentum augue lorem, at scelerisque mi lacinia ut. Fusce ut consequat lectus. Pellentesque viverra nec purus eget sodales. Fusce sodales turpis in ligula tincidunt vestibulum. In sed lectus quam. Vivamus vel tellus nisl. Suspendisse semper lacus tellus, at vulputate ipsum accumsan nec. Etiam ac leo lectus.
+    </p>
+    </div>
+    <div class="infos-modal-main-footer d-flex-center-end">
+    <button onclick="showModalInfos()" class="infos-modal-main-footer-voltar">Voltar</button>
+    </div>
+</div>
+</section>
+
+
+<!--# Função de expandir e retrair opção de resultados esperados no cadastro de modelo:-->
+<script>
+var escolha_sim = document.getElementById("escolha_resultado_sim");
+var escolha_nao = document.getElementById("escolha_resultado_nao");
+var nivel_processo = document.getElementById("nivel_processo");
+var nivel_resultado_esperado = document.getElementById("nivel_resultado_esperado");
+var tipo_nivel_numerico = document.getElementById("tipo_nivel_numerico");
+var tipo_nivel_alfanumerico = document.getElementById("tipo_nivel_alfanumerico");
+
+escolha_sim.addEventListener("click", function () {
+    if (escolha_sim.checked) {
+    resultado_escolha(1);
     }
-                            
-    function nivel_escolha(escolha){
-        if(escolha == "2"){
-            document.getElementsByClassName("nivel_escolha")[0].value = 2;
-        }else if(escolha == "1"){
-            document.getElementsByClassName("nivel_escolha")[0].value = 1;
-        }
+})
+escolha_nao.addEventListener("click", function () {
+    if (escolha_nao.checked) {
+    resultado_escolha(2);
     }
-    
-    function tipo_nivel(escolha){
-        if(escolha == "2"){
-            document.getElementsByClassName("tipo_nivel")[0].value = 2;
-        }else if(escolha == "1"){
-            document.getElementsByClassName("tipo_nivel")[0].value = 1;
-        }
+})
+nivel_processo.addEventListener("click", function () {
+    if (nivel_processo.checked) {
+    nivel_escolha(1);
     }
-    
-  </script>
-</body>
-</html>
+})
+nivel_resultado_esperado.addEventListener("click", function () {
+    if (nivel_resultado_esperado.checked) {
+    nivel_escolha(2);
+    }
+})
+tipo_nivel_numerico.addEventListener("click", function () {
+    if (tipo_nivel_numerico.checked) {
+    tipo_nivel(1);
+    }
+})
+tipo_nivel_alfanumerico.addEventListener("click", function () {
+    if (tipo_nivel_alfanumerico.checked) {
+    tipo_nivel(2);
+    }
+})
+function resultado_escolha(escolha) {
+    if (escolha == "2") {
+    document.getElementById("nivel_escolha").classList.remove("hidden");
+    document.getElementsByClassName("resultado_escolha")[0].value = 2;
+    } else if (escolha == "1") {
+    document.getElementById("nivel_escolha").classList.add("hidden");
+    document.getElementById("nivel_processo").checked = true;
+    document.getElementById("nivel_resultado_esperado").checked = false;
+    document.getElementsByClassName("nivel_escolha")[0].value = 1;
+    document.getElementsByClassName("resultado_escolha")[0].value = 1;
+    }
+}
+function nivel_escolha(escolha) {
+    if (escolha == "2") {
+    document.getElementsByClassName("nivel_escolha")[0].value = 2;
+    } else if (escolha == "1") {
+    document.getElementsByClassName("nivel_escolha")[0].value = 1;
+    }
+}
+
+function tipo_nivel(escolha) {
+    if (escolha == "2") {
+    document.getElementsByClassName("tipo_nivel")[0].value = 2;
+    } else if (escolha == "1") {
+    document.getElementsByClassName("tipo_nivel")[0].value = 1;
+    }
+}
+</script>
