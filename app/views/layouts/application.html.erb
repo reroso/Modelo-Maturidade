@@ -61,9 +61,51 @@
         <div class="header-title-text header-select d-flex-center-start">
           <h2><%= @valor_personalizado %></h2>
 
-
     <%= yield %>
     
+    <section id="infos_modal" class="infos-modal d-flex-center-center hidden">
+      <div class="infos-modal-main">
+          <div class="infos-modal-main-header d-flex-center-between">
+          <h1>Ajuda - Cadastrar Modelo</h1>
+          <button onclick="showModalInfos()" class="infos-modal-main-header-close">X</button>
+          </div>
+          <div class="infos-modal-main-center">
+          <h3><strong>01 - </strong>Dados Principais:</h3>
+          <hr>
+          <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod posuere arcu, nec egestas dolor consequat at. Donec nec ligula feugiat, porta leo vulputate, dictum leo. Cras sodales, nunc eu congue aliquam, quam sapien mollis nunc, venenatis suscipit arcu nibh ac ipsum. Quisque id lacus elit. Cras sagittis sollicitudin lobortis. Donec nunc mauris, condimentum id tincidunt id, rutrum sed libero. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris sollicitudin gravida euismod. Donec quam odio, fermentum tincidunt faucibus ac, suscipit non augue. Nunc ultricies leo ut arcu consectetur, id tincidunt odio sodales. Fusce in diam mauris. Vestibulum mollis, magna a vulputate pretium, quam ante tempus nisl, id venenatis est neque vitae est. Nullam tempor blandit justo, ac dignissim enim blandit non.
+          </p>
+          <h3><strong>02 - </strong>Escolhendo o modelo a ser utilizado:</h3>
+          <hr>
+          <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod posuere arcu, nec egestas dolor consequat at. Donec nec ligula feugiat, porta leo vulputate, dictum leo. Cras sodales, nunc eu congue aliquam, quam sapien mollis nunc, venenatis suscipit arcu nibh ac ipsum. Quisque id lacus elit. Cras sagittis sollicitudin lobortis. Donec nunc mauris, condimentum id tincidunt id, rutrum sed libero. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris sollicitudin gravida euismod. Donec quam odio, fermentum tincidunt faucibus ac, suscipit non augue. Nunc ultricies leo ut arcu consectetur, id tincidunt odio sodales. Fusce in diam mauris. Vestibulum mollis, magna a vulputate pretium, quam ante tempus nisl, id venenatis est neque vitae est. Nullam tempor blandit justo, ac dignissim enim blandit non.
+          </p>
+          <h3><strong>03 - </strong>Tipo de nível de maturidade:</h3>
+          <hr>
+          <p>
+              Nam imperdiet elementum felis, eget dictum velit ullamcorper quis. Aenean dui justo, accumsan at nulla non, semper dignissim metus. Nam dictum augue et nisl varius tempus. Duis vel maximus massa. Donec lacinia quam id interdum porta. Maecenas ultricies, enim ac ultricies consectetur, mi urna viverra mauris, quis vestibulum felis magna luctus massa. Donec semper lobortis tempor. Morbi hendrerit, ipsum id aliquet dapibus, magna nisi iaculis elit, sed pulvinar libero augue vel ex. Proin iaculis est lacus, a ultrices arcu volutpat non. Integer sodales metus et eros fermentum, eget eleifend augue molestie. Pellentesque id pulvinar sapien. Vestibulum orci nisi, venenatis et arcu at, vehicula viverra mauris.
+          </p>  
+          <h3><strong>04 - </strong>Range do nível do modelo:</h3>
+          <hr>
+          <p>
+              Donec vulputate quam neque, nec egestas nibh maximus pharetra. Donec ut lorem est. Phasellus libero magna, facilisis a rutrum vel, dapibus nec turpis. Duis congue pretium tortor, vel elementum quam blandit in. Pellentesque metus justo, porttitor vitae feugiat eget, aliquet id purus. Proin commodo efficitur nunc volutpat luctus. Fusce in purus sodales, dictum enim quis, malesuada ex. In sit amet ornare justo. Morbi feugiat ligula eget euismod porttitor. Quisque est odio, varius et accumsan consectetur, euismod id erat. Etiam ullamcorper ultricies ligula at malesuada.
+          </p>
+          <h3><strong>05 - </strong>Resultados esperados:</h3>
+          <hr>
+          <p>
+              Vivamus aliquam dui vel venenatis congue. Morbi eu luctus felis. Curabitur condimentum, risus sed feugiat ullamcorper, justo nulla varius enim, in imperdiet ex mauris et erat. Vestibulum malesuada interdum blandit. Morbi dictum erat sit amet nibh fermentum pharetra. Morbi fermentum augue lorem, at scelerisque mi lacinia ut. Fusce ut consequat lectus. Pellentesque viverra nec purus eget sodales. Fusce sodales turpis in ligula tincidunt vestibulum. In sed lectus quam. Vivamus vel tellus nisl. Suspendisse semper lacus tellus, at vulputate ipsum accumsan nec. Etiam ac leo lectus.
+          </p>
+          <h3><strong>06 - </strong>Nivel de maturidade:</h3>
+          <hr>
+          <p>
+              Vivamus aliquam dui vel venenatis congue. Morbi eu luctus felis. Curabitur condimentum, risus sed feugiat ullamcorper, justo nulla varius enim, in imperdiet ex mauris et erat. Vestibulum malesuada interdum blandit. Morbi dictum erat sit amet nibh fermentum pharetra. Morbi fermentum augue lorem, at scelerisque mi lacinia ut. Fusce ut consequat lectus. Pellentesque viverra nec purus eget sodales. Fusce sodales turpis in ligula tincidunt vestibulum. In sed lectus quam. Vivamus vel tellus nisl. Suspendisse semper lacus tellus, at vulputate ipsum accumsan nec. Etiam ac leo lectus.
+          </p>
+          </div>
+          <div class="infos-modal-main-footer d-flex-center-end">
+          <button onclick="showModalInfos()" class="infos-modal-main-footer-voltar">Voltar</button>
+          </div>
+      </div>
+      </section>
 
     <!-- #Mostrar Modal de informações sobre a página: -->
     <script>

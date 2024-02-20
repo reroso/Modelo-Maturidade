@@ -12,11 +12,12 @@
         
     </button>
     </div>
+    <% vetorResultado = [] %>
     <div class="header-links d-flex-center-start h-100 w-fit">
     <div class="header-links-wrapper d-flex-center-center">
         <div onclick="mostra_CalcularNivel()" class="header-link d-flex-center-start h-fit">
         <img src="https://icons.iconarchive.com/icons/fatcow/farm-fresh/32/calculator-icon.png" width="20" height="20" alt="Calculator Icon">
-        <a href="#">Calcular Nivel</a>
+        <a>Calcular Nivel</a>
         </div>
     </div>
     </div>
@@ -84,10 +85,28 @@
                       <div class="file-galery-wrapper nivel">
                       <div class="table">
                           <div class="table-content">	
-                            <div class="table-row">		
-                                <div class="table-data d-flex-center-start"><a href="#">Artefato-02.xlsx</a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
-                                <div class="table-data d-flex-center-end"><p>Atende parcialmente</p></div>
-                            </div>                  
+                            <% resultado.docs.each do |doc| %>
+                              <div class="table-row">	
+                              <%if doc.classificacao == 3%>
+                                <% vetorResultado.push(menorContador-1) %>
+                              <%end%>	
+                                  <div class="table-data d-flex-center-start"><%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %></a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
+                                  <% if doc.classificacao == 1 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Atende Totalmente</p>
+                                    </div>
+                                  <% elsif doc.classificacao == 2 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Atende parcialmente</p>
+                                    </div>
+                                  <% elsif doc.classificacao == 3 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Não Atende</p>
+                                    </div>
+                                  <% else %>
+                                  <% end %>
+                              </div> 
+                            <% end %>                  
                           </div>	
                       </div>
                       </div>
@@ -109,57 +128,27 @@
 </section>
 </main>
 
+<section class="pop-up-calcularNivel d-flex-center-center hidden" id="popup_CalcularNivel">
+    <div class="popup-main d-flex-center-between flex-column" id="popup_CalcularNivelMain">
+      <div> 
+        <div class="popup-titulo">
+          <h2>O nível deste modelo é <%=vetorResultado[0]%></h2>
+        </div>
+        <div class="popup-padding" style="overflow: hidden;max-height: 80px;">
+          <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris finibus eget metus quis dignissim.Lorem ipsum dolor sit amet.</p>
+        </div>
+      </div>
+      <div class="popup-btn popup-padding d-flex-center-end w-100">
+        <button onclick="mostra_CalcularNivel()">Fechar</button>
+      </div>
+    </div>
+  </section>
+
+
+
+
 <!-- Fim do conteúdo central -->
 
-<section id="infos_modal" class="infos-modal d-flex-center-center hidden">
-<div class="infos-modal-main">
-    <div class="infos-modal-main-header d-flex-center-between">
-    <h1>Ajuda - Utilizar Modelo</h1>
-    <button onclick="showModalInfos()" class="infos-modal-main-header-close">X</button>
-    </div>
-    <div class="infos-modal-main-center">
-    <h3><strong>01 - </strong>Selecionando o modelo:</h3>
-    <hr>
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod posuere arcu, nec egestas dolor consequat at. Donec nec ligula feugiat, porta leo vulputate, dictum leo...
-    </p>
-    <h3><strong>02 - </strong>Árvore do modelo de maturidade:</h3>
-    <hr>
-    <p>
-        Nam imperdiet elementum felis, eget dictum velit ullamcorper quis. Aenean dui justo, accumsan at nulla non, semper dignissim metus. Nam dictum augue et nisl varius tempus. Duis vel maximus massa. Donec lacinia quam id interdum porta...
-    </p>  
-    <h4><strong>02.1 - </strong>Visualizando descrições grandes:</h4>
-    <hr>
-    <p>
-        Donec vulputate quam neque, nec egestas nibh maximus pharetra. Donec ut lorem est. Phasellus libero magna, facilisis a rutrum vel, dapibus nec turpis...
-    </p>
-    <h4><strong>02.2 - </strong>Fazendo upload de arquivos:</h4>
-    <hr>
-    <p>
-        Vivamus aliquam dui vel venenatis congue. Morbi eu luctus felis. Curabitur condimentum, risus sed feugiat ullamcorper, justo nulla varius enim, in imperdiet ex mauris et erat...
-    </p>
-    </div>
-    <div class="infos-modal-main-footer d-flex-center-end">
-    <button onclick="showModalInfos()" class="infos-modal-main-footer-voltar">Voltar</button>
-    </div>
-</div>
-</section>
-
-<section class="pop-up-calcularNivel d-flex-center-center hidden" id="popup_CalcularNivel">
-<div class="popup-main d-flex-center-between flex-column" id="popup_CalcularNivelMain">
-    <div>
-    <div class="popup-titulo">
-        <h2>O nível deste modelo é Muito Ruim</h2>
-    </div>
-    <div class="popup-padding" style="overflow: hidden;max-height: 80px;">
-        <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris finibus eget metus quis dignissim.Lorem ipsum dolor sit amet.</span>
-    </div>
-    </div>
-    <div class="popup-btn popup-padding d-flex-center-end w-100">
-    <button onclick="mostra_CalcularNivel()">Fechar</button>
-    </div>
-</div>
-</section>
 
 
 
@@ -279,7 +268,7 @@ function mostraOpcoesPrimariasModelo() {
 //* Abrir pop up de calcular nivel de modelo
 function mostra_CalcularNivel() {
   const divPopUp = document.getElementById("popup_CalcularNivel");
-
+  console.log(divPopUp);
   if(divPopUp.classList.contains("hidden")) {
     divPopUp.classList.remove("hidden");
   } else {
@@ -289,7 +278,6 @@ function mostra_CalcularNivel() {
 //* Fim ---
 
 $(document).ready(function(){
-  console.log("Test");
   $(".header-select #maturidade_id").change(function(){
     console.log("Test1");
     var opcaoSelecionada = this.value;

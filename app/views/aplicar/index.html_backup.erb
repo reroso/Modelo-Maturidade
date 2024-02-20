@@ -3,14 +3,18 @@
           </div>
         </div>
         <button onclick="showModalInfos()" class="header-title-info d-flex-center-center h-100">
-          <%= image_tag('icons/info.svg', width: '25px', height: '25px') %>
+          <img src="img/icons/info.svg" width="25px" height="25px"></img>
         </button>
       </div>
       <div class="header-links d-flex-center-start h-100 w-fit">
         <div class="header-links-wrapper d-flex-center-center">
           <div onclick="mostraOpcoesPrimariasModelo()" class="header-link d-flex-center-start h-fit">
-            <%= image_tag('icons/edit2.svg', width: '20px', height: '20px') %>
+            <object data="img/icons/edit2.svg" width="20px" height="20px"></object>
             <a href="#">Editar opções do Modelo</a>
+          </div>
+          <div onclick="location.href='calcular_maturidade.html'" class="header-link d-flex-center-start h-fit">
+            <img src="https://icons.iconarchive.com/icons/fatcow/farm-fresh/32/calculator-icon.png" width="20" height="20">
+            <a href="#">Calcular Maturidade do Modelo</a>
           </div>
         </div>
       </div>
@@ -25,20 +29,20 @@
 
     <!-- Section: configurações primárias -->
     <section id="config_primaria_modelo" class="main-config d-flex-center-end mb-1">
+      <div class="main-config-dominioSelect">
+        <%= select_tag "dominio_id", options_from_collection_for_select(@dominios, "id", "nome"), prompt: "Escolha um dominio", class: "corpo_texto_select w-75" %>
+        <button class="header-cadastrar-btn" id="header_cadastrar_dominio_btn" onclick="show_popup('cadastrar_dominio', '')"><i class="icon-plus-sign"></i></button>
+      </div>
       <form action="/cadastroModeloAplicado/incluir_modelo_aplicado" method="post" class="form-incluir-modelo-aplicado d-flex-center-end">
-        <div class="main-config-dominioSelect d-flex-center-center w-25">
-          <%= select_tag "dominio_id", options_from_collection_for_select(@dominios, "id", "nome"), prompt: "Escolha um dominio", class: "corpo_texto_select w-100" %>
-          <button class="header-cadastrar-btn" id="header_cadastrar_dominio_btn" onclick="show_popup('cadastrar_dominio', '')"><i class="icon-plus-sign"></i></button>
-        </div>
-        <div class="main-config-instituicao w-25">
+        <div class="main-config-instituicao">
           <input name="instituicao" class="w-93" type="text" placeholder="Digite sua Instituição">
         </div>
-        <div class="main-config-metodo w-25">
+        <div class="main-config-metodo">
           <input name="metodo" class="w-93" type="text" placeholder="Digite o Método Utilizado">
         </div>
         <input type="text" id="inputDominio" name="dominio_id" aria-label="Recipient's username" aria-describedby="button-addon2" class="hidden">
         <input type="text" name="maturidade_id" aria-label="Recipient's username" aria-describedby="button-addon2" value="<%=@opcao%>" class="hidden">
-        <div class="main-config-inputLabels d-flex-center-start w-25">
+        <div class="main-config-inputLabels d-flex-center-start">
           <input onchange="mostraRangePriorizacao()" type="checkbox" id="config-priorizacao" name="nivel_escolha" value="1"> 
           <label for="config-priorizacao">O método vai possuir priorização?</label>
         </div>
@@ -75,7 +79,7 @@
             </div>
           
             <!--A== Main-Dimensão-1 -->
-            <div id="main-dimencao-<%= dimensao.id %>" class="expandable-main dimencao hidden">    
+            <div id="main-dimencao-<%= dimensao.id %>" class="expandable-main dimencao">    
               <% contadorProcessos = 1 %>
               <% @processos.each do |processo| %>
                 <%if dimensao.id == processo.dimensao_id%>    
@@ -98,7 +102,7 @@
                     </div>  
             
                     <!--A== Main-Processo-1-1 -->
-                    <div id="main-processo-<%= dimensao.id %>-<%= processo.id %>" class="expandable-main processo hidden">
+                    <div id="main-processo-<%= dimensao.id %>-<%= processo.id %>" class="expandable-main processo">
 
                       <%if @opcao != 0%>
                         <%if maturidade_selecionada.nivelEscolha == "1"%> <!--x ESTAMOS AQUI -->
@@ -118,16 +122,14 @@
                                         <option value="3" <%= doc.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
                                     </select>
                                 </form>
-                                <button onclick="showModalConfirmacao('/cadastroProcesso/<%= doc.id %>/excluir_processo_docs')" class="file-galery-item-btn">
-                                  <%= image_tag('icons/delete_folder.svg', width: '25px', height: '25px') %>
-                                </button>
+                                <button onclick="showModalConfirmacao('/cadastroProcesso/<%= doc.id %>/excluir_processo_docs')" class="file-galery-item-btn"><img height="25px" width="25px" src="img/icons/delete_folder.svg" alt="delete folder"></button>
                               </li>
                               <% end %> 
                             <% end %>
                 
                               <!-- Adicionar arquivos -->
                               <li class="file-galery-item d-flex-center-start">
-                                <form action="/cadastroProcesso/<%=processo.id%>/salvar_processo_docs" method="POST" enctype="multipart/form-data">
+                                <form action="/cadastroResultado/<%=processo.id%>/salvar_processo_docs" method="POST" enctype="multipart/form-data">
                                   <input type="file" name="docs"/>
                                   <button type="submit">Cadastrar</button>
                                 </form>
@@ -157,7 +159,7 @@
                                 </div>
                               </div>
                               <!--A== Main-Resultado -->
-                              <div id="main-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-main resultado hidden">
+                              <div id="main-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-main resultado">
                                 <%if maturidade_selecionada.nivelEscolha == "2"%>
                                   <div class="file-galery-wrapper dimencao">
                                     <ul class="file-galery">
@@ -174,9 +176,7 @@
                                                     <option value="3" <%= doc.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
                                                 </select>
                                             </form>
-                                            <button onclick="showModalConfirmacao('/cadastroresultado/<%= doc.id %>/excluir_resultado_docs')" class="file-galery-item-btn">
-                                              <%= image_tag('icons/delete_folder.svg', width: '25px', height: '25px') %>
-                                            </button>
+                                            <button onclick="showModalConfirmacao('/cadastroresultado/<%= doc.id %>/excluir_resultado_docs')" class="file-galery-item-btn"><img height="25px" width="25px" src="img/icons/delete_folder.svg" alt="delete folder"></button>
                                           </li>
                                         <% end %> 
                                       <% end %>
@@ -299,22 +299,8 @@
     }
   </script>
 
-  <script>
-    //* Retira o disabled do botao de exclusão do modal de confirmação de exclusão
-    function liberaBotaoExclusao() {
-      let inputConfirmaExclusao = document.getElementById('input_confirmation_exclusao');
-      let btnConfirmaExclusao = document.getElementById('btn_confirma_exclusao');
 
-      if(inputConfirmaExclusao.value == 'confirmo')
-        btnConfirmaExclusao.disabled = false;
-      else
-        btnConfirmaExclusao.disabled = true;
-    }
-    //* Fim ---
-  </script>
-
-
-    <!--# Função de expandir e retrair as camadas dos modelos -->
+  <!--# Função de expandir e retrair as camadas dos modelos -->
   <script>
     function expandeMain(id_expandir) {
       var div_expandir = document.getElementById('main-' + id_expandir);
@@ -332,23 +318,9 @@
         minus_trocar.classList.add('hidden');
       }
     }
+  </script>
 
-    //* Mostrar Modal de confirmação de exclusão:
-    function showModalConfirmacao() {
-      let modalConfirmacao = document.getElementById('modal_confirmacao');
-      let inputConfirmaExclusao = document.getElementById('input_confirmation_exclusao');
-      let btnConfirmaExclusao = document.getElementById('btn_confirma_exclusao');
-
-      if(modalConfirmacao.classList.contains('hidden')) {
-        modalConfirmacao.classList.remove('hidden');
-        inputConfirmaExclusao.value = '';
-        btnConfirmaExclusao.disabled = true;
-      }
-      else
-        modalConfirmacao.classList.add('hidden');
-    }
-    //* Fim ---
-
+  <script>
     //* Retira o disabled do botao de exclusão do modal de confirmação de exclusão
     function liberaBotaoExclusao() {
       let inputConfirmaExclusao = document.getElementById('input_confirmation_exclusao');
@@ -361,9 +333,8 @@
     }
     //* Fim ---
   </script>
-  
 
-  <script>
+<script>
     
  //Expande e contrai main dimensão
     function show_todos_processos(form_id,dimensao){
