@@ -201,11 +201,11 @@ body {
 }
   .confirmation-main {
     background-color: white;
-    height: 30%;
-    width: 42%;
+    height: fit-content;
+    width: fit-content;
     border-radius: 6px;
     position: relative;
-    padding: 5px 20px;
+    padding: 25px 35px;
   }
   .confirmation-main h1 {
     color: #2b2b2b;
@@ -226,6 +226,10 @@ body {
     color: #bebebe;
   }
 
+  .confirmation-main-btns,
+  #input_confirmation_exclusao {
+    margin-top: 25px;
+  }
   .confirmation-main-btns-cancelar {
     height: 25px;
     width: 80px;

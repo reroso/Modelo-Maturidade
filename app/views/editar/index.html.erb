@@ -1,0 +1,283 @@
+          <div class="header-select">
+              <%= select_tag "maturidade_id", options_from_collection_for_select(@maturidades, "id", "nome", @opcao), prompt: "Escolha um modelo", class: "modelo corpo_texto_select" %>
+          </div>
+        </div>
+        <button onclick="showModalInfos()" class="header-title-info d-flex-center-center h-100">
+          <%= image_tag('icons/info.svg', width: '25px', height: '25px') %>
+        </button>
+      </div>
+      <div class="header-links d-flex-center-start h-100 w-fit">
+        <div class="header-links-wrapper d-flex-center-center">
+          <div onclick="trocaEditarInfosModelos()" class="header-link d-flex-center-start h-fit">
+            <%= image_tag('icons/edit2.svg', width: '20px', height: '20px') %>
+            <a href="#" id="titulo_trocaInfosModelo"> Editar informações do modelo</a>
+          </div>
+        </div>
+      </div>
+      <div style="display: none">
+        <%if @opcao != 0%>
+            <% maturidade_selecionada = Maturidade.find(@opcao)%>
+            <div id="mudancaResultado" class="<%=maturidade_selecionada.resultadoEscolha%>"> </div>
+            <div id="maturidadeSelecionadaNivelEscolha" class="<%= maturidade_selecionada.nivelEscolha%>"></div>
+        <%end%>
+      </div>
+    </header>
+
+    <section id="section-niveis" class="main-content main-utlizar-modelo">
+      <table class="w-100 ">
+        <thead>
+          <tr>
+            <th class="table_nivel vertical-center p-0">Nível</th>
+            <th class="table_descricao vertical-center p-0">Descrição</th>
+            <th class="table_opcoes vertical-center p-0">Opções</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-center">1.</td>
+            <td><input type="text" id="input_descricao_1" name="" value="Crítico" disabled/></td>
+            <td class="text-center">
+              <button class="table-btn" id="btn_editar_1" title="Editar descrição" onclick="trocaEditardescricaoNivel(1)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
+              <button class="table-btn" id="btn_salvar_1" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(1)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
+              <button class="table-btn"  onclick="show_popup('confirmar_exclusao', 'rota')" title="Excluir nível" ><%= image_tag('icons/delete.svg', width: '20px', height: '20px') %></button>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-center">2.</td>
+            <td><input type="text" id="input_descricao_2" name="" value="Fundamental Básico" disabled/></td>
+            <td class="text-center">
+              <button class="table-btn" id="btn_editar_2" title="Editar descrição" onclick="trocaEditardescricaoNivel(2)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
+              <button class="table-btn" id="btn_salvar_2" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(2)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
+              <button class="table-btn"  onclick="show_popup('confirmar_exclusao', 'rota')" title="Excluir nível" ><%= image_tag('icons/delete.svg', width: '20px', height: '20px') %></button>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-center">3.</td>
+            <td><input type="text" id="input_descricao_3" name="" value="Fundamental Avançado" disabled/></td>
+            <td class="text-center">
+              <button class="table-btn" id="btn_editar_3" title="Editar descrição" onclick="trocaEditardescricaoNivel(3)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
+              <button class="table-btn" id="btn_salvar_3" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(3)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
+              <button class="table-btn"  onclick="show_popup('confirmar_exclusao', 'rota')" title="Excluir nível" ><%= image_tag('icons/delete.svg', width: '20px', height: '20px') %></button>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-center">4.</td>
+            <td><input type="text" id="input_descricao_4" name="" value="Complementar" disabled/></td>
+            <td class="text-center">
+              <button class="table-btn" id="btn_editar_4" title="Editar descrição" onclick="trocaEditardescricaoNivel(4)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
+              <button class="table-btn" id="btn_salvar_4" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(4)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
+              <button class="table-btn"  onclick="show_popup('confirmar_exclusao', 'rota')"  title="Excluir nível" ><%= image_tag('icons/delete.svg', width: '20px', height: '20px') %></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="section-editar-infos" class="main-content main-utlizar-modelo hidden">
+      <form method="post" action="/cadastroMaturidade/incluir_maturidade" class="d-flex-center-between w-100">
+          <!-- #Input "Nome"  -->
+          <div class="main-name d-flex-stretch-start flex-column w-100">
+          <label for="idName">Nome</label>
+          <input type="text" id="idName" name="nome"/> 
+          </div>
+
+          <!-- #Input "descrição"  -->
+          <div class="main-desc d-flex-stretch-start flex-column w-100">
+          <label for="idDesc">Descrição</label>
+          <textarea  id="idDesc" name="descricao"></textarea>
+          </div>
+
+          <!-- #Input "Nível do Modelo"  -->
+          <div class="main-level w-100">
+          <div class="form-title-wrapper w-100 h-fit">
+              <h3>Selecione o tipo de nível do modelo</h3>
+          </div>
+          <input type="radio" id="tipo_nivel_numerico" name="tipo_nivel" value="1" checked> 
+              <label for="tipo_nivel_numerico">Numérico</label>
+          <input type="radio" id="tipo_nivel_alfanumerico" name="tipo_nivel" value="2"> 
+              <label for="tipo_nivel_alfanumerico">Alfanumérico</label>
+          </div>
+
+          <!-- #Input "Range do Nível do Modelo"  -->
+          <div class="main-range w-100">
+          <div class="form-title-wrapper w-100 h-fit">
+              <h3>Escolha a range do nível do modelo</h3>
+          </div>
+          <div class="main-range-wrapper d-flex-stretch-start">
+              <input type="text" name="tipoNivel" class="tipo_nivel hidden" value="1"><br>  <!-- #Hidden-->
+              <!-- #Menor Range  -->
+              <div class="form-range-control d-flex-stretch-start flex-column w-25">
+              <label for="idLowRange">Menor Nivel</label>
+              <input type="text" id="idMenorNivel" name="menorNivel" />
+              </div>
+              <!-- #Maior Range  -->
+              <div class="form-range-control d-flex-stretch-start flex-column w-25">
+              <label for="idHighRange">Maior Nivel</label>
+              <input type="text" id="idMaiorNivel" name="maiorNivel" />
+              </div>
+          </div>
+          </div>
+
+          <!-- #Input "Resultados esperados"  -->
+          <div class="main-result w-100">
+          <div class="form-title-wrapper w-100 h-fit">
+              <h3>O modelo vai possuir resultados esperados ?</h3>
+          </div>
+          <input type="radio" id="escolha_resultado_sim" name="resultado_escolha" value="1" checked>
+              <label for="escolha_resultado_sim">Não</label>
+          <input type="radio" id="escolha_resultado_nao" name="resultado_escolha" value="2"> 
+              <label for="escolha_resultado_nao">Sim</label>
+          <input type="text" name="resultadoEscolha" class="resultado_escolha hidden" value="1">  <!-- #Hidden-->
+          </div>
+
+          <!-- #Input "Quem usará o nível"  -->
+          <div class="main-who  w-100 hidden" id="nivel_escolha">  
+          <div class="form-title-wrapper w-100 h-fit">
+              <h3>Escolha quem usará o nivel de maturidade:</h3>
+          </div>
+          <input type="radio" id="nivel_processo" name="nivel_escolha" value="1" checked> 
+              <label for="nivel_processo">Processos</label>
+          <input type="radio" id="nivel_resultado_esperado" name="nivel_escolha" value="2"> 
+              <label for="nivel_resultado_esperado">Resultados Esperados</label>
+          <input type="text" name="nivelEscolha" class="nivel_escolha hidden" value="1">  <!-- #Hidden-->
+          </div>
+
+          
+          <div class="main-button d-flex-center-between w-100">
+            <div>
+              <button class="infos-btn-excluir" onclick="show_popup('confirmar_exclusao', 'rota')" type="button">Excluir Modelo</button>
+            </div>
+            <div class="d-flex-center-center">
+              <button class="infos-btn-voltar" onclick="trocaEditarInfosModelos()" type="button">voltar</button>
+              <button type="submit">Cadastrar</button>
+            </div>
+          </div>
+
+      </form>
+
+    </section>
+
+
+
+
+
+  
+  
+  </main>
+
+  <section onclick="closeAll_popup(event)" class="popup-background d-flex-center-center hidden" id="popup_background">
+
+    <!-- Confirmação de exclusão de arquivos -->
+    <div id="confirmar_exclusao" class="confirmation-main d-flex-start-evenly flex-column hidden">
+      <h1>Confirmar exclusão?</h1>
+      <p>Tem certeza que deseja continuar com essa ação? Essa alteração não poderá ser desfeita.</p>
+      <p>Digite "confirmo" para executar essa ação</p>
+      <input onkeyup="liberaBotaoExclusao()" type="text" id="input_confirmation_exclusao" placeholder="confirmo">
+      <div class="confirmation-main-btns d-flex-center-end w-100">
+        <button onclick="closeAll_popup()" class="confirmation-main-btns-cancelar" value="">Cancelar</button>
+        <button id="btn_confirma_exclusao" class="confirmation-main-btns-confirmar" disabled>Excluir</button>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+
+
+
+  <script>
+    //contante de todos os ids de todos os popups da pagina;
+    const listaPopups = ["cadastrar_dominio", "confirmar_exclusao"];
+
+    //Função para mostrar um popup qualquer
+    function show_popup(id_popup, rota) {
+      const popup = document.getElementById(id_popup);
+                console.log(popup);
+      if(popup) {
+        const popupBg = document.getElementById("popup_background");
+
+        if(popup.classList.contains("hidden")) {
+          popup.classList.remove("hidden");
+          popupBg.classList.remove("hidden");
+        } else {
+          popup.classList.add("hidden");
+          popupBg.classList.add("hidden");
+        }
+
+        if(popup == "confirmar_exclusao") {
+          document.getElementById('btn_confirma_exclusao').setAttribute('onclick', `location.href='`+rota+`'`);
+        }
+      }
+    }
+
+    //Função para fechar todos os popups abertos
+    function closeAll_popup(event) {
+      const popupBg = document.getElementById("popup_background");
+
+      if(event.target === popupBg) {
+        popupBg.classList.add("hidden");
+        console.log(popupBg.classList);
+        listaPopups.forEach(function(popupId) {
+          let popup = document.getElementById(popupId);
+          if(!popup.classList.contains("hidden")) {
+            popup.classList.add("hidden");
+          }
+        });
+      }
+    }
+  </script>
+
+  <script>
+    //* Retira o disabled do botao de exclusão do modal de confirmação de exclusão
+    function liberaBotaoExclusao() {
+      let inputConfirmaExclusao = document.getElementById('input_confirmation_exclusao');
+      let btnConfirmaExclusao = document.getElementById('btn_confirma_exclusao');
+
+      if(inputConfirmaExclusao.value == 'confirmo')
+        btnConfirmaExclusao.disabled = false;
+      else
+        btnConfirmaExclusao.disabled = true;
+    }
+    //* Fim ---
+  </script>
+
+
+
+  <script>
+    function trocaEditarInfosModelos() {
+      let section_niveis  = document.getElementById("section-niveis");
+      let section_infos  = document.getElementById("section-editar-infos");
+      let titulo_btn = document.getElementById("titulo_trocaInfosModelo");
+
+      if(section_niveis.classList.contains("hidden")) {
+        titulo_btn.textContent = "Editar informações do modelo";
+        section_niveis.classList.remove("hidden");
+        section_infos.classList.add("hidden");
+      } else {
+        titulo_btn.textContent = "Voltar para edição de níveis";
+        section_niveis.classList.add("hidden");
+        section_infos.classList.remove("hidden");
+      }
+    }
+  </script>
+
+  <script>
+    function trocaEditardescricaoNivel(id_nivel) {
+      let input = document.getElementById("input_descricao_"+id_nivel);
+      let btn_editar = document.getElementById("btn_editar_"+id_nivel);
+      let btn_salvar = document.getElementById("btn_salvar_"+id_nivel);
+
+      if(input.disabled) {
+        input.disabled = false;
+        btn_editar.disabled = true;
+        btn_salvar.disabled = false;
+      } else {
+        input.disabled = true;
+        btn_editar.disabled = false;
+        btn_salvar.disabled = true;
+      }
+    }
+  </script>
+  
