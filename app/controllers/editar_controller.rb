@@ -19,6 +19,8 @@ class EditarController < ApplicationController
 
     end
 
+    #niveis
+
     def incluir_nivel
         level = Level.find_by(index: params[:index], modelo_id: params[:modelo_id])
 
@@ -40,6 +42,28 @@ class EditarController < ApplicationController
         level.descricao = params[:descricao]
         level.save
 
+    end
+
+    #modelos
+
+    def salvar_maturidade
+        maturidade = Maturidade.find(params[:id])
+        maturidade.nome = params[:nome]
+        maturidade.descricao = params[:descricao]
+        maturidade.tipoNivel = params[:tipoNivel]
+        maturidade.menorNivel = params[:menorNivel]
+        maturidade.maiorNivel = params[:maiorNivel]
+        maturidade.resultadoEscolha = params[:resultadoEscolha]
+        maturidade.nivelEscolha = params[:nivelEscolha]
+        maturidade.save
+
+        redirect_to "/editar"
+    end
+
+    def excluir_maturidade
+        maturidade = Maturidade.find(params[:id])
+        maturidade.destroy
+        redirect_to "/editar"
     end
 
 end

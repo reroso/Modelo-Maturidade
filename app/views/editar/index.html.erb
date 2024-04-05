@@ -175,17 +175,17 @@
     </section>
 
     <section id="section-editar-infos" class="main-content main-utlizar-modelo hidden">
-      <form method="post" action="/cadastroMaturidade/incluir_maturidade" class="d-flex-center-between w-100">
+      <form method="post" action="/editar/<%=@opcao%>/salvar_maturidade" class="d-flex-center-between w-100">
           <!-- #Input "Nome"  -->
           <div class="main-name d-flex-stretch-start flex-column w-100">
           <label for="idName">Nome</label>
-          <input type="text" id="idName" name="nome"/> 
+          <input type="text" id="idName" name="nome" value="<%=maturidade_selecionada.nome%>"/> 
           </div>
 
           <!-- #Input "descrição"  -->
           <div class="main-desc d-flex-stretch-start flex-column w-100">
           <label for="idDesc">Descrição</label>
-          <textarea  id="idDesc" name="descricao"></textarea>
+          <textarea  id="idDesc" name="descricao" ><%=maturidade_selecionada.descricao%></textarea>
           </div>
 
           <!-- #Input "Nível do Modelo"  -->
@@ -193,9 +193,10 @@
           <div class="form-title-wrapper w-100 h-fit">
               <h3>Selecione o tipo de nível do modelo</h3>
           </div>
-          <input type="radio" id="tipo_nivel_numerico" name="tipo_nivel" value="1" checked> 
+          
+          <input type="radio" id="tipo_nivel_numerico" name="tipo_nivel" value="1" <%= maturidade_selecionada.tipoNivel == "1" ? 'checked' : '' %>> 
               <label for="tipo_nivel_numerico">Numérico</label>
-          <input type="radio" id="tipo_nivel_alfanumerico" name="tipo_nivel" value="2"> 
+          <input type="radio" id="tipo_nivel_alfanumerico" name="tipo_nivel" value="2" <%= maturidade_selecionada.tipoNivel == "2" ? 'checked' : '' %>> 
               <label for="tipo_nivel_alfanumerico">Alfanumérico</label>
           </div>
 
@@ -205,16 +206,16 @@
               <h3>Escolha a range do nível do modelo</h3>
           </div>
           <div class="main-range-wrapper d-flex-stretch-start">
-              <input type="text" name="tipoNivel" class="tipo_nivel hidden" value="1"><br>  <!-- #Hidden-->
+              <input type="text" name="tipoNivel" class="tipo_nivel hidden" value="<%=maturidade_selecionada.tipoNivel%>"><br>  <!-- #Hidden-->
               <!-- #Menor Range  -->
               <div class="form-range-control d-flex-stretch-start flex-column w-25">
               <label for="idLowRange">Menor Nivel</label>
-              <input type="text" id="idMenorNivel" name="menorNivel" />
+              <input type="text" id="idMenorNivel" name="menorNivel" value="<%=maturidade_selecionada.menorNivel%>"/>
               </div>
               <!-- #Maior Range  -->
               <div class="form-range-control d-flex-stretch-start flex-column w-25">
               <label for="idHighRange">Maior Nivel</label>
-              <input type="text" id="idMaiorNivel" name="maiorNivel" />
+              <input type="text" id="idMaiorNivel" name="maiorNivel" value="<%=maturidade_selecionada.maiorNivel%>"/>
               </div>
           </div>
           </div>
@@ -224,29 +225,29 @@
           <div class="form-title-wrapper w-100 h-fit">
               <h3>O modelo vai possuir resultados esperados ?</h3>
           </div>
-          <input type="radio" id="escolha_resultado_sim" name="resultado_escolha" value="1" checked>
+          <input type="radio" id="escolha_resultado_sim" name="resultado_escolha" value="1" <%= maturidade_selecionada.resultadoEscolha == "1" ? 'checked' : '' %>>
               <label for="escolha_resultado_sim">Não</label>
-          <input type="radio" id="escolha_resultado_nao" name="resultado_escolha" value="2"> 
+          <input type="radio" id="escolha_resultado_nao" name="resultado_escolha" value="2" <%= maturidade_selecionada.resultadoEscolha == "2" ? 'checked' : '' %>> 
               <label for="escolha_resultado_nao">Sim</label>
-          <input type="text" name="resultadoEscolha" class="resultado_escolha hidden" value="1">  <!-- #Hidden-->
+          <input type="text" name="resultadoEscolha" class="resultado_escolha hidden" value="<%=maturidade_selecionada.resultadoEscolha%>">  <!-- #Hidden-->
           </div>
 
           <!-- #Input "Quem usará o nível"  -->
-          <div class="main-who  w-100 hidden" id="nivel_escolha">  
+          <div class="main-who  w-100" id="nivel_escolha">  
           <div class="form-title-wrapper w-100 h-fit">
               <h3>Escolha quem usará o nivel de maturidade:</h3>
           </div>
-          <input type="radio" id="nivel_processo" name="nivel_escolha" value="1" checked> 
+          <input type="radio" id="nivel_processo" name="nivel_escolha" value="1" <%= maturidade_selecionada.nivelEscolha == "1" ? 'checked' : '' %>> 
               <label for="nivel_processo">Processos</label>
-          <input type="radio" id="nivel_resultado_esperado" name="nivel_escolha" value="2"> 
+          <input type="radio" id="nivel_resultado_esperado" name="nivel_escolha" value="2" <%= maturidade_selecionada.nivelEscolha == "2" ? 'checked' : '' %>> 
               <label for="nivel_resultado_esperado">Resultados Esperados</label>
-          <input type="text" name="nivelEscolha" class="nivel_escolha hidden" value="1">  <!-- #Hidden-->
+          <input type="text" name="nivelEscolha" class="nivel_escolha hidden" value="<%=maturidade_selecionada.nivelEscolha%>">  <!-- #Hidden-->
           </div>
 
           
           <div class="main-button d-flex-center-between w-100">
             <div>
-              <button class="infos-btn-excluir" onclick="show_popup('confirmar_exclusao', 'rota')" type="button">Excluir Modelo</button>
+              <button class="infos-btn-excluir" onclick="show_popup('confirmar_exclusao', '/editar/<%=@opcao%>/excluir_maturidade')" type="button">Excluir Modelo</button>
             </div>
             <div class="d-flex-center-center">
               <button class="infos-btn-voltar" onclick="trocaEditarInfosModelos()" type="button">voltar</button>
@@ -306,8 +307,9 @@
           popup.classList.add("hidden");
           popupBg.classList.add("hidden");
         }
-
-        if(popup == "confirmar_exclusao") {
+        
+        if(id_popup == "confirmar_exclusao") {
+          console.log("oi");
           document.getElementById('btn_confirma_exclusao').setAttribute('onclick', `location.href='`+rota+`'`);
         }
       }
