@@ -6,6 +6,8 @@
       'Cadastro de Estrutura'
     when 'aplicar'
       'Utilizar modelo'
+    when 'avaliar'
+      'Avaliar Modelo'
     else 
       'Visualizar Maturidade'
     end
@@ -34,6 +36,8 @@
           <%= stylesheet_link_tag 'utilizar_modelo.css', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%  when 'visualizar' %>
           <%= stylesheet_link_tag 'utilizar_modelo.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%  when 'avaliar' %>
+          <%= stylesheet_link_tag 'avaliar_modelo.css', media: 'all', 'data-turbolinks-track': 'reload' %>
     <% end %>
 
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@3.2.1/css/font-awesome.min.css" rel="stylesheet">
@@ -49,6 +53,7 @@
       <button onclick="location.href='/editar'" class="aside-button w-100">Editar Modelo</button>
       <button onclick="location.href='/cadastro'" class="aside-button w-100">Cadastrar Estrutura</button>
       <button onclick="location.href='/aplicar'" class="aside-button w-100">Utilizar Modelo</button>
+      <button onclick="location.href='/avaliar'" class="aside-button w-100">Avaliar Modelo</button>
       <button onclick="location.href='/visualizar'" class="aside-button w-100">Visualizar Modelo</button>
     </div>
   </aside>
