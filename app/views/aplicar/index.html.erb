@@ -110,14 +110,6 @@
                               <!-- Arquivo-1-Dimensão-1 -->
                               <li id="doc-<%= dimensao.id %>-<%= processo.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-start">
                                 <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
-                                <form action="/cadastroResultado/<%= doc.id %>/salvar_classificacao_docs" method="post">
-                                    <select name="classificacao" onchange="this.form.submit()">
-                                        <option value="" disabled selected>Selecione uma opção</option>
-                                        <option value="1" <%= doc.classificacao == 1 ? 'selected' : '' %>>Atende Totalmente</option>
-                                        <option value="2" <%= doc.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
-                                        <option value="3" <%= doc.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
-                                    </select>
-                                </form>
                                 <button onclick="showModalConfirmacao('/cadastroProcesso/<%= doc.id %>/excluir_processo_docs')" class="file-galery-item-btn">
                                   <%= image_tag('icons/delete_folder.svg', width: '25px', height: '25px') %>
                                 </button>
@@ -166,14 +158,6 @@
                                           <!-- Arquivo-1-Dimensão-1 -->
                                           <li id="doc-<%= dimensao.id %>-<%= resultado.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-start">
                                             <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
-                                            <form action="/cadastroResultado/<%= doc.id %>/salvar_classificacao_docs" method="post">
-                                                <select name="classificacao" onchange="this.form.submit()">
-                                                    <option value="" disabled selected>Selecione uma opção</option>
-                                                    <option value="1" <%= doc.classificacao == 1 ? 'selected' : '' %>>Atende Totalmente</option>
-                                                    <option value="2" <%= doc.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
-                                                    <option value="3" <%= doc.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
-                                                </select>
-                                            </form>
                                             <button onclick="showModalConfirmacao('/cadastroresultado/<%= doc.id %>/excluir_resultado_docs')" class="file-galery-item-btn">
                                               <%= image_tag('icons/delete_folder.svg', width: '25px', height: '25px') %>
                                             </button>

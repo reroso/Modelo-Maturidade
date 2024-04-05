@@ -219,3 +219,15 @@ button {
           font-size: 16px;
           margin-right: 12px;
         }
+
+.select-nivel-maturidade {
+  font-weight: 600; 
+  font-size: 13px;
+  padding: 3px 8px; 
+  margin-left: 15px;
+  min-width: 25px!important; 
+  color: #5c8b10; 
+  border: 1px solid #5c8b10;
+  border-radius: 3px;
+  background-color: #f2f7eb;
+}
