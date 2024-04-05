@@ -68,3 +68,7 @@ table td input:disabled {
     padding: 8px 15px!important;
     margin-right: 15px;
 }
+.infos-btn-excluir:hover,
+.infos-btn-voltar {
+    outline: 0px!important;
+}

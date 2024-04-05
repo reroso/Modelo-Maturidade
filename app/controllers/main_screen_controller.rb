@@ -12,7 +12,7 @@ class MainScreenController < ApplicationController
         maturidade.nivelEscolha = params[:nivelEscolha]
         maturidade.save
         
-        redirect_to "/main_screen"
+        redirect_to "/editar"
     end
 
     def salvar_maturidade
