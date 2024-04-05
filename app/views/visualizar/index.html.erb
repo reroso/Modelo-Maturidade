@@ -30,6 +30,7 @@
     </div>
 </div> -->
 <section class="main-content main-visualizar-item">
+  <!-- maturidade_selecionada.tipoNivel = 1 é numerico -->
   <%if maturidade_selecionada.tipoNivel == "1"%>
     <%if maturidade_selecionada.menorNivel.to_i < maturidade_selecionada.maiorNivel.to_i%>
       <%menorContador = maturidade_selecionada.menorNivel.to_i%>
@@ -104,6 +105,9 @@
                                       <p>Não Atende</p>
                                     </div>
                                   <% else %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Artefato não classificado</p>
+                                    </div>
                                   <% end %>
                               </div> 
                             <% end %>                  
@@ -120,9 +124,230 @@
           <%end%>  
         <%end%>
         <%end%>
+      <%elsif maturidade_selecionada.nivelEscolha == "1"%>
+        <% @dimensaos.each do |dimensao| %>
+        <%if dimensao.maturidade_id == @opcao%>
+          <% @processos.each do |processo| %>
+          <%if dimensao.id == processo.dimensao_id%>
+              <%if processo.nivel_selecionado.to_i == menorContador%>
+                <!--A== Main-Nivel-F -->
+                <div id="main-Nivel-<%=menorContador%>" class="expandable-main nivel">
+                    <!--S== Processo-1 -->
+                    <div id="Processo-<%=processo.id%>" class="resultado">
+                    <!--A== Header-Processo-1 -->
+                    <div id="header-Processo-<%=processo.id%>" class="expandable-header d-flex-center-between resultado w-100">
+                        <div class="expandable-header-left d-flex-center-start" style="min-width: 100%!important;" onclick="show_todos_processos(1)">
+                        <!-- o 1 do id é o id da Nivel-->
+                        <div onclick="expandeMain('Processo-<%=processo.id%>')">
+                            <i id="plus-Processo-<%=processo.id%>" class="fa-solid fa-plus"></i>
+                            <i id="minus-Processo-<%=processo.id%>" class="fa-solid fa-minus hidden"></i>
+                        </div>
+                        <h3 id="titulo-Nivel-<%=menorContador%>-1" style="max-height: 25px;" onclick="mostra_titulo('1')"><%=processo.descricao%></h3>
+                        </div>
+                    </div>
+                    <div id="main-Processo-<%=processo.id%>" class="expandable-main resultado hidden">
+                      <div class="file-galery-wrapper nivel">
+                      <div class="table">
+                          <div class="table-content">	
+                            <% processo.docs.each do |doc| %>
+                              <div class="table-row">	
+                              <%if doc.classificacao == 3%>
+                                <% vetorResultado.push(menorContador-1) %>
+                              <%end%>	
+                                  <div class="table-data d-flex-center-start"><%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %></a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
+                                  <% if doc.classificacao == 1 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Atende Totalmente</p>
+                                    </div>
+                                  <% elsif doc.classificacao == 2 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Atende parcialmente</p>
+                                    </div>
+                                  <% elsif doc.classificacao == 3 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Não Atende</p>
+                                    </div>
+                                  <% else %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Artefato não classificado</p>
+                                    </div>
+                                  <% end %>
+                              </div> 
+                            <% end %>                  
+                          </div>	
+                      </div>
+                      </div>
+                  </div>
+                    </div>
+                </div>
+              <%end%>
+          <%end%>
+          <%end%>  
+        <%end%>
+        <%end%>
       <%end%>  
       </div>
       <% menorContador += 1 %>
+    <%end%>
+  <!-- maturidade_selecionada.tipoNivel = 2 é alfanumerico -->
+  <%elsif maturidade_selecionada.tipoNivel == "2"%>
+    <%if maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s%>
+      <%menorContador = maturidade_selecionada.menorNivel.to_s%>
+      <%maiorContador = maturidade_selecionada.maiorNivel.to_s%>
+      <%menorContador = menorContador.to_s%>
+      <%maiorContador = maiorContador.to_s%>
+    <%else%>
+      <%maiorContador = maturidade_selecionada.menorNivel.to_s%>
+      <%menorContador = maturidade_selecionada.maiorNivel.to_s%>
+      <%menorContador = menorContador.to_s%>
+      <%maiorContador = maiorContador.to_s%>
+    <%end%>
+    <% while menorContador <= maiorContador do %>
+      <% menorContadorContar = menorContador%>
+      <!--S== Nivel -->
+      <div id="Nivel-<%=menorContador%>" class="nivel">
+      <!--A== Header-Nivel -->
+      <div id="header-Nivel-<%=menorContador%>" class="expandable-header header-nivel d-flex-center-between nivel w-100">
+        <!-- expandeMain(grau do modelo + '-' + id) -->
+        <div class="expandable-header-left d-flex-center-start" style="min-width: 100%!important;" onclick="show_todos_processos(1)">
+        <!-- o 1 do id é o id da Nivel-->
+        <div onclick="expandeMain('Nivel-<%=menorContador%>')">
+            <i id="plus-Nivel-<%=menorContador%>" class="fa-solid fa-plus hidden"></i>
+            <i id="minus-Nivel-<%=menorContador%>" class="fa-solid fa-minus"></i>
+        </div>
+        <h3 id="titulo-Nivel-<%=menorContador%>" style="max-height: 25px;" onclick="mostra_titulo('1')">Nível <%=menorContador%></h3>
+        </div>
+      </div>
+      <!-- maturidade_selecionada.nivelEscolha = 1 é em processos = 2 em resultados -->
+      <%if maturidade_selecionada.nivelEscolha == "2"%>
+        <% @dimensaos.each do |dimensao| %>
+        <%if dimensao.maturidade_id == @opcao%>
+          <% @processos.each do |processo| %>
+          <%if dimensao.id == processo.dimensao_id%>
+            <% @resultados.each do |resultado| %>
+            <%if processo.id == resultado.processo_id%>
+              <%if resultado.nivel_selecionado.to_s == menorContador%>
+                <!--A== Main-Nivel-F -->
+                <div id="main-Nivel-<%=menorContador%>" class="expandable-main nivel">
+                    <!--S== Processo-1 -->
+                    <div id="Processo-<%=resultado.id%>" class="resultado">
+                    <!--A== Header-Processo-1 -->
+                    <div id="header-Processo-<%=resultado.id%>" class="expandable-header d-flex-center-between resultado w-100">
+                        <div class="expandable-header-left d-flex-center-start" style="min-width: 100%!important;" onclick="show_todos_processos(1)">
+                        <!-- o 1 do id é o id da Nivel-->
+                        <div onclick="expandeMain('Processo-<%=resultado.id%>')">
+                            <i id="plus-Processo-<%=resultado.id%>" class="fa-solid fa-plus"></i>
+                            <i id="minus-Processo-<%=resultado.id%>" class="fa-solid fa-minus hidden"></i>
+                        </div>
+                        <h3 id="titulo-Nivel-<%=menorContador%>-1" style="max-height: 25px;" onclick="mostra_titulo('1')"><%=resultado.descricao%></h3>
+                        </div>
+                    </div>
+                    <div id="main-Processo-<%=resultado.id%>" class="expandable-main resultado hidden">
+                      <div class="file-galery-wrapper nivel">
+                      <div class="table">
+                          <div class="table-content">	
+                            <% resultado.docs.each do |doc| %>
+                              <div class="table-row">	
+                              <%if doc.classificacao == 3%>
+                                <% vetorResultado.push(menorContadorContar) %>
+                              <%end%>	
+                                  <div class="table-data d-flex-center-start"><%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %></a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
+                                  <% if doc.classificacao == 1 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Atende Totalmente</p>
+                                    </div>
+                                  <% elsif doc.classificacao == 2 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Atende parcialmente</p>
+                                    </div>
+                                  <% elsif doc.classificacao == 3 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Não Atende</p>
+                                    </div>
+                                  <% else %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Artefato não classificado</p>
+                                    </div>
+                                  <% end %>
+                              </div> 
+                            <% end %>                  
+                          </div>	
+                      </div>
+                      </div>
+                  </div>
+                    </div>
+                </div>
+              <%end%>
+            <%end%>
+            <%end%>
+          <%end%>
+          <%end%>  
+        <%end%>
+        <%end%>
+      <%elsif maturidade_selecionada.nivelEscolha == "1"%>
+        <% @dimensaos.each do |dimensao| %>
+        <%if dimensao.maturidade_id == @opcao%>
+          <% @processos.each do |processo| %>
+          <%if dimensao.id == processo.dimensao_id%>
+              <%if processo.nivel_selecionado.to_s == menorContador%>
+                <!--A== Main-Nivel-F -->
+                <div id="main-Nivel-<%=menorContador%>" class="expandable-main nivel">
+                    <!--S== Processo-1 -->
+                    <div id="Processo-<%=processo.id%>" class="resultado">
+                    <!--A== Header-Processo-1 -->
+                    <div id="header-Processo-<%=processo.id%>" class="expandable-header d-flex-center-between resultado w-100">
+                        <div class="expandable-header-left d-flex-center-start" style="min-width: 100%!important;" onclick="show_todos_processos(1)">
+                        <!-- o 1 do id é o id da Nivel-->
+                        <div onclick="expandeMain('Processo-<%=processo.id%>')">
+                            <i id="plus-Processo-<%=processo.id%>" class="fa-solid fa-plus"></i>
+                            <i id="minus-Processo-<%=processo.id%>" class="fa-solid fa-minus hidden"></i>
+                        </div>
+                        <h3 id="titulo-Nivel-<%=menorContador%>-1" style="max-height: 25px;" onclick="mostra_titulo('1')"><%=processo.descricao%></h3>
+                        </div>
+                    </div>
+                    <div id="main-Processo-<%=processo.id%>" class="expandable-main resultado hidden">
+                      <div class="file-galery-wrapper nivel">
+                      <div class="table">
+                          <div class="table-content">	
+                            <% processo.docs.each do |doc| %>
+                              <div class="table-row">	
+                              <%if doc.classificacao == 3%>
+                                <% vetorResultado.push(menorContadorContar) %>
+                              <%end%>	
+                                  <div class="table-data d-flex-center-start"><%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %></a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
+                                  <% if doc.classificacao == 1 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Atende Totalmente</p>
+                                    </div>
+                                  <% elsif doc.classificacao == 2 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Atende parcialmente</p>
+                                    </div>
+                                  <% elsif doc.classificacao == 3 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Não Atende</p>
+                                    </div>
+                                  <% else %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Artefato não classificado</p>
+                                    </div>
+                                  <% end %>
+                              </div> 
+                            <% end %>                  
+                          </div>	
+                      </div>
+                      </div>
+                  </div>
+                    </div>
+                </div>
+              <%end%>
+          <%end%>
+          <%end%>  
+        <%end%>
+        <%end%>
+      <%end%>  
+      </div>
+      <% menorContador = menorContador.next %>
     <%end%>
   <%end%>
 </section>
@@ -132,7 +357,11 @@
     <div class="popup-main d-flex-center-between flex-column" id="popup_CalcularNivelMain">
       <div> 
         <div class="popup-titulo">
-          <h2>O nível deste modelo é <%=vetorResultado[0]%></h2>
+          <% if vetorResultado[0].nil? %>
+            <h2>O nível deste modelo é <%=maturidade_selecionada.menorNivel%></h2>
+          <%else%>
+            <h2>O nível deste modelo é <%=vetorResultado[0]%></h2>
+          <%end%>
         </div>
         <div class="popup-padding" style="overflow: hidden;max-height: 80px;">
           <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris finibus eget metus quis dignissim.Lorem ipsum dolor sit amet.</p>

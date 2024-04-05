@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root to: 'cadastro#index'
   get "/main_screen", to: "main_screen#index"
   get "/cadastro", to: "cadastro#index"
+  get "/editar", to: "editar#index"
   get "/cadastroProcesso", to: "cadastro#indexProcesso"
   get "/cadastroResultado", to: "cadastro#indexResultado"
   get "/cadastroMaturidade", to: "cadastro#indexMaturidade"
@@ -9,7 +10,7 @@ Rails.application.routes.draw do
   get "/aplicar", to: "aplicar#index"
   get "/cadastroModeloAplicado", to: "aplicar#indexModeloAplicado"
   get "/visualizar", to: "visualizar#index"
-
+  
   #dimensaos
 
   post "/cadastro/incluir_dimensao", to: "cadastro#incluir_dimensao"
@@ -57,10 +58,16 @@ Rails.application.routes.draw do
 
   post "/cadastroModeloAplicado/incluir_modelo_aplicado", to: "cadastro#incluir_modelo_aplicado"
 
+  #nivel
+
+  post "/editar/incluir_nivel", to: "editar#incluir_nivel"
+  post "/editar/:id/salvar_nivel", to: "editar#salvar_nivel"
+
   #rotas auxiliares
   
   post "cadastro/atualizar_opcao", to:"cadastro#atualizar_opcao"
   post "aplicar/atualizar_opcao", to:"aplicar#atualizar_opcao"
   post "visualizar/atualizar_opcao", to:"visualizar#atualizar_opcao"
+  post "editar/atualizar_opcao", to:"editar#atualizar_opcao"
 end
 

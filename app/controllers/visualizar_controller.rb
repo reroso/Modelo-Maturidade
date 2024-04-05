@@ -18,6 +18,4 @@ class VisualizarController < ApplicationController
 
     end
 
-    
-
 end

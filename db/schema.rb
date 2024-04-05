@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_08_225619) do
+ActiveRecord::Schema.define(version: 2024_04_05_045618) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -51,6 +51,14 @@ ActiveRecord::Schema.define(version: 2024_02_08_225619) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "levels", force: :cascade do |t|
+    t.string "index"
+    t.text "descricao"
+    t.integer "modelo_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "maturidades", force: :cascade do |t|
     t.string "nome"
     t.string "descricao"
@@ -79,6 +87,14 @@ ActiveRecord::Schema.define(version: 2024_02_08_225619) do
     t.integer "maturidade_id", null: false
     t.index ["dominio_id"], name: "index_modelo_aplicados_on_dominio_id"
     t.index ["maturidade_id"], name: "index_modelo_aplicados_on_maturidade_id"
+  end
+
+  create_table "nivels", force: :cascade do |t|
+    t.string "index"
+    t.text "descricao"
+    t.integer "modelo_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "nota", force: :cascade do |t|

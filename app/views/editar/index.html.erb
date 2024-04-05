@@ -16,9 +16,10 @@
       </div>
       <div style="display: none">
         <%if @opcao != 0%>
-            <% maturidade_selecionada = Maturidade.find(@opcao)%>
-            <div id="mudancaResultado" class="<%=maturidade_selecionada.resultadoEscolha%>"> </div>
-            <div id="maturidadeSelecionadaNivelEscolha" class="<%= maturidade_selecionada.nivelEscolha%>"></div>
+          <% maturidade_selecionada = Maturidade.find(@opcao)%>
+          <div id="mudancaResultado" class="<%=maturidade_selecionada.resultadoEscolha%>"> </div>
+        <% else %>
+          <% maturidade_selecionada = Maturidade.new %>
         <%end%>
       </div>
     </header>
@@ -33,42 +34,140 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="text-center">1.</td>
-            <td><input type="text" id="input_descricao_1" name="" value="Crítico" disabled/></td>
-            <td class="text-center">
-              <button class="table-btn" id="btn_editar_1" title="Editar descrição" onclick="trocaEditardescricaoNivel(1)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
-              <button class="table-btn" id="btn_salvar_1" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(1)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
-              <button class="table-btn"  onclick="show_popup('confirmar_exclusao', 'rota')" title="Excluir nível" ><%= image_tag('icons/delete.svg', width: '20px', height: '20px') %></button>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-center">2.</td>
-            <td><input type="text" id="input_descricao_2" name="" value="Fundamental Básico" disabled/></td>
-            <td class="text-center">
-              <button class="table-btn" id="btn_editar_2" title="Editar descrição" onclick="trocaEditardescricaoNivel(2)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
-              <button class="table-btn" id="btn_salvar_2" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(2)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
-              <button class="table-btn"  onclick="show_popup('confirmar_exclusao', 'rota')" title="Excluir nível" ><%= image_tag('icons/delete.svg', width: '20px', height: '20px') %></button>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-center">3.</td>
-            <td><input type="text" id="input_descricao_3" name="" value="Fundamental Avançado" disabled/></td>
-            <td class="text-center">
-              <button class="table-btn" id="btn_editar_3" title="Editar descrição" onclick="trocaEditardescricaoNivel(3)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
-              <button class="table-btn" id="btn_salvar_3" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(3)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
-              <button class="table-btn"  onclick="show_popup('confirmar_exclusao', 'rota')" title="Excluir nível" ><%= image_tag('icons/delete.svg', width: '20px', height: '20px') %></button>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-center">4.</td>
-            <td><input type="text" id="input_descricao_4" name="" value="Complementar" disabled/></td>
-            <td class="text-center">
-              <button class="table-btn" id="btn_editar_4" title="Editar descrição" onclick="trocaEditardescricaoNivel(4)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
-              <button class="table-btn" id="btn_salvar_4" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(4)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
-              <button class="table-btn"  onclick="show_popup('confirmar_exclusao', 'rota')"  title="Excluir nível" ><%= image_tag('icons/delete.svg', width: '20px', height: '20px') %></button>
-            </td>
-          </tr>
+      <%if maturidade_selecionada.tipoNivel == "1"%>
+        <%if maturidade_selecionada.menorNivel.to_i < maturidade_selecionada.maiorNivel.to_i%>
+          <%menorContador = maturidade_selecionada.menorNivel.to_i%>
+          <%maiorContador = maturidade_selecionada.maiorNivel.to_i%>
+          <%menorContador = menorContador.to_i%>
+          <%maiorContador = maiorContador.to_i%>
+        <%else%>
+          <%maiorContador = maturidade_selecionada.menorNivel.to_i%>
+          <%menorContador = maturidade_selecionada.maiorNivel.to_i%>
+          <%menorContador = menorContador.to_i%>
+          <%maiorContador = maiorContador.to_i%>
+        <%end%>
+        <% while menorContador <= maiorContador do %>
+          <% if @levels.empty? %>
+            <tr>
+              <td class="text-center"><%=menorContador%>.</td>
+              <form id="form_<%=menorContador%>" action="/editar/incluir_nivel" method="post">
+                <input type="text" id="indexNivel" class="hidden" name="index" value="<%=menorContador%>">
+                <td><input type="text" id="input_descricao_<%=menorContador%>" name="descricao" disabled></td>
+                <input type="text" id="modeloNivel" class="hidden" name="modelo_id" value="<%=@opcao%>">
+                <td class="text-center">
+                  <button class="table-btn" id="btn_editar_<%=menorContador%>" title="Editar descrição" onclick="trocaEditardescricaoNivel(<%=menorContador%>)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
+                  <button class="table-btn" id="btn_salvar_<%=menorContador%>" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(<%=menorContador%>)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
+              </form>
+              </td>
+            </tr>
+          <% else %>
+            <%salvarId = 0%>
+            <%salvarDescricao = 0%>
+            <% @levels.each do |level| %>
+              <% if menorContador == level.index.to_i && level.modelo_id.to_i == @opcao %>
+                <%salvarId = level.id%>
+                <%salvarDescricao = level.descricao%>
+              <%end%>
+            <% end %>
+            <% if  salvarId != 0%>
+              <tr>
+                <td class="text-center"><%=menorContador%>.</td>
+                <form id="form_<%=menorContador%>" action="/editar/<%=salvarId%>/salvar_nivel" method="post">
+                <input type="text" class="hidden" id="indexNivel" name="index" value="<%=menorContador%>">
+                <td><input type="text" id="input_descricao_<%=menorContador%>" name="descricao" value="<%= salvarDescricao%>" disabled></td>
+                <input type="text" class="hidden" id="modeloNivel" name="modelo_id" value="<%=@opcao%>">
+                <td class="text-center">
+                  <button class="table-btn" id="btn_editar_<%=menorContador%>" title="Editar descrição" onclick="trocaEditardescricaoNivel(<%=menorContador%>)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
+                  <button class="table-btn" id="btn_salvar_<%=menorContador%>" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(<%=menorContador%>)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
+                </form>
+                </td>
+              </tr>
+            <%else%>
+              <tr>
+                <td class="text-center"><%=menorContador%>.</td>
+                <form id="form_<%=menorContador%>" action="/editar/incluir_nivel" method="post">
+                <input type="text" class="hidden" id="indexNivel" name="index" value="<%=menorContador%>">
+                <td><input type="text" id="input_descricao_<%=menorContador%>" name="descricao" disabled></td>
+                <input type="text" class="hidden" id="modeloNivel" name="modelo_id" value="<%=@opcao%>">
+                <td class="text-center">
+                  <button class="table-btn" id="btn_editar_<%=menorContador%>" title="Editar descrição" onclick="trocaEditardescricaoNivel(<%=menorContador%>)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
+                  <button class="table-btn" id="btn_salvar_<%=menorContador%>" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(<%=menorContador%>)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
+                </form>
+                </td>
+              </tr>
+            <%end%>
+            <%salvarId = 0%>
+          <% end %>
+
+          <% menorContador += 1 %>
+        <%end%>
+      <%elsif maturidade_selecionada.tipoNivel == "2"%>
+        <%if maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s%>
+          <%menorContador = maturidade_selecionada.menorNivel.to_s%>
+          <%maiorContador = maturidade_selecionada.maiorNivel.to_s%>
+          <%menorContador = menorContador.to_s%>
+          <%maiorContador = maiorContador.to_s%>
+        <%else%>
+          <%maiorContador = maturidade_selecionada.menorNivel.to_s%>
+          <%menorContador = maturidade_selecionada.maiorNivel.to_s%>
+          <%menorContador = menorContador.to_s%>
+          <%maiorContador = maiorContador.to_s%>
+        <%end%>
+        <% while menorContador <= maiorContador do %>
+          <% if @levels.empty? %>
+            <tr>
+              <td class="text-center"><%=menorContador%>.</td>
+              <form id="form_<%=menorContador%>" action="/editar/incluir_nivel" method="post">
+                <input type="text" id="indexNivel" class="hidden" name="index" value="<%=menorContador%>">
+                <td><input type="text" id="input_descricao_<%=menorContador%>" name="descricao" disabled></td>
+                <input type="text" id="modeloNivel" class="hidden" name="modelo_id" value="<%=@opcao%>">
+                <td class="text-center">
+                  <button class="table-btn" id="btn_editar_<%=menorContador%>" title="Editar descrição" onclick="trocaEditardescricaoNivel(<%=menorContador%>)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
+                  <button class="table-btn" id="btn_salvar_<%=menorContador%>" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(<%=menorContador%>)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
+              </form>
+              </td>
+            </tr>
+          <% else %>
+            <%salvarId = 0%>
+            <%salvarDescricao = 0%>
+            <% @levels.each do |level| %>
+              <% if menorContador == level.index.to_s && level.modelo_id.to_i == @opcao %>
+                <%salvarId = level.id%>
+                <%salvarDescricao = level.descricao%>
+              <%end%>
+            <% end %>
+            <% if  salvarId != 0%>
+              <tr>
+                <td class="text-center"><%=menorContador%>.</td>
+                <form id="form_<%=menorContador%>" action="/editar/<%=salvarId%>/salvar_nivel" method="post">
+                <input type="text" class="hidden" id="indexNivel" name="index" value="<%=menorContador%>">
+                <td><input type="text" id="input_descricao_<%=menorContador%>" name="descricao" value="<%= salvarDescricao%>" disabled></td>
+                <input type="text" class="hidden" id="modeloNivel" name="modelo_id" value="<%=@opcao%>">
+                <td class="text-center">
+                  <button class="table-btn" id="btn_editar_<%=menorContador%>" title="Editar descrição" onclick="trocaEditardescricaoNivel(<%=menorContador%>)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
+                  <button class="table-btn" id="btn_salvar_<%=menorContador%>" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(<%=menorContador%>)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
+                </form>
+                </td>
+              </tr>
+            <%else%>
+              <tr>
+                <td class="text-center"><%=menorContador%>.</td>
+                <form id="form_<%=menorContador%>" action="/editar/incluir_nivel" method="post">
+                <input type="text" class="hidden" id="indexNivel" name="index" value="<%=menorContador%>">
+                <td><input type="text" id="input_descricao_<%=menorContador%>" name="descricao" disabled></td>
+                <input type="text" class="hidden" id="modeloNivel" name="modelo_id" value="<%=@opcao%>">
+                <td class="text-center">
+                  <button class="table-btn" id="btn_editar_<%=menorContador%>" title="Editar descrição" onclick="trocaEditardescricaoNivel(<%=menorContador%>)"><%= image_tag('icons/edit.svg', width: '20px', height: '20px') %></button> 
+                  <button class="table-btn" id="btn_salvar_<%=menorContador%>" title="Salvar Alterações" onclick="trocaEditardescricaoNivel(<%=menorContador%>)" disabled><%= image_tag('icons/salvar.svg', width: '20px', height: '20px') %></button>
+                </form>
+                </td>
+              </tr>
+            <%end%>
+            <%salvarId = 0%>
+          <% end %>
+          <% menorContador = menorContador.next %>
+        <%end%>
+      <%end%>
         </tbody>
       </table>
     </section>
@@ -251,13 +350,15 @@
       let section_infos  = document.getElementById("section-editar-infos");
       let titulo_btn = document.getElementById("titulo_trocaInfosModelo");
 
-      if(section_niveis.classList.contains("hidden")) {
+      if(section_niveis.classList.contains("hidden") == true) {
         titulo_btn.textContent = "Editar informações do modelo";
         section_niveis.classList.remove("hidden");
         section_infos.classList.add("hidden");
+        console.log('oi');
       } else {
         titulo_btn.textContent = "Voltar para edição de níveis";
         section_niveis.classList.add("hidden");
+        console.log('tchau');
         section_infos.classList.remove("hidden");
       }
     }
@@ -268,16 +369,37 @@
       let input = document.getElementById("input_descricao_"+id_nivel);
       let btn_editar = document.getElementById("btn_editar_"+id_nivel);
       let btn_salvar = document.getElementById("btn_salvar_"+id_nivel);
+      const form = document.getElementById("form_"+id_nivel);
 
       if(input.disabled) {
         input.disabled = false;
         btn_editar.disabled = true;
         btn_salvar.disabled = false;
       } else {
+        form.submit();
         input.disabled = true;
         btn_editar.disabled = false;
         btn_salvar.disabled = true;
+        
       }
+
     }
+
+    $(document).ready(function(){
+      $(".header-select #maturidade_id").change(function(){
+        var opcaoSelecionada = this.value;
+        axios.post("/editar/atualizar_opcao", { opcao: opcaoSelecionada })
+        .then(function(response) {
+          // Lógica para sucesso na resposta
+          var redirectUrl = response.data.redirect_url;
+          window.location.href = redirectUrl;
+          console.log(response.data);
+        })
+        .catch(function(error) {
+          // Lógica para erro na resposta
+          console.error(error);
+        });
+      });
+    });
   </script>
   
