@@ -75,5 +75,6 @@ Rails.application.routes.draw do
   post "visualizar/atualizar_opcao", to:"visualizar#atualizar_opcao"
   post "editar/atualizar_opcao", to:"editar#atualizar_opcao"
   post "avaliar/atualizar_opcao", to:"avaliar#atualizar_opcao"
+  
 end
 

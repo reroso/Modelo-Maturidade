@@ -347,7 +347,7 @@
       $(".header-select #maturidade_id").change(function(){
       var opcaoSelecionada = this.value;
       
-      axios.post("/aplicar/atualizar_opcao", { opcao: opcaoSelecionada })
+      axios.post("/avaliar/atualizar_opcao", { opcao: opcaoSelecionada })
       .then(function(response) {
           // Lógica para sucesso na resposta
           var redirectUrl = response.data.redirect_url;
