@@ -237,6 +237,8 @@
           <div class="form-title-wrapper w-100 h-fit">
               <h3>Escolha quem usará o nivel de maturidade:</h3>
           </div>
+          <input type="radio" id="nivel_dimensao" name="nivel_escolha" value="3" <%= maturidade_selecionada.nivelEscolha == "3" ? 'checked' : '' %>> 
+              <label for="nivel_dimensao">Dimensao</label>
           <input type="radio" id="nivel_processo" name="nivel_escolha" value="1" <%= maturidade_selecionada.nivelEscolha == "1" ? 'checked' : '' %>> 
               <label for="nivel_processo">Processos</label>
           <input type="radio" id="nivel_resultado_esperado" name="nivel_escolha" value="2" <%= maturidade_selecionada.nivelEscolha == "2" ? 'checked' : '' %>> 
@@ -281,13 +283,6 @@
       </div>
     </div>
   </section>
-
-
-
-
-
-
-
 
   <script>
     //contante de todos os ids de todos os popups da pagina;
@@ -412,4 +407,65 @@
     });
     
   </script>
+
   
+  <script>//função para mudar o nivel do input, de tipoNivel
+   
+    const tipoNivelNumerico = document.getElementById('tipo_nivel_numerico');
+    const tipoNivelAlfanumerico = document.getElementById('tipo_nivel_alfanumerico');
+    const tipoNivelInput = document.querySelector('input[name="tipoNivel"]');
+
+    function atualizarValorTipoNivel() {
+      if (tipoNivelNumerico.checked) {
+        tipoNivelInput.value = '1';
+      } else if (tipoNivelAlfanumerico.checked) {
+        tipoNivelInput.value = '2';
+      }
+    }
+
+    tipoNivelNumerico.addEventListener('change', atualizarValorTipoNivel);
+    tipoNivelAlfanumerico.addEventListener('change', atualizarValorTipoNivel);
+  
+  </script>
+  
+
+
+  <script>//função para mudar o input, se vai ter resultado esperado ou não
+
+    const escolhaResultadoSim = document.getElementById('escolha_resultado_sim');
+    const escolhaResultadoNao = document.getElementById('escolha_resultado_nao');
+    const resultadoEscolhaInput = document.querySelector('input[name="resultadoEscolha"]');
+
+    function atualizarValorResultadoEscolha() {
+      if (escolhaResultadoSim.checked) {
+        resultadoEscolhaInput.value = '1';
+      } else if (escolhaResultadoNao.checked) {
+        resultadoEscolhaInput.value = '2';
+      }
+    }
+
+    escolhaResultadoSim.addEventListener('change', atualizarValorResultadoEscolha);
+    escolhaResultadoNao.addEventListener('change', atualizarValorResultadoEscolha);
+  
+  </script>
+
+  <script>
+    const nivelDimensao = document.getElementById('nivel_dimensao');
+    const nivelProcesso = document.getElementById('nivel_processo');
+    const nivelResultadoEsperado = document.getElementById('nivel_resultado_esperado');
+    const nivelEscolhaInput = document.querySelector('input[name="nivelEscolha"]');
+
+    function atualizarValorNivelEscolha() {
+      if (nivelDimensao.checked) {
+        nivelEscolhaInput.value = '3';
+      } else if (nivelProcesso.checked) {
+        nivelEscolhaInput.value = '1';
+      } else if (nivelResultadoEsperado.checked) {
+        nivelEscolhaInput.value = '2';
+      }
+    }
+
+    nivelDimensao.addEventListener('change', atualizarValorNivelEscolha);
+    nivelProcesso.addEventListener('change', atualizarValorNivelEscolha);
+    nivelResultadoEsperado.addEventListener('change', atualizarValorNivelEscolha);
+  </script>
