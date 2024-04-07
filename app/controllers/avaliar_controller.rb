@@ -19,4 +19,5 @@ class AvaliarController < ApplicationController
 
     end
 
+
 end

@@ -508,7 +508,6 @@ function mostra_CalcularNivel() {
 
 $(document).ready(function(){
   $(".header-select #maturidade_id").change(function(){
-    console.log("Test1");
     var opcaoSelecionada = this.value;
     axios.post("/visualizar/atualizar_opcao", { opcao: opcaoSelecionada })
     .then(function(response) {

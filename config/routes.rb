@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
   root to: 'cadastro#index'
+
+  get "/editar", to: "editar#index"
   get "/main_screen", to: "main_screen#index"
   get "/cadastro", to: "cadastro#index"
-  get "/editar", to: "editar#index"
   get "/cadastroProcesso", to: "cadastro#indexProcesso"
   get "/cadastroResultado", to: "cadastro#indexResultado"
   get "/cadastroMaturidade", to: "cadastro#indexMaturidade"
@@ -47,8 +48,6 @@ Rails.application.routes.draw do
   
   post "/cadastroMaturidade/incluir_maturidade", to: "cadastro#incluir_maturidade"
   post "/cadastroMaturidade/alterar_maturidade", to: "cadastro#alterar_maturidade"
-  post "/cadastroMaturidade/:id/salvar_maturidade", to: "cadastro#salvar_maturidade"
-  get "/cadastroMaturidade/:id/excluir_maturidade", to: "cadastro#excluir_maturidade"
   get '/cadastroMaturidade/:id', to: 'cadastro#mostrar_maturidade'
 
   #dominio
@@ -64,6 +63,11 @@ Rails.application.routes.draw do
   post "/editar/incluir_nivel", to: "editar#incluir_nivel"
   post "/editar/:id/salvar_nivel", to: "editar#salvar_nivel"
 
+  #editar
+
+  post "/editar/:id/salvar_maturidade", to: "editar#salvar_maturidade"
+  get "/editar/:id/excluir_maturidade", to: "editar#excluir_maturidade"
+
   #rotas auxiliares
   
   post "cadastro/atualizar_opcao", to:"cadastro#atualizar_opcao"
@@ -71,5 +75,6 @@ Rails.application.routes.draw do
   post "visualizar/atualizar_opcao", to:"visualizar#atualizar_opcao"
   post "editar/atualizar_opcao", to:"editar#atualizar_opcao"
   post "avaliar/atualizar_opcao", to:"avaliar#atualizar_opcao"
+  
 end
 
