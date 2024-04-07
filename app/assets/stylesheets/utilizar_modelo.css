@@ -125,7 +125,7 @@ button {
             border-radius: 5px;
           }
         /* \/ Input type=file */
-        .file-galery-item:last-child {
+        .file-galery-item {
           margin-top: 10px;
           padding-top: 10px;
           border-top: 1px solid rgb(237, 237, 237);
