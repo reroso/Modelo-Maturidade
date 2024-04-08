@@ -110,7 +110,7 @@
                               <!-- Arquivo-1-Dimensão-1 -->
                               <li id="doc-<%= dimensao.id %>-<%= processo.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-start">
                                 <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
-                                <button onclick="showModalConfirmacao('/cadastroProcesso/<%= doc.id %>/excluir_processo_docs')" class="file-galery-item-btn">
+                                <button onclick="show_popup('confirmar_exclusao', '/cadastroProcesso/<%= doc.id %>/excluir_processo_docs')" class="file-galery-item-btn">
                                   <%= image_tag('icons/delete_folder.svg', width: '25px', height: '25px') %>
                                 </button>
                               </li>
@@ -158,7 +158,7 @@
                                           <!-- Arquivo-1-Dimensão-1 -->
                                           <li id="doc-<%= dimensao.id %>-<%= resultado.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-start">
                                             <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
-                                            <button onclick="showModalConfirmacao('/cadastroresultado/<%= doc.id %>/excluir_resultado_docs')" class="file-galery-item-btn">
+                                            <button onclick="show_popup('confirmar_exclusao', '/cadastroresultado/<%= doc.id %>/excluir_resultado_docs')" class="file-galery-item-btn">
                                               <%= image_tag('icons/delete_folder.svg', width: '25px', height: '25px') %>
                                             </button>
                                           </li>
@@ -230,7 +230,7 @@
       <p>Digite "confirmo" para executar essa ação</p>
       <input onkeyup="liberaBotaoExclusao()" type="text" id="input_confirmation_exclusao" placeholder="confirmo">
       <div class="confirmation-main-btns d-flex-center-end w-100">
-        <button onclick="showModalConfirmacao()" class="confirmation-main-btns-cancelar" value="">Cancelar</button>
+        <button onclick="show_popup(confirmar_exclusao, '')" class="confirmation-main-btns-cancelar" value="">Cancelar</button>
         <button id="btn_confirma_exclusao" class="confirmation-main-btns-confirmar" disabled>Excluir</button>
       </div>
     </div>
@@ -260,7 +260,8 @@
           popupBg.classList.add("hidden");
         }
 
-        if(popup == "confirmar_exclusao") {
+        if(id_popup == "confirmar_exclusao") {
+          console.log('oi');
           document.getElementById('btn_confirma_exclusao').setAttribute('onclick', `location.href='`+rota+`'`);
         }
       }
@@ -318,7 +319,7 @@
     }
 
     //* Mostrar Modal de confirmação de exclusão:
-    function showModalConfirmacao() {
+    function showModalConfirmacao(rota) {
       let modalConfirmacao = document.getElementById('modal_confirmacao');
       let inputConfirmaExclusao = document.getElementById('input_confirmation_exclusao');
       let btnConfirmaExclusao = document.getElementById('btn_confirma_exclusao');
