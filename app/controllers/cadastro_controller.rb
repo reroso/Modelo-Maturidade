@@ -157,7 +157,6 @@ class CadastroController < ApplicationController
         blob = attachment.blob  # Obtém o blob associado ao attachment
         blob.update(classificacao: params[:classificacao])
         
-        redirect_to "/aplicar"
     end
 
     def incluir_maturidade
