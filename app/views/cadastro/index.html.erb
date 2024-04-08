@@ -1,6 +1,6 @@
           <%= select_tag "maturidade_id", options_from_collection_for_select(@maturidades, "id", "nome", @opcao), prompt: "Escolha um modelo", class: "modelo corpo_texto_select" %>
         </div>
-        <%= puts @opcao %>
+        
         <%if @opcao != 0%>
           <% maturidade_selecionada = Maturidade.find(@opcao)%>
           <div id="mudancaResultado" class="<%=maturidade_selecionada.resultadoEscolha%>"> </div>

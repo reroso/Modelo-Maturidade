@@ -78,6 +78,13 @@ class CadastroController < ApplicationController
         processo = Processo.find(params[:id])
         processo.docs.attach(params[:docs])
         
+        documento_id = processo.docs.last.id
+
+        attachment = ActiveStorage::Attachment.find(documento_id)
+        blob = attachment.blob  # Obtém o blob associado ao attachment
+        blob.update(descricao: params[:descricao])
+        
+
         redirect_to "/aplicar"
     end
 
@@ -96,6 +103,7 @@ class CadastroController < ApplicationController
 
         redirect_to "/aplicar"
     end
+
 
         #resultados
 
@@ -131,6 +139,12 @@ class CadastroController < ApplicationController
     def salvar_resultado_docs
         resultado = Resultado.find(params[:id])
         resultado.docs.attach(params[:docs])
+
+        documento_id = resultado.docs.last.id
+
+        attachment = ActiveStorage::Attachment.find(documento_id)
+        blob = attachment.blob  # Obtém o blob associado ao attachment
+        blob.update(descricao: params[:descricao])
         
         redirect_to "/aplicar"
     end
@@ -145,7 +159,7 @@ class CadastroController < ApplicationController
 
     def excluir_resultado_docs
 
-        attachment = ActiveStorage::Attachment.find(params[:id])  # Substitua params[:id] pelo ID correto
+        attachment = ActiveStorage::Attachment.find(params[:id])  
         attachment.purge
 
         redirect_to "/aplicar"

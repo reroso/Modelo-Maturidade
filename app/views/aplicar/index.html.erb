@@ -90,9 +90,32 @@
                         </div>
                         <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>')"><strong><%= contadorDimensaos %>.<%= contadorProcessos %> - </strong><%= processo.descricao %></h3>
                         <% if processo.nivel_selecionado %>
-                        <div class="select-nivel-maturidade processoNivelSelecionado" name="nome" id="" disabled>
-                          <p><%= processo.nivel_selecionado %> - Descrição processo</p>
-                        </div>
+                          <%if maturidade_selecionada.tipoNivel == "1"%>
+                            <%salvarDescricao = ""%>
+                            <% @levels.each do |level| %>
+                              <% if processo.nivel_selecionado.to_i == level.index.to_i && level.modelo_id.to_i == @opcao %>
+                                <%salvarDescricao = level.descricao%>
+                              <%end%>
+                            <% end %>
+                          <%else%>
+                            <%salvarDescricao = ""%>
+                            <%contadorExistencia = 0%>
+                            <% @levels.each do |level| %>
+                              <% if processo.nivel_selecionado.to_s == level.index.to_s && level.modelo_id.to_i == @opcao %>
+                                <%salvarDescricao = level.descricao%>
+                                <%contadorExistencia = 1%>
+                              <%end%>
+                            <% end %>
+                          <%end%>
+                          <div class="select-nivel-maturidade processoNivelSelecionado" name="nome" id="" disabled>
+                            <p><%= processo.nivel_selecionado %> 
+                            <% if contadorExistencia == 0%>
+                              - <%= salvarDescricao %>
+                            <% end %>
+                            </p>
+                          </div>
+                          <%salvarDescricao = ""%>
+                          <%contadorExistencia = 0%>
                         <% end %>
                       </div>
                     </div>  
@@ -110,7 +133,7 @@
                               <% processo.docs.each do |doc| %>
                               <!-- Arquivo-1-Dimensão-1 -->
                               <li id="doc-<%= dimensao.id %>-<%= processo.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-start">
-                                <h5 class="descricao-artefato">Artefato01</h5>
+                                <h5 class="descricao-artefato"><%= doc.descricao%></h5>
                                 <span class="descricao-artefato">-</span>
                                 <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
                                 <button onclick="show_popup('confirmar_exclusao', '/cadastroProcesso/<%= doc.id %>/excluir_processo_docs')" class="file-galery-item-btn">
@@ -147,9 +170,32 @@
                                     <i id="minus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid fa-minus hidden"></i>
                                   </div>
                                   <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')"><strong><%= contadorDimensaos %>.<%= contadorProcessos %>.<%= contadorResultados %> - </strong><%= resultado.descricao %></h3>
-                                  <div class="select-nivel-maturidade resultadoNivelSelecionado" style="font-weight: 600;font-size: 13px;padding: 3px 6px; width: 25px!important; color: #5c8b10; border-color: #5c8b10;" name="nome" id="" disabled>
-                                    <p><%= resultado.nivel_selecionado %></p>
+                                  <%if maturidade_selecionada.tipoNivel == "1"%>
+                                    <%salvarDescricao = ""%>
+                                    <% @levels.each do |level| %>
+                                      <% if resultado.nivel_selecionado.to_i == level.index.to_i && level.modelo_id.to_i == @opcao %>
+                                        <%salvarDescricao = level.descricao%>
+                                      <%end%>
+                                    <% end %>
+                                  <%else%>
+                                    <%salvarDescricao = ""%>
+                                    <%contadorExistencia = 0%>
+                                    <% @levels.each do |level| %>
+                                      <% if resultado.nivel_selecionado.to_s == level.index.to_s && level.modelo_id.to_i == @opcao %>
+                                        <%salvarDescricao = level.descricao%>
+                                        <%contadorExistencia = 1%>
+                                      <%end%>
+                                    <% end %>
+                                  <%end%>
+                                  <div class="select-nivel-maturidade resultadoNivelSelecionado" name="nome" id="" disabled>
+                                    <p><%= resultado.nivel_selecionado %>
+                                    <% if contadorExistencia == 0%> 
+                                      - <%= salvarDescricao %>
+                                    <% end %>
+                                    </p>
                                   </div>
+                                  <%salvarDescricao = ""%>
+                                  <%contadorExistencia = 0%>
                                 </div>
                               </div>
                               <!--A== Main-Resultado -->
@@ -161,6 +207,8 @@
                                         <% resultado.docs.each do |doc| %>
                                           <!-- Arquivo-1-Dimensão-1 -->
                                           <li id="doc-<%= dimensao.id %>-<%= resultado.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-start">
+                                            <h5 class="descricao-artefato"><%= doc.descricao%></h5>
+                                            <span class="descricao-artefato">-</span>
                                             <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
                                             <button onclick="show_popup('confirmar_exclusao', '/cadastroresultado/<%= doc.id %>/excluir_resultado_docs')" class="file-galery-item-btn">
                                               <%= image_tag('icons/delete_folder.svg', width: '25px', height: '25px') %>
@@ -170,8 +218,9 @@
                                       <% end %>
                                       <!-- Adicionar arquivos -->
                                       <li class="file-galery-item d-flex-center-start">
-                                        <form action="/cadastroResultado/<%=resultado.id%>/salvar_resultado_docs" method="POST" enctype="multipart/form-data">
+                                          <form action="/cadastroResultado/<%=resultado.id%>/salvar_resultado_docs" method="POST" enctype="multipart/form-data">
                                           <input type="file" name="docs"/>
+                                          <input name="descricao" class="input-artefato" id="descricao_artefato" placeholder="Descrição do artefato" type="text">
                                           <button type="submit">Cadastrar</button>
                                         </form>
                                       </li>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_05_045618) do
+ActiveRecord::Schema.define(version: 2024_04_08_160844) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 2024_04_05_045618) do
     t.string "checksum", null: false
     t.datetime "created_at", null: false
     t.integer "classificacao"
+    t.text "descricao"
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -40,6 +41,9 @@ ActiveRecord::Schema.define(version: 2024_04_05_045618) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "maturidade_id", null: false
     t.index ["maturidade_id"], name: "index_dimensaos_on_maturidade_id"
+  end
+
+  create_table "documentos_opcoes", force: :cascade do |t|
   end
 
   create_table "dominios", force: :cascade do |t|
@@ -68,6 +72,13 @@ ActiveRecord::Schema.define(version: 2024_04_05_045618) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "minhas_opcoes", force: :cascade do |t|
+    t.integer "active_storage_blob_id", null: false
+    t.integer "opcao", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "modelo_aplicados", force: :cascade do |t|
     t.string "metodo"
     t.string "instituicao"
@@ -77,6 +88,20 @@ ActiveRecord::Schema.define(version: 2024_04_05_045618) do
     t.integer "maturidade_id", null: false
     t.index ["dominio_id"], name: "index_modelo_aplicados_on_dominio_id"
     t.index ["maturidade_id"], name: "index_modelo_aplicados_on_maturidade_id"
+  end
+
+  create_table "nivels", force: :cascade do |t|
+    t.string "index"
+    t.text "descricao"
+    t.integer "modelo_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "nota", force: :cascade do |t|
+    t.string "descricao"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "processos", force: :cascade do |t|
