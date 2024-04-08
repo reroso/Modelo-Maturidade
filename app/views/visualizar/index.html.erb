@@ -142,7 +142,7 @@
                             <i id="plus-Processo-<%=processo.id%>" class="fa-solid fa-plus"></i>
                             <i id="minus-Processo-<%=processo.id%>" class="fa-solid fa-minus hidden"></i>
                         </div>
-                        <h3 id="titulo-Nivel-<%=menorContador%>-1" style="max-height: 25px;" onclick="mostra_titulo('1')"><%=dimensao.descricao%> <strong>></strong> <%=processo.descricao%></h3>
+                        <h3 id="titulo-Nivel-<%=menorContador%>-1" style="max-height: 25px;" onclick="mostra_titulo('1')"><%=dimensao.descricao%> <strong>→</strong> <%=processo.descricao%></h3>
                         </div>
                     </div>
                     <div id="main-Processo-<%=processo.id%>" class="expandable-main resultado hidden">
@@ -239,7 +239,7 @@
                             <i id="plus-Processo-<%=resultado.id%>" class="fa-solid fa-plus"></i>
                             <i id="minus-Processo-<%=resultado.id%>" class="fa-solid fa-minus hidden"></i>
                         </div>
-                        <h3 id="titulo-Nivel-<%=menorContador%>-1" style="max-height: 25px;" onclick="mostra_titulo('1')"><%=dimensao.descricao%> <strong>></strong> <%=processo.descricao%> <strong>></strong> <%=resultado.descricao%></h3>
+                        <h3 id="titulo-Nivel-<%=menorContador%>-1" style="max-height: 25px;" onclick="mostra_titulo('1')"><%=dimensao.descricao%> <strong>→</strong> <%=processo.descricao%> <strong>→</strong> <%=resultado.descricao%></h3>
                         </div>
                     </div>
                     <div id="main-Processo-<%=resultado.id%>" class="expandable-main resultado hidden">
@@ -354,7 +354,7 @@
 </main>
 
 <section class="pop-up-calcularNivel d-flex-center-center hidden" id="popup_CalcularNivel">
-    <div class="popup-main d-flex-center-between flex-column" id="popup_CalcularNivelMain">
+    <div class="popup-main d-flex-center-evenly flex-column" style="height:150px;" id="popup_CalcularNivelMain">
       <div> 
         <div class="popup-titulo">
           <% if vetorResultado[0].nil? %>
@@ -363,11 +363,8 @@
             <h2>O nível deste modelo é <%=vetorResultado[0]%></h2>
           <%end%>
         </div>
-        <div class="popup-padding" style="overflow: hidden;max-height: 80px;">
-          <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris finibus eget metus quis dignissim.Lorem ipsum dolor sit amet.</p>
-        </div>
       </div>
-      <div class="popup-btn popup-padding d-flex-center-end w-100">
+      <div class="popup-btn popup-padding d-flex-center-center w-100">
         <button onclick="mostra_CalcularNivel()">Fechar</button>
       </div>
     </div>
