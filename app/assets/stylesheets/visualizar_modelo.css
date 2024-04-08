@@ -265,16 +265,17 @@ h1,h2,h3,h4,h5,h6 {
 	}
 }
 
+.table-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .table-data, .header__item {
-	flex: 1 1 20%;
   padding: 15px;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
 }
 
-.table-data a {
-  color: #000;
+.table-data p {
+  text-align: end;
 }
 
 .header__item {

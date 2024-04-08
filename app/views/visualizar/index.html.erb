@@ -78,7 +78,7 @@
                             <i id="plus-Processo-<%=resultado.id%>" class="fa-solid fa-plus"></i>
                             <i id="minus-Processo-<%=resultado.id%>" class="fa-solid fa-minus hidden"></i>
                         </div>
-                        <h3 id="titulo-Nivel-<%=menorContador%>-1" style="max-height: 25px;" onclick="mostra_titulo('1')"><%=resultado.descricao%></h3>
+                        <h3 id="titulo-Nivel-<%=menorContador%>-1" style="max-height: 25px;" onclick="mostra_titulo('1')"><%=dimensao.descricao%> <strong>→</strong> <%=processo.descricao%> <strong>→</strong> <%=resultado.descricao%></h3>
                         </div>
                     </div>
                     <div id="main-Processo-<%=resultado.id%>" class="expandable-main resultado hidden">
@@ -153,9 +153,12 @@
                               <%if doc.classificacao == 3%>
                                 <% vetorResultado.push(menorContador-1) %>
                               <%end%>	
-                                  <div class="table-data d-flex-center-start"><%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %></a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
+                                  <div class="table-data d-flex-center-start" style="width:80%">
+                                  <h5 class="descricao-artefato"><%= doc.descricao%></h5>
+                                  <span class="descricao-artefato">-</span>
+                                  <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %></a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
                                   <% if doc.classificacao == 1 %>
-                                    <div class="table-data d-flex-center-end">
+                                    <div class="table-data d-flex-center-end" style="width:20%">
                                       <p>Atende Totalmente</p>
                                     </div>
                                   <% elsif doc.classificacao == 2 %>
@@ -250,7 +253,9 @@
                               <%if doc.classificacao == 3%>
                                 <% vetorResultado.push(menorContadorContar) %>
                               <%end%>	
-                                  <div class="table-data d-flex-center-start"><%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %></a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
+                                <div class="table-data d-flex-center-start">
+                                  <h5 class="descricao-artefato"><%= doc.descricao%></h5>
+                                  <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %></a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
                                   <% if doc.classificacao == 1 %>
                                     <div class="table-data d-flex-center-end">
                                       <p>Atende Totalmente</p>
@@ -301,7 +306,7 @@
                             <i id="plus-Processo-<%=processo.id%>" class="fa-solid fa-plus"></i>
                             <i id="minus-Processo-<%=processo.id%>" class="fa-solid fa-minus hidden"></i>
                         </div>
-                        <h3 id="titulo-Nivel-<%=menorContador%>-1" style="max-height: 25px;" onclick="mostra_titulo('1')"><%=processo.descricao%></h3>
+                        <h3 id="titulo-Nivel-<%=menorContador%>-1" style="max-height: 25px;" onclick="mostra_titulo('1')"><%=dimensao.descricao%> <strong>→</strong> <%=processo.descricao%></h3>
                         </div>
                     </div>
                     <div id="main-Processo-<%=processo.id%>" class="expandable-main resultado hidden">
@@ -313,7 +318,9 @@
                               <%if doc.classificacao == 3%>
                                 <% vetorResultado.push(menorContadorContar) %>
                               <%end%>	
-                                  <div class="table-data d-flex-center-start"><%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %></a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
+                                  <div class="table-data d-flex-center-start">
+                                  <h5 class="descricao-artefato"><%= doc.descricao%></h5> 
+                                  <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %></a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
                                   <% if doc.classificacao == 1 %>
                                     <div class="table-data d-flex-center-end">
                                       <p>Atende Totalmente</p>
