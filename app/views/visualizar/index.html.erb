@@ -54,8 +54,22 @@
             <i id="plus-Nivel-<%=menorContador%>" class="fa-solid fa-plus hidden"></i>
             <i id="minus-Nivel-<%=menorContador%>" class="fa-solid fa-minus"></i>
         </div>
-        <h3 id="titulo-Nivel-<%=menorContador%>" style="max-height: 25px;" onclick="mostra_titulo('1')">Nível <%=menorContador%></h3>
+        <h3 id="titulo-Nivel-<%=menorContador%>" style="max-height: 25px;" onclick="mostra_titulo('1')">Nível <%=menorContador%>
+        <%salvarDescricao = ""%>
+        <%contadorExistencia = 0%>
+        <% @levels.each do |level| %>
+          <% if menorContador.to_i == level.index.to_i && level.modelo_id.to_i == @opcao %>
+            <%salvarDescricao = level.descricao%>
+            <%contadorExistencia = 1%>
+          <%end%>
+        <% end %>
+        <% if contadorExistencia == 1%>
+          - <%= salvarDescricao %>
+        <% end %>
+        </h3>
         </div>
+        <%salvarDescricao = ""%>
+        <%contadorExistencia = 0%>
       </div>
       <!-- maturidade_selecionada.nivelEscolha = 1 é em processos = 2 em resultados -->
       <%if maturidade_selecionada.nivelEscolha == "2"%>
@@ -217,7 +231,22 @@
             <i id="plus-Nivel-<%=menorContador%>" class="fa-solid fa-plus hidden"></i>
             <i id="minus-Nivel-<%=menorContador%>" class="fa-solid fa-minus"></i>
         </div>
-        <h3 id="titulo-Nivel-<%=menorContador%>" style="max-height: 25px;" onclick="mostra_titulo('1')">Nível <%=menorContador%></h3>
+        <h3 id="titulo-Nivel-<%=menorContador%>" style="max-height: 25px;" onclick="mostra_titulo('1')">Nível <%=menorContador%>
+        <%salvarDescricao = ""%>
+        <%contadorExistencia = 0%>
+        <% @levels.each do |level| %>
+          <% if menorContador.to_s == level.index.to_s && level.modelo_id.to_i == @opcao %>
+            <%salvarDescricao = level.descricao%>
+            <%contadorExistencia = 1%>
+          <%end%>
+        <% end %>
+        <% if contadorExistencia == 1%>
+          - <%= salvarDescricao %>
+        <% end %>
+        </h3>
+        </div>
+        <%salvarDescricao = ""%>
+        <%contadorExistencia = 0%>
         </div>
       </div>
       <!-- maturidade_selecionada.nivelEscolha = 1 é em processos = 2 em resultados -->
