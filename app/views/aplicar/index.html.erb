@@ -95,6 +95,7 @@
                             <% @levels.each do |level| %>
                               <% if processo.nivel_selecionado.to_i == level.index.to_i && level.modelo_id.to_i == @opcao %>
                                 <%salvarDescricao = level.descricao%>
+                                <%contadorExistencia = 1%>
                               <%end%>
                             <% end %>
                           <%else%>
@@ -103,7 +104,6 @@
                             <% @levels.each do |level| %>
                               <% if processo.nivel_selecionado.to_s == level.index.to_s && level.modelo_id.to_i == @opcao %>
                                 <%salvarDescricao = level.descricao%>
-                                <%contadorExistencia = 1%>
                               <%end%>
                             <% end %>
                           <%end%>

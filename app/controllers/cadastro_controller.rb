@@ -143,7 +143,7 @@ class CadastroController < ApplicationController
         documento_id = resultado.docs.last.id
 
         attachment = ActiveStorage::Attachment.find(documento_id)
-        blob = attachment.blob  # Obtém o blob associado ao attachment
+        blob = attachment.blob
         blob.update(descricao: params[:descricao])
         
         redirect_to "/aplicar"

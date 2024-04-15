@@ -8,6 +8,7 @@ class VisualizarController < ApplicationController
         @opcao = params[:opcao].to_i
         @dominios = Dominio.all
         @modelo_aplicados = ModeloAplicado.all
+        @levels = Level.all
     end
 
     def atualizar_opcao

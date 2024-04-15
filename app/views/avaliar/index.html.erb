@@ -58,9 +58,33 @@
                         </div>
                         <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>')"><strong><%= contadorDimensaos %>.<%= contadorProcessos %> - </strong><%= processo.descricao %></h3>
                         <% if processo.nivel_selecionado %>
+                          <%if maturidade_selecionada.tipoNivel == "1"%>
+                            <%salvarDescricao = ""%>
+                            <% @levels.each do |level| %>
+                              <% if processo.nivel_selecionado.to_i == level.index.to_i && level.modelo_id.to_i == @opcao %>
+                                <%salvarDescricao = level.descricao%>
+                                <%contadorExistencia = 1%>
+                              <%end%>
+                            <% end %>
+                          <%else%>
+                            <%salvarDescricao = ""%>
+                            <%contadorExistencia = 0%>
+                            <% @levels.each do |level| %>
+                              <% if processo.nivel_selecionado.to_s == level.index.to_s && level.modelo_id.to_i == @opcao %>
+                                <%salvarDescricao = level.descricao%>
+                                
+                              <%end%>
+                            <% end %>
+                          <%end%>
                         <div class="select-nivel-maturidade processoNivelSelecionado" name="nome" id="" disabled>
-                          <p><%= processo.nivel_selecionado %> - Descrição Processo 01</p>
+                          <p><%= processo.nivel_selecionado %>
+                          <% if contadorExistencia == 0%>
+                            - <%= salvarDescricao %>
+                          <% end %>
+                          </p>
                         </div>
+                          <%salvarDescricao = ""%>
+                          <%contadorExistencia = 0%>
                         <% end %>
                       </div>
                     </div>  
@@ -112,9 +136,33 @@
                                     <i id="minus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid fa-minus hidden"></i>
                                   </div>
                                   <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')"><strong><%= contadorDimensaos %>.<%= contadorProcessos %>.<%= contadorResultados %> - </strong><%= resultado.descricao %></h3>
+                                  <%if maturidade_selecionada.tipoNivel == "1"%>
+                                    <%salvarDescricao = ""%>
+                                    <% @levels.each do |level| %>
+                                      <% if resultado.nivel_selecionado.to_i == level.index.to_i && level.modelo_id.to_i == @opcao %>
+                                        <%salvarDescricao = level.descricao%>
+                                        <%contadorExistencia = 1%>
+                                      <%end%>
+                                    <% end %>
+                                  <%else%>
+                                    <%salvarDescricao = ""%>
+                                    <%contadorExistencia = 0%>
+                                    <% @levels.each do |level| %>
+                                      <% if resultado.nivel_selecionado.to_s == level.index.to_s && level.modelo_id.to_i == @opcao %>
+                                        <%salvarDescricao = level.descricao%>
+                                        <%contadorExistencia = 1%>
+                                      <%end%>
+                                    <% end %>
+                                  <%end%>
                                   <div class="select-nivel-maturidade resultadoNivelSelecionado" name="nome" id="" disabled>
-                                    <p><%= resultado.nivel_selecionado %></p>
+                                    <p><%= resultado.nivel_selecionado %>
+                                    <% if contadorExistencia == 0%> 
+                                      - <%= salvarDescricao %>
+                                    <% end %>
+                                    </p>
                                   </div>
+                                  <%salvarDescricao = ""%>
+                                  <%contadorExistencia = 0%>
                                 </div>
                               </div>
                               <!--A== Main-Resultado -->
