@@ -141,15 +141,36 @@
                           <%maiorContador = maiorContador.to_i%>
                         <%end%>
                         <% nivel_resultado_selecionado = processo.nivel_selecionado %>
-                        <% nivel_resultado_selecionado = nivel_resultado_selecionado.to_i %>
+                        
+                        <% if processo.nivel_selecionado.nil? %>
+                          <option value="" selected>Selecionar Nível</option>
+                        <% end %>
                         <% while menorContador <= maiorContador do %>
-                          <%if nivel_resultado_selecionado == menorContador %>
-                            <option value="<%= menorContador%>" selected><%= menorContador %></option>
+                          <%salvarDescricao = ""%>
+                          <%contadorExistencia = 0%>
+                          <% @levels.each do |level| %>
+                            <% if menorContador.to_i == level.index.to_i && level.modelo_id.to_i == @opcao %>
+                              <%salvarDescricao = level.descricao%>
+                              <%contadorExistencia = 1%>
+                            <%end%>
+                          <% end %>
+                          <%if nivel_resultado_selecionado == menorContador && processo.nivel_selecionado.present?%>
+                            <option value="<%= menorContador%>" selected><%= menorContador %>
+                            <% if contadorExistencia == 1%>
+                              - <%= salvarDescricao %>
+                            <% end %>
+                            </option>
                             <% menorContador += 1 %>
                           <% else %>
-                            <option value="<%= menorContador %>"><%= menorContador %></option>
+                            <option value="<%= menorContador %>"><%= menorContador %>
+                            <% if contadorExistencia == 1%>
+                              - <%= salvarDescricao %>
+                            <% end %>
+                            </option>
                             <% menorContador += 1 %>
                           <% end %>
+                          <%salvarDescricao = ""%>
+                          <%contadorExistencia = 0%>
                         <% end %>
                       <% else %>
                         <%if maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s%>
@@ -165,14 +186,37 @@
                         <%end%>
                         <% nivel_resultado_selecionado = processo.nivel_selecionado.to_s %>
                         <% nivel_resultado_selecionado = nivel_resultado_selecionado.to_s %>
+
+                        <% if processo.nivel_selecionado.nil? %>
+                          <option value="" selected>Selecionar Nível</option>
+                        <% end %>
+
                         <% while menorContador <= maiorContador do %>
-                          <%if nivel_resultado_selecionado == menorContador %>
-                            <option value="<%= menorContador%>" selected><%= menorContador %></option>
+                          <%salvarDescricao = ""%>
+                          <%contadorExistencia = 0%>
+                          <% @levels.each do |level| %>
+                            <% if menorContador.to_s == level.index.to_s && level.modelo_id.to_i == @opcao %>
+                              <%salvarDescricao = level.descricao%>
+                              <%contadorExistencia = 1%>
+                            <%end%>
+                          <% end %>
+                          <%if nivel_resultado_selecionado == menorContador && processo.nivel_selecionado.present?%>
+                            <option value="<%= menorContador%>" selected><%= menorContador %>
+                            <% if contadorExistencia == 1%>
+                              - <%= salvarDescricao %>
+                            <% end %>
+                            </option>
                             <% menorContador = menorContador.next %>
                           <% else %>
-                            <option value="<%= menorContador %>"><%= menorContador %></option>
+                            <option value="<%= menorContador %>"><%= menorContador %>
+                            <% if contadorExistencia == 1%>
+                              - <%= salvarDescricao %>
+                            <% end %>
+                            </option>
                             <% menorContador = menorContador.next %>
                           <% end %>  
+                          <%salvarDescricao = ""%>
+                          <%contadorExistencia = 0%>
                         <% end %>
                       <% end %>
                     </select>
@@ -215,7 +259,6 @@
                     <%if maturidade_selecionada.nivelEscolha == "2"%>
                     <form id="meu_formulario_resultados" action="/cadastroResultado/<%= resultado.id %>/salvar_resultado_nivel" method="post">
                       <select class="nivel_maturidade_select" style="font-size: 13px!important; padding: 2px 6px" name="nivel_selecionado" onchange="submitForm(this)">
-                        <option value="-" disabled></option>
                         <%if maturidade_selecionada.tipoNivel == "1"%>
                           <%if maturidade_selecionada.menorNivel.to_i < maturidade_selecionada.maiorNivel.to_i%>
                             <%menorContador = maturidade_selecionada.menorNivel.to_i%>
@@ -228,16 +271,41 @@
                             <%menorContador = menorContador.to_i%>
                             <%maiorContador = maiorContador.to_i%>
                           <%end%>
+                          
                           <% nivel_resultado_selecionado = resultado.nivel_selecionado %>
                           <% nivel_resultado_selecionado = nivel_resultado_selecionado.to_i %>
+                          
+                          <% if resultado.nivel_selecionado.nil? %>
+                            <option value="" selected>Selecionar Nível</option>
+                          <% end %>
+
                           <% while menorContador <= maiorContador do %>
-                            <%if nivel_resultado_selecionado == menorContador %>
-                              <option value="<%= menorContador%>" selected><%= menorContador %></option>
+                            
+                            <%salvarDescricao = ""%>
+                            <%contadorExistencia = 0%>
+                            <% @levels.each do |level| %>
+                              <% if menorContador.to_i == level.index.to_i && level.modelo_id.to_i == @opcao %>
+                                <%salvarDescricao = level.descricao%>
+                                <%contadorExistencia = 1%>
+                              <%end%>
+                            <% end %>
+                            <%if nivel_resultado_selecionado == menorContador && resultado.nivel_selecionado.present? %>
+                              <option value="<%= menorContador%>" selected><%= menorContador %>
+                              <% if contadorExistencia == 1%>
+                                - <%= salvarDescricao %>
+                              <% end %>
+                              </option>
                               <% menorContador += 1 %>
                             <% else %>
-                              <option value="<%= menorContador %>"><%= menorContador %></option>
+                              <option value="<%= menorContador %>"><%= menorContador %>
+                              <% if contadorExistencia == 1%>
+                                - <%= salvarDescricao %>
+                              <% end %>
+                              </option>
                               <% menorContador += 1 %>
                             <% end %>
+                            <%salvarDescricao = ""%>
+                            <%contadorExistencia = 0%>
                           <% end %>
                         <% else %>
                           <%if maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s%>
@@ -251,17 +319,41 @@
                             <%menorContador = menorContador.to_s%>
                             <%maiorContador = maiorContador.to_s%>
                           <%end%>
+
                           <% nivel_resultado_selecionado = resultado.nivel_selecionado.to_s %>
                           <% nivel_resultado_selecionado = nivel_resultado_selecionado.to_s %>
+
+                          <% if resultado.nivel_selecionado.nil? %>
+                            <option value="" selected>Selecionar Nível</option>
+                          <% end %>
+
                           <% while menorContador <= maiorContador do %>
-                            <%if nivel_resultado_selecionado == menorContador %>
-                              <option value="<%= menorContador%>" selected><%= menorContador %></option>
+                            <%salvarDescricao = ""%>
+                            <%contadorExistencia = 0%>
+                            <% @levels.each do |level| %>
+                              <% if menorContador.to_s == level.index.to_s && level.modelo_id.to_i == @opcao %>
+                                <%salvarDescricao = level.descricao%>
+                                <%contadorExistencia = 1%>
+                              <%end%>
+                            <% end %>
+                            <%if nivel_resultado_selecionado == menorContador && resultado.nivel_selecionado.present?%>
+                              <option value="<%= menorContador%>" selected><%= menorContador %>
+                              <% if contadorExistencia == 1%>
+                                - <%= salvarDescricao %>
+                              <% end %>
+                              </option>
                               <% menorContador = menorContador.next %>
                             <% else %>
-                              <option value="<%= menorContador %>"><%= menorContador %></option>
+                              <option value="<%= menorContador %>"><%= menorContador %>
+                              <% if contadorExistencia == 1%>
+                                - <%= salvarDescricao %>
+                              <% end %>
+                              </option>
                               <% menorContador = menorContador.next %>
                             <% end %>  
                           <% end %>
+                          <%salvarDescricao = ""%>
+                          <%contadorExistencia = 0%>
                         <% end %>
                       </select>
                     </form>
