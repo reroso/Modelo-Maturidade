@@ -229,7 +229,7 @@
               <label for="escolha_resultado_sim">Não</label>
           <input type="radio" id="escolha_resultado_nao" name="resultado_escolha" value="2" <%= maturidade_selecionada.resultadoEscolha == "2" ? 'checked' : '' %>> 
               <label for="escolha_resultado_nao">Sim</label>
-          <input type="text" name="resultadoEscolha" class="resultado_escolha hidden" value="<%=maturidade_selecionada.resultadoEscolha%>">  <!-- #Hidden-->
+          <input type="text" name="resultadoEscolha" class="resultado_escolha " value="<%=maturidade_selecionada.resultadoEscolha%>">  <!-- #Hidden-->
           </div>
 
           <!-- #Input "Quem usará o nível"  -->
@@ -238,12 +238,13 @@
               <h3>Escolha quem usará o nivel de maturidade:</h3>
           </div>
           <input type="radio" id="nivel_dimensao" name="nivel_escolha" value="3" <%= maturidade_selecionada.nivelEscolha == "3" ? 'checked' : '' %>> 
+          <%puts maturidade_selecionada.resultadoEscolha%>    
               <label for="nivel_dimensao">Dimensao</label>
           <input type="radio" id="nivel_processo" name="nivel_escolha" value="1" <%= maturidade_selecionada.nivelEscolha == "1" ? 'checked' : '' %>> 
               <label for="nivel_processo">Processos</label>
-          <input type="radio" id="nivel_resultado_esperado" name="nivel_escolha" value="2" <%= maturidade_selecionada.nivelEscolha == "2" ? 'checked' : '' %>> 
+          <input type="radio" id="nivel_resultado_esperado" name="nivel_escolha" value="2" <%= maturidade_selecionada.resultadoEscolha == "1" ? 'disabled' : '' %><%= maturidade_selecionada.nivelEscolha == "2" ? 'checked' : '' %>> 
               <label for="nivel_resultado_esperado">Resultados Esperados</label>
-          <input type="text" name="nivelEscolha" class="nivel_escolha hidden" value="<%=maturidade_selecionada.nivelEscolha%>">  <!-- #Hidden-->
+          <input type="text" name="nivelEscolha" class="nivel_escolha " value="<%=maturidade_selecionada.nivelEscolha%>">  <!-- #Hidden-->
           </div>
 
           
@@ -369,11 +370,6 @@
       let btn_editar = document.getElementById("btn_editar_"+id_nivel);
       let btn_salvar = document.getElementById("btn_salvar_"+id_nivel);
       const form = document.getElementById("form_"+id_nivel);
-      
-      console.log(input);
-      console.log(btn_editar);
-      console.log(btn_salvar);
-      console.log(form);
 
       if(input.disabled) {
         input.disabled = false;
@@ -397,7 +393,6 @@
           // Lógica para sucesso na resposta
           var redirectUrl = response.data.redirect_url;
           window.location.href = redirectUrl;
-          console.log(response.data);
         })
         .catch(function(error) {
           // Lógica para erro na resposta
@@ -435,12 +430,21 @@
     const escolhaResultadoSim = document.getElementById('escolha_resultado_sim');
     const escolhaResultadoNao = document.getElementById('escolha_resultado_nao');
     const resultadoEscolhaInput = document.querySelector('input[name="resultadoEscolha"]');
-
+    const nivel_processo = document.getElementById("nivel_processo");
+    const nivel_resultado_esperado = document.getElementById("nivel_resultado_esperado");
     function atualizarValorResultadoEscolha() {
       if (escolhaResultadoSim.checked) {
         resultadoEscolhaInput.value = '1';
+
+        nivel_resultado_esperado.disabled = true;
+        if (nivel_resultado_esperado.checked) {
+            nivel_processo.checked = true;
+            document.getElementsByClassName("nivel_escolha")[0].value = 1;
+        }
       } else if (escolhaResultadoNao.checked) {
         resultadoEscolhaInput.value = '2';
+
+        nivel_resultado_esperado.disabled = false;
       }
     }
 

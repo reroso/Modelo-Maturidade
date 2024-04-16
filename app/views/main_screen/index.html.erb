@@ -75,24 +75,22 @@
         <div class="form-title-wrapper w-100 h-fit">
             <h3>O modelo vai possuir resultados esperados ?</h3>
         </div>
-        <input type="radio" id="escolha_resultado_sim" name="resultado_escolha" value="1" checked>
+        <input type="radio" id="escolha_resultado_sim" name="resultado_escolha" value="1" >
             <label for="escolha_resultado_sim">Não</label>
-        <input type="radio" id="escolha_resultado_nao" name="resultado_escolha" value="2"> 
+        <input type="radio" id="escolha_resultado_nao" name="resultado_escolha" value="2" checked> 
             <label for="escolha_resultado_nao">Sim</label>
-        <input type="text" name="resultadoEscolha" class="resultado_escolha hidden" value="1">  <!-- #Hidden-->
+        <input type="text" name="resultadoEscolha" class="resultado_escolha hidden" value="2">  <!-- #Hidden-->
         </div>
 
         <!-- #Input "Quem usará o nível"  -->
-        <div class="main-who  w-100 hidden" id="nivel_escolha">  
+        <div class="main-who  w-100 " id="nivel_escolha">  
         <div class="form-title-wrapper w-100 h-fit">
             <h3>Escolha quem usará o nivel de maturidade:</h3>
         </div>
 
-        <!------->
+        
         <input type="radio" id="nivel_dimensao" name="nivel_escolha" value="3"> 
-          <label for="nivel_dimensao">Dimenções</label>
-        <!------->
-
+          <label for="nivel_dimensao">Dimensões</label>
         <input type="radio" id="nivel_processo" name="nivel_escolha" value="1" checked> 
           <label for="nivel_processo">Processos</label>
         <input type="radio" id="nivel_resultado_esperado" name="nivel_escolha" value="2"> 
@@ -119,6 +117,7 @@ var escolha_sim = document.getElementById("escolha_resultado_sim");
 var escolha_nao = document.getElementById("escolha_resultado_nao");
 var nivel_processo = document.getElementById("nivel_processo");
 var nivel_resultado_esperado = document.getElementById("nivel_resultado_esperado");
+var nivel_dimensao = document.getElementById("nivel_dimensao");
 var tipo_nivel_numerico = document.getElementById("tipo_nivel_numerico");
 var tipo_nivel_alfanumerico = document.getElementById("tipo_nivel_alfanumerico");
 
@@ -142,6 +141,11 @@ nivel_resultado_esperado.addEventListener("click", function () {
     nivel_escolha(2);
     }
 })
+nivel_dimensao.addEventListener("click", function () {
+    if (nivel_dimensao.checked) {
+    nivel_escolha(3);
+    }
+})
 tipo_nivel_numerico.addEventListener("click", function () {
     if (tipo_nivel_numerico.checked) {
     tipo_nivel(1);
@@ -154,21 +158,26 @@ tipo_nivel_alfanumerico.addEventListener("click", function () {
 })
 function resultado_escolha(escolha) {
     if (escolha == "2") {
-    document.getElementById("nivel_escolha").classList.remove("hidden");
-    document.getElementsByClassName("resultado_escolha")[0].value = 2;
+        document.getElementsByClassName("resultado_escolha")[0].value = 2;
+        
+        nivel_resultado_esperado.disabled = false;
     } else if (escolha == "1") {
-    document.getElementById("nivel_escolha").classList.add("hidden");
-    document.getElementById("nivel_processo").checked = true;
-    document.getElementById("nivel_resultado_esperado").checked = false;
-    document.getElementsByClassName("nivel_escolha")[0].value = 1;
-    document.getElementsByClassName("resultado_escolha")[0].value = 1;
-    }
+        document.getElementsByClassName("resultado_escolha")[0].value = 1;
+        
+        nivel_resultado_esperado.disabled = true;
+        if (nivel_resultado_esperado.checked) {
+            nivel_processo.checked = true;
+            document.getElementsByClassName("nivel_escolha")[0].value = 1;
+        }
+    } 
 }
 function nivel_escolha(escolha) {
     if (escolha == "2") {
     document.getElementsByClassName("nivel_escolha")[0].value = 2;
     } else if (escolha == "1") {
     document.getElementsByClassName("nivel_escolha")[0].value = 1;
+    } else if (escolha == "3") {
+    document.getElementsByClassName("nivel_escolha")[0].value = 3;
     }
 }
 
