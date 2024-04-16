@@ -215,6 +215,7 @@
                     <%if maturidade_selecionada.nivelEscolha == "2"%>
                     <form id="meu_formulario_resultados" action="/cadastroResultado/<%= resultado.id %>/salvar_resultado_nivel" method="post">
                       <select class="nivel_maturidade_select" style="font-size: 13px!important; padding: 2px 6px" name="nivel_selecionado" onchange="submitForm(this)">
+                        <option value="-" disabled></option>
                         <%if maturidade_selecionada.tipoNivel == "1"%>
                           <%if maturidade_selecionada.menorNivel.to_i < maturidade_selecionada.maiorNivel.to_i%>
                             <%menorContador = maturidade_selecionada.menorNivel.to_i%>
