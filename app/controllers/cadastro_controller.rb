@@ -93,8 +93,6 @@ class CadastroController < ApplicationController
         processo = Processo.find(params[:id])
         processo.nivel_selecionado = params[:nivel_selecionado]
         processo.save
-
-        redirect_to "/cadastro"
     end
 
     def excluir_processo_docs
