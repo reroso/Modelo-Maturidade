@@ -43,9 +43,6 @@ ActiveRecord::Schema.define(version: 2024_04_08_160844) do
     t.index ["maturidade_id"], name: "index_dimensaos_on_maturidade_id"
   end
 
-  create_table "documentos_opcoes", force: :cascade do |t|
-  end
-
   create_table "dominios", force: :cascade do |t|
     t.string "nome"
     t.datetime "created_at", precision: 6, null: false
@@ -72,13 +69,6 @@ ActiveRecord::Schema.define(version: 2024_04_08_160844) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "minhas_opcoes", force: :cascade do |t|
-    t.integer "active_storage_blob_id", null: false
-    t.integer "opcao", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "modelo_aplicados", force: :cascade do |t|
     t.string "metodo"
     t.string "instituicao"
@@ -88,20 +78,6 @@ ActiveRecord::Schema.define(version: 2024_04_08_160844) do
     t.integer "maturidade_id", null: false
     t.index ["dominio_id"], name: "index_modelo_aplicados_on_dominio_id"
     t.index ["maturidade_id"], name: "index_modelo_aplicados_on_maturidade_id"
-  end
-
-  create_table "nivels", force: :cascade do |t|
-    t.string "index"
-    t.text "descricao"
-    t.integer "modelo_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "nota", force: :cascade do |t|
-    t.string "descricao"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "processos", force: :cascade do |t|
