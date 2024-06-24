@@ -229,7 +229,7 @@
               <label for="escolha_resultado_sim">Não</label>
           <input type="radio" id="escolha_resultado_nao" name="resultado_escolha" value="2" <%= maturidade_selecionada.resultadoEscolha == "2" ? 'checked' : '' %>> 
               <label for="escolha_resultado_nao">Sim</label>
-          <input type="text" name="resultadoEscolha" class="resultado_escolha " value="<%=maturidade_selecionada.resultadoEscolha%>">  <!-- #Hidden-->
+          <input type="text" name="resultadoEscolha" class="resultado_escolha hidden" value="<%=maturidade_selecionada.resultadoEscolha%>">  <!-- #Hidden-->
           </div>
 
           <!-- #Input "Quem usará o nível"  -->
@@ -243,7 +243,7 @@
               <label for="nivel_processo">Processos</label>
           <input type="radio" id="nivel_resultado_esperado" name="nivel_escolha" value="2" <%= maturidade_selecionada.resultadoEscolha == "1" ? 'disabled' : '' %><%= maturidade_selecionada.nivelEscolha == "2" ? 'checked' : '' %>> 
               <label for="nivel_resultado_esperado">Resultados Esperados</label>
-          <input type="text" name="nivelEscolha" class="nivel_escolha " value="<%=maturidade_selecionada.nivelEscolha%>">  <!-- #Hidden-->
+          <input type="text" name="nivelEscolha" class="nivel_escolha hidden" value="<%=maturidade_selecionada.nivelEscolha%>" >  <!-- #Hidden-->
           </div>
 
           
