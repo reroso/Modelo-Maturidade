@@ -103,7 +103,7 @@
                               <!-- Arquivo-1-Dimensão-1 -->
                               <li id="doc-<%= dimensao.id %>-<%= processo.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-between m-0" style="border: 0px 0px 1px 0px; padding: 10px;">
                                 <div class="d-flex-center-start">  
-                                  <h5 class="descricao-artefato">Artefato01</h5>
+                                  <h5 class="descricao-artefato"><%= doc.descricao %></h5>
                                   <span class="descricao-artefato">-</span>
                                   <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
                                 </div>
