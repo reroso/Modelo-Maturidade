@@ -1,4 +1,5 @@
 class CadastroController < ApplicationController
+
     def index
         @dimensaos = Dimensao.all
         @processos = Processo.all
