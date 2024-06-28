@@ -15,8 +15,9 @@ class VisualizarController < ApplicationController
 
         @opcao = params[:opcao]
         redirect_url = url_for(controller: :visualizar, action: :index, opcao: @opcao)
-        render json: { redirect_url: redirect_url } 
+        render json: { redirect_url: redirect_url }
 
     end
 
 end
+
