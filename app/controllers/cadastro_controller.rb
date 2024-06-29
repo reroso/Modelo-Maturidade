@@ -1,5 +1,5 @@
 class CadastroController < ApplicationController
-
+    #before_action :authenticate_admin!
     def index
         @dimensaos = Dimensao.all
         @processos = Processo.all
@@ -18,7 +18,7 @@ class CadastroController < ApplicationController
         dimensao.descricao = params[:descricao]
         dimensao.maturidade_id = params[:maturidade_id]
         dimensao.save
-        
+
         redirect_to "/cadastro"
     end
 
@@ -44,7 +44,7 @@ class CadastroController < ApplicationController
 
         redirect_to "/cadastro"
     end
-        
+
         #processos
 
     def incluir_processo
@@ -52,7 +52,7 @@ class CadastroController < ApplicationController
         processo.descricao = params[:descricao]
         processo.dimensao_id = params[:dimensao_id]
         processo.save
-        
+
         redirect_to "/cadastro"
     end
 
@@ -79,13 +79,13 @@ class CadastroController < ApplicationController
     def salvar_processo_docs
         processo = Processo.find(params[:id])
         processo.docs.attach(params[:docs])
-        
+
         documento_id = processo.docs.last.id
 
         attachment = ActiveStorage::Attachment.find(documento_id)
         blob = attachment.blob  # Obtém o blob associado ao attachment
         blob.update(descricao: params[:descricao])
-        
+
 
         redirect_to "/aplicar"
     end
@@ -112,7 +112,7 @@ class CadastroController < ApplicationController
         resultado.descricao = params[:descricao]
         resultado.processo_id = params[:processo_id]
         resultado.save
-        
+
         redirect_to "/cadastro"
     end
 
@@ -145,7 +145,7 @@ class CadastroController < ApplicationController
         attachment = ActiveStorage::Attachment.find(documento_id)
         blob = attachment.blob
         blob.update(descricao: params[:descricao])
-        
+
         redirect_to "/aplicar"
     end
 
@@ -159,7 +159,7 @@ class CadastroController < ApplicationController
 
     def excluir_resultado_docs
 
-        attachment = ActiveStorage::Attachment.find(params[:id])  
+        attachment = ActiveStorage::Attachment.find(params[:id])
         attachment.purge
 
         redirect_to "/aplicar"
@@ -170,7 +170,7 @@ class CadastroController < ApplicationController
         attachment = ActiveStorage::Attachment.find(params[:id])
         blob = attachment.blob  # Obtém o blob associado ao attachment
         blob.update(classificacao: params[:classificacao])
-        
+
     end
 
     def incluir_maturidade
@@ -183,7 +183,7 @@ class CadastroController < ApplicationController
         maturidade.resultadoEscolha = params[:resultadoEscolha]
         maturidade.nivelEscolha = params[:nivelEscolha]
         maturidade.save
-        
+
         redirect_to "/main_screen"
     end
 
@@ -233,7 +233,7 @@ class CadastroController < ApplicationController
         dominio = Dominio.new
         dominio.nome = params[:nome]
         dominio.save
-        
+
         redirect_to "/aplicar"
     end
 

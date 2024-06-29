@@ -1,4 +1,5 @@
 class MainScreenController < ApplicationController
+    #before_action :authenticate_admin!
     #maturidades
 
     def incluir_maturidade
@@ -11,7 +12,7 @@ class MainScreenController < ApplicationController
         maturidade.resultadoEscolha = params[:resultadoEscolha]
         maturidade.nivelEscolha = params[:nivelEscolha]
         maturidade.save
-        
+
         redirect_to "/editar"
     end
 

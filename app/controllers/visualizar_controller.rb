@@ -1,4 +1,5 @@
 class VisualizarController < ApplicationController
+    #before_action :authenticate_user!
 
     def index
         @dimensaos = Dimensao.all
@@ -20,4 +21,3 @@ class VisualizarController < ApplicationController
     end
 
 end
-

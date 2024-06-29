@@ -1,5 +1,5 @@
 class AvaliarController < ApplicationController
-
+    #before_action :authenticate_admin!
     def index
         @dimensaos = Dimensao.all
         @processos = Processo.all
@@ -15,7 +15,7 @@ class AvaliarController < ApplicationController
 
         @opcao = params[:opcao]
         redirect_url = url_for(controller: :avaliar, action: :index, opcao: @opcao)
-        render json: { redirect_url: redirect_url } 
+        render json: { redirect_url: redirect_url }
 
     end
 
