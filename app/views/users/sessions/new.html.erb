@@ -25,7 +25,7 @@
       <div class="d-flex-center-center flex-column">
         <div style="margin-bottom:5px;">
           <span>Ainda não tem uma conta?</span>
-          <%= link_to "Sign up", new_registration_path(resource_name) %><br />
+          <%= link_to "Registrar-se", new_registration_path(resource_name) %><br />
         </div>
         <div>
           <span>Esqueceu sua senha?</span>
@@ -38,10 +38,8 @@
   <div class="userSign-wrapper-right d-flex-center-center flex-column h-100" style="width: 400px;">
     <h4>Bem vindo!</h4>
     <div class="userSign-right-changesign d-flex-center-center flex-column w-100">
-      <span>Você está atualmente no login de <strong>usuário</strong>.</span>
+      <span>Você está atualmente no login de <strong id="SignType_target">usuário<i class="bi bi-info-circle"></i></strong>.</span>
       <span>Gostaria de criar seu próprio modelo?</span>
       <a class="redirect-sign-upin">Entre como conta administrativa</a>
     </div>
   </div>
-
-</main>

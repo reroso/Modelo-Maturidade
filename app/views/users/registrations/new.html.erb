@@ -1,29 +1,43 @@
-<h2>Sign up</h2>
+<main style="width: 800px; height:600px;background:transparent;" class="d-flex-center-center">
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "users/shared/error_messages", resource: resource %>
+  <div class="userSign-wrapper-left h-100" style="width: 400px;z-index: 2;">
+    <div class="userSign w-100 h-100 d-flex-center-between flex-column">
+      <div class="userSign-title w-100 d-flex-center-center">
+        <h2>Cadastro</h2>
+      </div> 
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= render "users/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+        <div class="field input_dados_text dados_1">
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "E-mail" %>
+        </div>
+        <div class="field input_dados_text dados_2 w-100">
+          <%= f.password_field :password, autocomplete: "new-password", placeholder: "Senha" %>
+          <% if @minimum_password_length %>
+            <span style="font-size: 12px;margin:5px 0 0 5px;">*Mínimo de <%= @minimum_password_length %> characteres</span>
+          <% end %><br />
+        </div>
+        <div class="field input_dados_text dados_3">
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirmar Senha"  %>
+        </div>
+        <div class="actions">
+          <%= f.submit "Registrar-se" %>
+        </div>
+      <% end %>
+      <div class="d-flex-center-center flex-column">
+        <div style="margin-bottom:5px;">
+          <span>Já tem uma conta?</span>
+          <%= link_to "Login", new_session_path(resource_name) %><br />
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
+  <div class="userSign-wrapper-right d-flex-center-center flex-column h-100" style="width: 400px;">
+    <h4>Bem vindo!</h4>
+    <div class="userSign-right-changesign d-flex-center-center flex-column w-100">
+      <span>Você está atualmente no cadastro de <strong id="SignType_target">usuário<i class="bi bi-info-circle"></i></strong>.</span>
+      <span>Gostaria de criar seu próprio modelo?</span>
+      <a class="redirect-sign-upin">Cadastrar conta administrativa</a>
+    </div>
   </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "users/shared/links" %>

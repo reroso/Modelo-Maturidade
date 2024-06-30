@@ -31,10 +31,13 @@
       border: 1px solid #697e36;
     }
     .input_dados_text.dados_1{
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
     .input_dados_text.dados_2{
-      margin-bottom: 25px;
+      margin-bottom: 15px;
+    }
+    .input_dados_text.dados_3{
+      margin-bottom: 20px;
     }
     .input_dados_text input::placeholder{
       color: #697e36;
@@ -129,6 +132,13 @@
   .userSign-wrapper-right span strong {
     font-weight: bold;
     color: #88cf0f;
+    cursor: help;
+  }
+  .userSign-right-changesign .bi-info-circle {
+    color: #88cf0f;
+    font-weight: bolder;
+    font-size: 9px;
+    vertical-align: super;
   }
   .userSign-right-changesign a {
     display: flex;
@@ -149,4 +159,27 @@
     background-color: white;
     color: #507113;
     border: 1px solid #507113;
+  }
+
+  .sign-type-info {
+    background-color: rgb(240, 239, 239);
+    border: 1px solid rgb(171, 182, 147);
+    height: fit-content;
+    height: fit-content;
+    max-width: 300px;
+    padding: 15px 20px;
+    position: absolute;
+    z-index: 3;
+    border-radius: 0 15px 15px 15px;
+    pointer-events: none;
+    display: none;
+  }
+  .sign-type-info span {
+    font-size: 12px;
+    font-weight: normal;
+    color: rgb(86, 86, 86);
+  }
+  .sign-type-info strong {
+    font-weight: bold;
+    color: #6aa109;
   }

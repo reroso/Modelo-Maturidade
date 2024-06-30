@@ -15,7 +15,8 @@
 
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@3.2.1/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -25,7 +26,30 @@
   <body class="d-flex-center-center flex-column">
 
     <!-- #Início do Main -->
-      <%= yield %>
+    <%= yield %>
+
+      <div id="SignTypeInfo" class="sign-type-info">
+        <span><strong>Usuário:</strong> usuários podem visualizar modelos de maturidade já criados e utilizá-los.</span>
+        </br>
+        <span><strong>Admin:</strong> administradores podem criar modelos de maturidade, bem como suas estruturas e níves.</span>
+      </div>
+
+    </main>
+
+    <% if(controller_name == "sessions" || controller_name == "registrations") %>
+      <script>
+        document.getElementById('SignType_target').addEventListener('mouseover', function(e) {
+            document.getElementById('SignTypeInfo').style.display = 'block';
+        });
+        document.getElementById('SignType_target').addEventListener('mousemove', function(e) {
+            document.getElementById('SignTypeInfo').style.left = `${e.pageX + 7}px`;
+            document.getElementById('SignTypeInfo').style.top = `${e.pageY + 7}px`;
+        });
+        document.getElementById('SignType_target').addEventListener('mouseout', function(e) {
+            document.getElementById('SignTypeInfo').style.display = 'none';
+        });
+      </script>
+    <% end %>
 
   </body>
 </html>
