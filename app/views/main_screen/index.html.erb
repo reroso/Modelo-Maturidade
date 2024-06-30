@@ -29,11 +29,6 @@
     <form method="post" action="/cadastroMaturidade/incluir_maturidade" class="d-flex-center-between w-100">
         <!-- #Input "Nome"  -->
         <div class="main-name d-flex-stretch-start flex-column w-100">
-        <%if user_signed_in?%>
-            <label for="idName"><%= "Usuário esta logado"%></label>
-            <label for="idName"><%= current_user.email%></label>
-            <p><%= link_to 'fazer logoff', destroy_user_session_path, method: :delete%></p>
-        <%end%>
         
         <label for="idName">Nome</label>
         <input type="text" id="idName" name="nome"/>

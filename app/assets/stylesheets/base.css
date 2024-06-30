@@ -28,7 +28,7 @@
       margin-bottom: 7px; /* Espaço abaixo da barra de rolagem */
   }
   .aside-buttons::-webkit-scrollbar-thumb {
-      border-radius: 8px;
+      /* border-radius: 8px; */
       background-color: #adba8f;
   }
     .aside-button {
@@ -55,16 +55,17 @@
 
     .aside-user {
       height: 180px;
+      width: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: end;
       justify-content: space-evenly;
-      border-radius: 10px 0 0 10px;
     }
       .aside-user-infos {
         background-color: rgb(255, 255, 255);
-        margin-bottom: 5px;
-        border-radius: 10px;
+        margin-bottom: 5px; 
+        margin: 0;
+        border-radius: 10px 0 0 10px;
         padding: 5px 10px;
         flex-direction: column;
       }
@@ -72,7 +73,7 @@
           margin-bottom: 10px;
         }
         .aside-user h5 {
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 700;
           margin-bottom: 3px;
         }
@@ -83,23 +84,26 @@
           color: rgb(99, 99, 99);
           font-style: italic;
         }
-      .aside-user button {
-        padding: 4px 40px;
-        border-radius: 4px;
-        color: white;
-        font-size: 14px;
-        font-weight: 600;
-        background: -webkit-linear-gradient(180deg, #8d8d8d 50%, #7b7b7b 50%);
-        background: -o-linear-gradient(180deg, #8d8d8d 50%, #7b7b7b 50%);
-        background: -moz-linear-gradient(180deg, #8d8d8d 50%, #7b7b7b 50%);
-        background: linear-gradient(180deg, #8d8d8d 50%, #7b7b7b 50%)
-      }
-      .aside-user button:hover {
-        background: -webkit-linear-gradient(180deg, #838383 50%, #6c6c6c 50%);
-        background: -o-linear-gradient(180deg, #838383(131, 130, 130) #6c6c6c 50%);
-        background: -moz-linear-gradient(180deg, #838383 50%, #6c6c6c 50%);
-        background: linear-gradient(180deg, #838383 50%, #6c6c6c 50%)
-      }
+        .aside-user form {
+          align-self: center;
+        }
+          .aside-user input {
+            padding: 4px 40px;
+            border-radius: 4px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            background: -webkit-linear-gradient(180deg, #8d8d8d 50%, #7b7b7b 50%);
+            background: -o-linear-gradient(180deg, #8d8d8d 50%, #7b7b7b 50%);
+            background: -moz-linear-gradient(180deg, #8d8d8d 50%, #7b7b7b 50%);
+            background: linear-gradient(180deg, #8d8d8d 50%, #7b7b7b 50%);
+          }
+          .aside-user button:hover {
+            background: -webkit-linear-gradient(180deg, #838383 50%, #6c6c6c 50%);
+            background: -o-linear-gradient(180deg, #838383(131, 130, 130) #6c6c6c 50%);
+            background: -moz-linear-gradient(180deg, #838383 50%, #6c6c6c 50%);
+            background: linear-gradient(180deg, #838383 50%, #6c6c6c 50%);
+          }
 
 
 /*# ========== */
@@ -107,7 +111,7 @@
 /*# Main - Conteúdo Principal */
 main {
   background-color: white;
-  min-height: calc(100vh - 4vw);
+  height: calc(100vh - 48px);
   width: 85%;
   border-radius: 6px 6px 0 0;
 }
