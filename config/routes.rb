@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root to: 'main_screen#index'
+  root to: 'aplicar#index'
 
   get "/editar", to: "editar#index"
   get "/main_screen", to: "main_screen#index"
@@ -76,7 +76,7 @@ Rails.application.routes.draw do
   post "editar/atualizar_opcao", to:"editar#atualizar_opcao"
   post "avaliar/atualizar_opcao", to:"avaliar#atualizar_opcao"
 
-  # rotas para o devise 
+  # rotas para o devise
   devise_for :users, controllers: {
   sessions: 'users/sessions',
   registrations: 'users/registrations',

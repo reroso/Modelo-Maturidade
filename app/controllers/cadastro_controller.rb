@@ -1,5 +1,5 @@
 class CadastroController < ApplicationController
-    #before_action :authenticate_admin!
+    before_action :authenticate_admin!
     def index
         @dimensaos = Dimensao.all
         @processos = Processo.all
