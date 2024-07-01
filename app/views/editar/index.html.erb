@@ -234,16 +234,16 @@
 
           <!-- #Input "Quem usará o nível"  -->
           <div class="main-who  w-100" id="nivel_escolha">  
-          <div class="form-title-wrapper w-100 h-fit">
-              <h3>Escolha quem usará o nivel de maturidade:</h3>
-          </div>
-          <input type="radio" id="nivel_dimensao" name="nivel_escolha" value="3" <%= maturidade_selecionada.nivelEscolha == "3" ? 'checked' : '' %>>  
-              <label for="nivel_dimensao">Dimensao</label>
-          <input type="radio" id="nivel_processo" name="nivel_escolha" value="1" <%= maturidade_selecionada.nivelEscolha == "1" ? 'checked' : '' %>> 
-              <label for="nivel_processo">Processos</label>
-          <input type="radio" id="nivel_resultado_esperado" name="nivel_escolha" value="2" <%= maturidade_selecionada.resultadoEscolha == "1" ? 'disabled' : '' %><%= maturidade_selecionada.nivelEscolha == "2" ? 'checked' : '' %>> 
-              <label for="nivel_resultado_esperado">Resultados Esperados</label>
-          <input type="text" name="nivelEscolha" class="nivel_escolha hidden" value="<%=maturidade_selecionada.nivelEscolha%>" >  <!-- #Hidden-->
+            <div class="form-title-wrapper w-100 h-fit">
+                <h3>Escolha quem usará o nivel de maturidade:</h3>
+            </div>
+            <input type="radio" id="nivel_dimensao" name="nivel_escolha" value="3" <%= maturidade_selecionada.nivelEscolha == "3" ? 'checked' : '' %>>  
+                <label for="nivel_dimensao">Dimensao</label>
+            <input type="radio" id="nivel_processo" name="nivel_escolha" value="1" <%= maturidade_selecionada.nivelEscolha == "1" ? 'checked' : '' %>> 
+                <label for="nivel_processo">Processos</label>
+            <input type="radio" id="nivel_resultado_esperado" name="nivel_escolha" value="2" <%= maturidade_selecionada.resultadoEscolha == "1" ? 'disabled' : '' %><%= maturidade_selecionada.nivelEscolha == "2" ? 'checked' : '' %>> 
+                <label for="nivel_resultado_esperado">Resultados Esperados</label>
+            <input type="text" name="nivelEscolha" class="nivel_escolha hidden" value="<%=maturidade_selecionada.nivelEscolha%>" >  <!-- #Hidden-->
           </div>
 
           
