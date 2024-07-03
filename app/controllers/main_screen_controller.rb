@@ -1,5 +1,5 @@
 class MainScreenController < ApplicationController
-    before_action :authenticate_admin!
+    #before_action :authenticate_admin!
     #maturidades
 
     def incluir_maturidade

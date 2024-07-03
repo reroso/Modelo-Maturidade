@@ -1,5 +1,5 @@
 class CadastroController < ApplicationController
-    before_action :authenticate_admin!
+    #before_action :authenticate_admin!
     def index
         @dimensaos = Dimensao.all
         @processos = Processo.all
@@ -13,27 +13,31 @@ class CadastroController < ApplicationController
 
     #dimensao
 
-    def incluir_dimensao
+    def incluir_dimensao ##########
         dimensao = Dimensao.new
         dimensao.descricao = params[:descricao]
         dimensao.maturidade_id = params[:maturidade_id]
         dimensao.save
 
-        redirect_to "/cadastro"
+        opcao = params[:maturidade_id]
+        redirect_to cadastro_path(opcao: opcao)
     end
 
-    def salvar_dimensao
+    def salvar_dimensao ##############
         dimensao = Dimensao.find(params[:id])
         dimensao.descricao = params[:descricao]
         dimensao.save
 
-        redirect_to "/cadastro"
+        opcao = params[:opcao]
+        redirect_to cadastro_path(opcao: opcao)
     end
 
-    def excluir_dimensao
+    def excluir_dimensao ################
         dimensao = Dimensao.find(params[:id])
         dimensao.destroy
-        redirect_to "/cadastro"
+
+        opcao = params[:opcao]
+        redirect_to cadastro_path(opcao: opcao)
     end
 
     def alterar_dimensao
@@ -47,13 +51,14 @@ class CadastroController < ApplicationController
 
         #processos
 
-    def incluir_processo
+    def incluir_processo ########
         processo = Processo.new
         processo.descricao = params[:descricao]
         processo.dimensao_id = params[:dimensao_id]
         processo.save
 
-        redirect_to "/cadastro"
+        opcao = params[:opcao]
+        redirect_to cadastro_path(opcao: opcao)
     end
 
     def salvar_processo
@@ -64,10 +69,12 @@ class CadastroController < ApplicationController
         redirect_to "/cadastro"
     end
 
-    def excluir_processo
+    def excluir_processo #######
         processo = Processo.find(params[:id])
         processo.destroy
-        redirect_to "/cadastro"
+
+        opcao = params[:opcao]
+        redirect_to cadastro_path(opcao: opcao)
     end
 
     def alterar_processo
@@ -107,13 +114,14 @@ class CadastroController < ApplicationController
 
         #resultados
 
-    def incluir_resultado
+    def incluir_resultado ###########
         resultado = Resultado.new
         resultado.descricao = params[:descricao]
         resultado.processo_id = params[:processo_id]
         resultado.save
 
-        redirect_to "/cadastro"
+        opcao = params[:opcao]
+        redirect_to cadastro_path(opcao: opcao)
     end
 
     def salvar_resultado
@@ -127,7 +135,9 @@ class CadastroController < ApplicationController
     def excluir_resultado
         resultado = Resultado.find(params[:id])
         resultado.destroy
-        redirect_to "/cadastro"
+        
+        opcao = params[:opcao]
+        redirect_to cadastro_path(opcao: opcao)
     end
 
     def alterar_resultado
@@ -153,8 +163,6 @@ class CadastroController < ApplicationController
         resultado = Resultado.find(params[:id])
         resultado.nivel_selecionado = params[:nivel_selecionado]
         resultado.save
-
-        redirect_to "/cadastro"
     end
 
     def excluir_resultado_docs
@@ -171,20 +179,6 @@ class CadastroController < ApplicationController
         blob = attachment.blob  # Obtém o blob associado ao attachment
         blob.update(classificacao: params[:classificacao])
 
-    end
-
-    def incluir_maturidade
-        maturidade = Maturidade.new
-        maturidade.nome = params[:nome]
-        maturidade.descricao = params[:descricao]
-        maturidade.tipoNivel = params[:tipoNivel]
-        maturidade.menorNivel = params[:menorNivel]
-        maturidade.maiorNivel = params[:maiorNivel]
-        maturidade.resultadoEscolha = params[:resultadoEscolha]
-        maturidade.nivelEscolha = params[:nivelEscolha]
-        maturidade.save
-
-        redirect_to "/main_screen"
     end
 
     def salvar_maturidade
@@ -210,7 +204,7 @@ class CadastroController < ApplicationController
     def atualizar_opcao
 
         @opcao = params[:opcao]
-        render json: { redirect_url: root_path(opcao: @opcao) }
+        render json: { redirect_url: cadastro_path(opcao: @opcao) }
 
     end
 

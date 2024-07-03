@@ -69,6 +69,16 @@
           <%= button_to 'Sair', destroy_user_session_path, method: :delete%>
         </div>
       <%end%>
+      <%if admin_signed_in?%>
+        <div class="aside-user w-100">
+          <div class="aside-user-infos d-flex-center-center">
+            <%= image_tag('icons/user.svg', width: '70px', height: '70px') %>
+            <h5><%= current_admin.email%></h5>
+            <span style="visibility:none;">Analista de Processos e Qualidade</span>
+          </div>
+          <%= button_to 'Sair', destroy_admin_session_path, method: :delete%>
+        </div>
+      <%end%>
     </aside>
     <!-- # Fim da Barra lateral -->
     

@@ -57,8 +57,10 @@
         <p>Editar Dimensão:</p>
         <form action="" id="form_edit_dimensao" method="post" class="d-flex-center-center flex-column h-100">
           <div class="form-control d-flex-center-center">
+            <input type="hidden" name="opcao" value="<%= @opcao %>">
             <label for="nome_editar_dimensao">Nome:</label>
             <textarea type="text" id="nome_editar_dimensao" name="descricao"></textarea>
+
             <!-- <input name="maturidade_id" type="text" id="maturidade_dimensao" class="hidden" value="<%= @opcao%>"> -->
           </div>
           <div class="main-create-level-buttons">
@@ -89,7 +91,7 @@
           <div class="expandable-header-right">
             <button onclick="biuldProcessoForm(<%= dimensao.id %>)" id="novo-dimencao-<%= dimensao.id %>" class="expandable-header-btn"><%= image_tag("icons/plus.svg", width: 16, height: 16) %></button>
             <button onclick="openDimensaoEditForm(<%= dimensao.id %>, '<%= dimensao.descricao %>')" id="editar-dimencao-<%= dimensao.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
-            <button id="excluir-dimencao-<%= dimensao.id %>" onclick="location.href='/cadastro/<%= dimensao.id %>/excluir_dimensao'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
+            <button id="excluir-dimencao-<%= dimensao.id %>" onclick="location.href='/cadastro/<%= dimensao.id %>/excluir_dimensao?opcao=<%= @opcao %>'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
           </div>
         </div>
         <!--# Fim do Header da Dimensão X -->
@@ -221,13 +223,13 @@
                       <% end %>
                     </select>
                   </form>
-                  <% end %>
+                <% end %>
               </div>
               <div class="processo-header-right">
                 <div class="expandable-header-right">
                   <button onclick="biuldResultadoForm(<%= dimensao.id %>, <%= processo.id %>)" id="novo-resultado-<%= processo.id %>" class="expandable-header-btn"><%= image_tag("icons/plus.svg", width: 16, height: 16) %></button>
                   <button onclick="biuldResultadoForm(<%= dimensao.id %>, <%= processo.id %>)" id="editar-processo-<%= processo.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
-                  <button id="excluir-processo-<%= processo.id %>" onclick="location.href='/cadastroProcesso/<%= processo.id %>/excluir_processo'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
+                  <button id="excluir-processo-<%= processo.id %>" onclick="location.href='/cadastroProcesso/<%= processo.id %>/excluir_processo?opcao=<%= @opcao %>'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
                 </div>
               </div>
             </div>  
@@ -250,10 +252,7 @@
                 <!--# Início do header do resultado Z do processo Y da dimensão X -->
                 <div id="header-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-header d-flex-center-between resultado w-100">
                   <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(1)"><!-- o 1 do id é o id da dimensão-->
-                    <div class="h-100" onclick="expandeMain('resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')">
                       <i id="plus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid icon-caret-right"></i>
-                      <i id="minus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid icon-minus hidden"></i>
-                    </div>
                     <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')"><strong><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> - </strong><%= resultado.descricao %></h3>
 
                     <%if maturidade_selecionada.nivelEscolha == "2"%>
@@ -363,7 +362,7 @@
                   <div class="resultado-header-right">
                     <div class="expandable-header-right">
                       <button id="editar-resultado-<%= resultado.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
-                      <button id="excluir-resultado-<%= resultado.id %>" onclick="location.href='/cadastroResultado/<%= resultado.id %>/excluir_resultado'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
+                      <button id="excluir-resultado-<%= resultado.id %>" onclick="location.href='/cadastroResultado/<%= resultado.id %>/excluir_resultado?opcao=<%= @opcao %>'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
                     </div>
                   </div>
                 </div>
@@ -440,7 +439,7 @@
       const formEditDimencao = document.getElementById("form_edit_dimensao");
       const textareaEditDimensao = document.getElementById("nome_editar_dimensao");
       
-      formEditDimencao.setAttribute("action", "cadastro/"+ id +"/salvar_dimensao");
+      formEditDimencao.setAttribute("action", "cadastro/"+ id +"/salvar_dimensao?opcao=<%= @opcao %>");
       textareaEditDimensao.innerHTML = descricao;
 
       if(formDimensao.classList.contains("hidden")) {
@@ -458,7 +457,7 @@
       const templateNovoProcesso = `
         <div id="create_new_processo_${dimensao}" class="main-create-level d-flex-center-center dimencao w-100">
           <p>Novo Processo:</p>
-          <form method="post" action="/cadastroProcesso/incluir_processo" class="d-flex-center-center flex-column">
+          <form method="post" action="/cadastroProcesso/incluir_processo?opcao=<%= @opcao %>" class="d-flex-center-center flex-column">
             <div class="form-control d-flex-center-center">
               <label for="nome-novo">Nome:</label>
               <textarea type="text" id="nome-novo-processo-${dimensao}" name="descricao"></textarea>
@@ -491,7 +490,7 @@
       const templateNovoResultadoEsperado = `
         <div id="create_new_resultado_${dimensao}_${processo}" class="main-create-level d-flex-center-center dimencao w-100">
           <p>Novo Resultado Esperado:</p>
-          <form method="post" action="/cadastroResultado/incluir_resultado" method="post" class="d-flex-center-center flex-column">
+          <form method="post" action="/cadastroResultado/incluir_resultado?opcao=<%= @opcao %>" method="post" class="d-flex-center-center flex-column">
             <div class="form-control d-flex-center-center">
               <label for="nome-novo">Nome:</label>
               <textarea type="text" id="nome-novo-resultado-${dimensao}-${processo}" name="descricao"></textarea>

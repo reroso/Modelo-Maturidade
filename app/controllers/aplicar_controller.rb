@@ -1,5 +1,5 @@
 class AplicarController < ApplicationController
-    before_action :authenticate_user!
+    #before_action :authenticate_user!
     def index
         @dimensaos = Dimensao.all
         @processos = Processo.all

@@ -46,7 +46,7 @@ Rails.application.routes.draw do
 
   #maturidades
 
-  post "/cadastroMaturidade/incluir_maturidade", to: "cadastro#incluir_maturidade"
+  post "/cadastroMaturidade/incluir_maturidade", to: "main_screen#incluir_maturidade"
   post "/cadastroMaturidade/alterar_maturidade", to: "cadastro#alterar_maturidade"
   get '/cadastroMaturidade/:id', to: 'cadastro#mostrar_maturidade'
 
