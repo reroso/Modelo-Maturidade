@@ -71,6 +71,36 @@
                   <i id="minus-dimencao-<%= dimensao.id %>" class="fa-solid fa-minus hidden"></i>
                 </div>
                 <h3 id="titulo-nivel-<%= dimensao.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>')"> <strong><%= contadorDimensaos %>- </strong><%= dimensao.descricao %></h3>
+                <% if dimensao.nivel_selecionado %>
+                  <%if maturidade_selecionada.tipoNivel == "1"%>
+                    <%salvarDescricao = ""%>
+                    <%contadorExistencia = 0%>
+                    <% @levels.each do |level| %>
+                      <% if dimensao.nivel_selecionado.to_i == level.index.to_i && level.modelo_id.to_i == @opcao %>
+                        <%salvarDescricao = level.descricao%>
+                        <%contadorExistencia = 1%>
+                      <%end%>
+                    <% end %>
+                  <%else%>
+                    <%salvarDescricao = ""%>
+                    <%contadorExistencia = 0%>
+                    <% @levels.each do |level| %>
+                      <% if dimensao.nivel_selecionado.to_s == level.index.to_s && level.modelo_id.to_i == @opcao %>
+                        <%salvarDescricao = level.descricao%>
+                        <%contadorExistencia = 1%>
+                      <%end%>
+                    <% end %>
+                  <%end%>
+                  <div class="select-nivel-maturidade dimensaoNivelSelecionado" name="nome" id="" disabled>
+                    <p><%= dimensao.nivel_selecionado %> 
+                    <% if contadorExistencia == 1%>
+                      - <%= salvarDescricao %>
+                    <% end %>
+                    </p>
+                  </div>
+                  <%salvarDescricao = ""%>
+                  <%contadorExistencia = 0%>
+                <% end %>
               </div>
             </div>
           
