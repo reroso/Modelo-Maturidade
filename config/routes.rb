@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   post "/cadastro/:id/salvar_dimensao", to: "cadastro#salvar_dimensao"
   get "/cadastro/:id/excluir_dimensao", to: "cadastro#excluir_dimensao"
   get '/cadastro/:id', to: 'cadastro#mostrar'
+  post "/cadastro/:id/salvar_dimensao_nivel", to: "cadastro#salvar_dimensao_nivel"
 
   #processos
 

@@ -13,7 +13,7 @@ class CadastroController < ApplicationController
 
     #dimensao
 
-    def incluir_dimensao ##########
+    def incluir_dimensao
         dimensao = Dimensao.new
         dimensao.descricao = params[:descricao]
         dimensao.maturidade_id = params[:maturidade_id]
@@ -23,7 +23,7 @@ class CadastroController < ApplicationController
         redirect_to cadastro_path(opcao: opcao)
     end
 
-    def salvar_dimensao ##############
+    def salvar_dimensao
         dimensao = Dimensao.find(params[:id])
         dimensao.descricao = params[:descricao]
         dimensao.save
@@ -32,7 +32,7 @@ class CadastroController < ApplicationController
         redirect_to cadastro_path(opcao: opcao)
     end
 
-    def excluir_dimensao ################
+    def excluir_dimensao
         dimensao = Dimensao.find(params[:id])
         dimensao.destroy
 
@@ -49,9 +49,15 @@ class CadastroController < ApplicationController
         redirect_to "/cadastro"
     end
 
+    def salvar_dimensao_nivel
+        dimensao = Dimensao.find(params[:id])
+        dimensao.nivel_selecionado = params[:nivel_selecionado]
+        dimensao.save
+    end
+
         #processos
 
-    def incluir_processo ########
+    def incluir_processo
         processo = Processo.new
         processo.descricao = params[:descricao]
         processo.dimensao_id = params[:dimensao_id]
@@ -66,7 +72,8 @@ class CadastroController < ApplicationController
         processo.descricao = params[:descricao]
         processo.save
 
-        redirect_to "/cadastro"
+        opcao = params[:opcao]
+        redirect_to cadastro_path(opcao: opcao)
     end
 
     def excluir_processo #######
@@ -114,7 +121,7 @@ class CadastroController < ApplicationController
 
         #resultados
 
-    def incluir_resultado ###########
+    def incluir_resultado
         resultado = Resultado.new
         resultado.descricao = params[:descricao]
         resultado.processo_id = params[:processo_id]
@@ -129,13 +136,14 @@ class CadastroController < ApplicationController
         resultado.descricao = params[:descricao]
         resultado.save
 
-        redirect_to "/cadastro"
+        opcao = params[:opcao]
+        redirect_to cadastro_path(opcao: opcao)
     end
 
     def excluir_resultado
         resultado = Resultado.find(params[:id])
         resultado.destroy
-        
+
         opcao = params[:opcao]
         redirect_to cadastro_path(opcao: opcao)
     end

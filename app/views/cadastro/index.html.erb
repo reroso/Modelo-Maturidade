@@ -87,6 +87,106 @@
               <i id="minus-dimencao-<%= dimensao.id %>"  class="icon-minus hidden"></i>
             </div>
             <h3 id="titulo-nivel-<%= dimensao.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>')"><strong><%=contadorDimensaos%> - </strong><%= dimensao.descricao %></h3>
+            
+            <%if maturidade_selecionada.nivelEscolha == "3"%>
+              <form id="meu_formulario_dimensoes" action="/cadastro/<%= dimensao.id %>/salvar_dimensao_nivel" method="post">
+                <select class="nivel_maturidade_select" style="font-size: 13px!important; padding: 2px 6px" name="nivel_selecionado" onchange="submitForm(this)">
+                  <%if maturidade_selecionada.tipoNivel == "1"%>
+                    <%if maturidade_selecionada.menorNivel.to_i < maturidade_selecionada.maiorNivel.to_i%>
+                      <%menorContador = maturidade_selecionada.menorNivel.to_i%>
+                      <%maiorContador = maturidade_selecionada.maiorNivel.to_i%>
+                      <%menorContador = menorContador.to_i%>
+                      <%maiorContador = maiorContador.to_i%>
+                    <%else%>
+                      <%maiorContador = maturidade_selecionada.menorNivel.to_i%>
+                      <%menorContador = maturidade_selecionada.maiorNivel.to_i%>
+                      <%menorContador = menorContador.to_i%>
+                      <%maiorContador = maiorContador.to_i%>
+                    <%end%>
+                    <% nivel_resultado_selecionado = dimensao.nivel_selecionado %>
+                    
+                    <% if dimensao.nivel_selecionado.nil? %>
+                      <option value="" selected>Selecionar Nível</option>
+                    <% end %>                    
+                    <% while menorContador <= maiorContador do %>
+                      <%salvarDescricao = ""%>
+                      <%contadorExistencia = 0%>
+                      <% @levels.each do |level| %>
+                        <% if menorContador.to_i == level.index.to_i && level.modelo_id.to_i == @opcao %>
+                          <%salvarDescricao = level.descricao%>
+                          <%contadorExistencia = 1%>
+                        <%end%>
+                      <% end %>
+                      
+                      <%if nivel_resultado_selecionado.to_i == menorContador && dimensao.nivel_selecionado.present?%>
+                        <option value="<%= menorContador%>" selected><%= menorContador %>
+                        <% if contadorExistencia == 1%>
+                          - <%= salvarDescricao %>
+                        <% end %>
+                        </option>
+                        <% menorContador += 1 %>
+                      <% else %>
+                        <option value="<%= menorContador %>"><%= menorContador %>
+                        <% if contadorExistencia == 1%>
+                          - <%= salvarDescricao %>
+                        <% end %>
+                        </option>
+                        <% menorContador += 1 %>
+                      <% end %>
+                      <%salvarDescricao = ""%>
+                      <%contadorExistencia = 0%>
+                    <% end %>
+                  <% else %>
+                    <%if maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s%>
+                      <%menorContador = maturidade_selecionada.menorNivel.to_s%>
+                      <%maiorContador = maturidade_selecionada.maiorNivel.to_s%>
+                      <%menorContador = menorContador.to_s%>
+                      <%maiorContador = maiorContador.to_s%>
+                    <%else%>
+                      <%maiorContador = maturidade_selecionada.menorNivel.to_s%>
+                      <%menorContador = maturidade_selecionada.maiorNivel.to_s%>
+                      <%menorContador = menorContador.to_s%>
+                      <%maiorContador = maiorContador.to_s%>
+                    <%end%>
+                    <% nivel_resultado_selecionado = processo.nivel_selecionado.to_s %>
+                    <% nivel_resultado_selecionado = nivel_resultado_selecionado.to_s %>
+
+                    <% if dimensao.nivel_selecionado.nil? %>
+                      <option value="" selected>Selecionar Nível</option>
+                    <% end %>
+
+                    <% while menorContador <= maiorContador do %>
+                      <%salvarDescricao = ""%>
+                      <%contadorExistencia = 0%>
+                      <% @levels.each do |level| %>
+                        <% if menorContador.to_s == level.index.to_s && level.modelo_id.to_i == @opcao %>
+                          <%salvarDescricao = level.descricao%>
+                          <%contadorExistencia = 1%>
+                        <%end%>
+                      <% end %>
+                      <%if nivel_resultado_selecionado == menorContador && dimensao.nivel_selecionado.present?%>
+                        <option value="<%= menorContador%>" selected><%= menorContador %>
+                        <% if contadorExistencia == 1%>
+                          - <%= salvarDescricao %>
+                        <% end %>
+                        </option>
+                        <% menorContador = menorContador.next %>
+                      <% else %>
+                        <option value="<%= menorContador %>"><%= menorContador %>
+                        <% if contadorExistencia == 1%>
+                          - <%= salvarDescricao %>
+                        <% end %>
+                        </option>
+                        <% menorContador = menorContador.next %>
+                      <% end %>  
+                      <%salvarDescricao = ""%>
+                      <%contadorExistencia = 0%>
+                    <% end %>
+                  <% end %>
+                </select>
+              </form>
+            <% end %>
+
           </div>
           <div class="expandable-header-right">
             <button onclick="biuldProcessoForm(<%= dimensao.id %>)" id="novo-dimencao-<%= dimensao.id %>" class="expandable-header-btn"><%= image_tag("icons/plus.svg", width: 16, height: 16) %></button>
@@ -113,18 +213,17 @@
 
             <!--# Início do cabeçalho do Processo Y da Dimensão X -->
             <div id="header-processo-<%= dimensao.id %>-<%= processo.id %>" class="expandable-header d-flex-center-between processo w-100">
+
               <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(<%= processo.id %>)"><!-- o 1 do id é o id da dimensão-->
+                <% if salvar_resultado_escolha == "2" %>
                 <div class="h-100" onclick="expandeMain('processo-<%= dimensao.id %>-<%= processo.id %>')">
-                  <i id="plus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid 
-                    <% if salvar_resultado_escolha == 1 %> 
-                      icon-caret-right
-                    <% else %> 
-                      icon-plus 
-                    <% end %> 
-                    abrir_form_resultado_esperado">
-                  </i>
+                  <i id="plus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid icon-plus abrir_form_resultado_esperado"></i> 
                   <i id="minus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid icon-minus hidden"></i>
                 </div>
+                <%else%>
+                  <i id="plus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid icon-caret-right abrir_form_resultado_esperado"></i>   
+                <%end%>                
+                
                 <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>')"><strong><%=contadorDimensaos%>.<%=contadorProcessos%> - </strong><%= processo.descricao %></h3>
 
                 <%if maturidade_selecionada.nivelEscolha == "1"%>
@@ -156,7 +255,7 @@
                               <%contadorExistencia = 1%>
                             <%end%>
                           <% end %>
-                          <%if nivel_resultado_selecionado == menorContador && processo.nivel_selecionado.present?%>
+                          <%if nivel_resultado_selecionado.to_i == menorContador && processo.nivel_selecionado.present?%>
                             <option value="<%= menorContador%>" selected><%= menorContador %>
                             <% if contadorExistencia == 1%>
                               - <%= salvarDescricao %>
@@ -227,8 +326,10 @@
               </div>
               <div class="processo-header-right">
                 <div class="expandable-header-right">
-                  <button onclick="biuldResultadoForm(<%= dimensao.id %>, <%= processo.id %>)" id="novo-resultado-<%= processo.id %>" class="expandable-header-btn"><%= image_tag("icons/plus.svg", width: 16, height: 16) %></button>
-                  <button onclick="biuldResultadoForm(<%= dimensao.id %>, <%= processo.id %>)" id="editar-processo-<%= processo.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
+                  <% if salvar_resultado_escolha == "2" %>
+                    <button onclick="biuldResultadoForm(<%= dimensao.id %>, <%= processo.id %>)" id="novo-resultado-<%= processo.id %>" class="expandable-header-btn"><%= image_tag("icons/plus.svg", width: 16, height: 16) %></button>
+                  <%end%>
+                  <button onclick="biuldResultadoFormEditar(<%= dimensao.id %>, <%= processo.id %>, '<%= processo.descricao %>')" id="editar-processo-<%= processo.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
                   <button id="excluir-processo-<%= processo.id %>" onclick="location.href='/cadastroProcesso/<%= processo.id %>/excluir_processo?opcao=<%= @opcao %>'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
                 </div>
               </div>
@@ -288,7 +389,7 @@
                                 <%contadorExistencia = 1%>
                               <%end%>
                             <% end %>
-                            <%if nivel_resultado_selecionado == menorContador && resultado.nivel_selecionado.present? %>
+                            <%if nivel_resultado_selecionado.to_i == menorContador && resultado.nivel_selecionado.present? %>
                               <option value="<%= menorContador%>" selected><%= menorContador %>
                               <% if contadorExistencia == 1%>
                                 - <%= salvarDescricao %>
@@ -361,7 +462,7 @@
                   </div>
                   <div class="resultado-header-right">
                     <div class="expandable-header-right">
-                      <button id="editar-resultado-<%= resultado.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
+                      <button onclick="biuldEsperadoForm(<%= dimensao.id %>, <%= processo.id %>, <%= resultado.id %>, '<%= resultado.descricao %>')" id="editar-resultado-<%= resultado.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
                       <button id="excluir-resultado-<%= resultado.id %>" onclick="location.href='/cadastroResultado/<%= resultado.id %>/excluir_resultado?opcao=<%= @opcao %>'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
                     </div>
                   </div>
@@ -369,7 +470,7 @@
                 <!--# Fim do header do resultado Z do processo Y da dimensão X -->
 
                 <!--# Início do main expansivel do resultado Z do processo Y da dimensão X -->
-                <div id="main-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-main resultado hidden">
+                <div id="main-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-main resultado">
 
                 </div>
                 <!--# Fim do main expansivel do resultado Z do processo Y da dimensão X -->
@@ -419,6 +520,7 @@
         minus_trocar.classList.add('hidden');
       }
     }
+
   </script>
 
 
@@ -448,7 +550,6 @@
         formDimensao.classList.add("hidden");
       }
     }
-
 
     //Função de abrir e fechar o form de criação de novos processos
     function biuldProcessoForm(dimensao) {
@@ -483,7 +584,6 @@
     }
     
 
-
     //Função de abrir e fechar o form de criação de novos resultados esperados
     function biuldResultadoForm(dimensao, processo) {
 
@@ -507,10 +607,74 @@
       expandeMain('processo-' + dimensao + '-' + processo, 1);
 
       if(!document.getElementById("create_new_resultado_" + dimensao + "_" + processo)) {
+        if(document.getElementById("editar_processo_" + dimensao + "_" + processo)) {
+          const elementoDescartado = document.getElementById("editar_processo_" + dimensao + "_" + processo);
+          elementoDescartado.remove();
+        }
         const elementoPai = document.getElementById("main-processo-" + dimensao + "-" + processo);
         elementoPai.insertAdjacentHTML("afterbegin", templateNovoResultadoEsperado);
       } else {
         const elementoDescartado = document.getElementById("create_new_resultado_" + dimensao + "_" + processo);
+        elementoDescartado.remove();
+      }
+    }
+
+    function biuldResultadoFormEditar(dimensao, processo, descricao) {
+
+      const templateNovoResultadoEsperado = `
+        <div id="editar_processo_${dimensao}_${processo}" class="main-create-level d-flex-center-center dimencao w-100">
+          <p>Editar Processo:</p>
+          <form method="post" action="/cadastroProcesso/${processo}/salvar_processo?opcao=<%= @opcao %>" class="d-flex-center-center flex-column">
+            <div class="form-control d-flex-center-center">
+              <label for="nome-novo">Nome:</label>
+              <textarea type="text" id="nome-novo-resultado-${dimensao}-${processo}" name="descricao">${descricao}</textarea>
+            </div>
+            <div class="main-create-level-buttons">
+              <button class="main-create-level-submit">Salvar</button>
+              <button class="main-create-level-cancel" onclick="biuldResultadoFormEditar(${dimensao}, ${processo})">cancelar</button>
+            </div>
+          </form>
+        </div> 
+      `;
+
+      expandeMain('processo-' + dimensao + '-' + processo, 1);
+
+      if(!document.getElementById("editar_processo_" + dimensao + "_" + processo)) {
+        if(document.getElementById("create_new_resultado_" + dimensao + "_" + processo)) {
+          const elementoDescartado = document.getElementById("create_new_resultado_" + dimensao + "_" + processo);
+          elementoDescartado.remove();
+        }
+        const elementoPai = document.getElementById("main-processo-" + dimensao + "-" + processo);
+        elementoPai.insertAdjacentHTML("afterbegin", templateNovoResultadoEsperado);
+      } else {
+        const elementoDescartado = document.getElementById("editar_processo_" + dimensao + "_" + processo);
+        elementoDescartado.remove();
+      }
+    }
+
+    function biuldEsperadoForm(dimensao, processo, resultado, descricao) {
+
+      const templateNovoResultadoEsperado = `
+        <div id="editar_resultado_${dimensao}_${processo}_${resultado}" class="main-create-level d-flex-center-center dimencao w-100">
+          <p>Editar Resultado Esperado:</p>
+          <form method="post" action="/cadastroResultado/${resultado}/salvar_resultado?opcao=<%= @opcao %>" method="post" class="d-flex-center-center flex-column">
+            <div class="form-control d-flex-center-center">
+              <label for="nome-novo">Nome:</label>
+              <textarea type="text" id="nome-editar-resultado-${dimensao}-${processo}-${resultado}" name="descricao">${descricao}</textarea>
+            </div>
+            <div class="main-create-level-buttons">
+              <button class="main-create-level-submit">Salvar</button>
+              <button class="main-create-level-cancel" onclick="biuldEsperadoForm(${dimensao}, ${processo}, ${resultado})">cancelar</button>
+            </div>
+          </form>
+        </div> 
+      `;
+
+      if(!document.getElementById("editar_resultado_" + dimensao + "_" + processo + "_" + resultado)) {
+        const elementoPai = document.getElementById("main-resultado-" + dimensao + "-" + processo + "-" + resultado);
+        elementoPai.insertAdjacentHTML("afterbegin", templateNovoResultadoEsperado);
+      } else {
+        const elementoDescartado = document.getElementById("editar_resultado_" + dimensao + "_" + processo + "_" + resultado);
         elementoDescartado.remove();
       }
     }
