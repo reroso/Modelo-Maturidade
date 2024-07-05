@@ -328,8 +328,10 @@
                 <div class="expandable-header-right">
                   <% if salvar_resultado_escolha == "2" %>
                     <button onclick="biuldResultadoForm(<%= dimensao.id %>, <%= processo.id %>)" id="novo-resultado-<%= processo.id %>" class="expandable-header-btn"><%= image_tag("icons/plus.svg", width: 16, height: 16) %></button>
+                    <button onclick="biuldResultadoFormEditar(<%= dimensao.id %>, <%= processo.id %>, '<%= processo.descricao %>')" id="editar-processo-<%= processo.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
+                  <%else%>
+                    <button onclick="biuldResultadoFormEditarProcesso(<%= dimensao.id %>, <%= processo.id %>, '<%= processo.descricao %>')" id="editar-processo-<%= processo.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
                   <%end%>
-                  <button onclick="biuldResultadoFormEditar(<%= dimensao.id %>, <%= processo.id %>, '<%= processo.descricao %>')" id="editar-processo-<%= processo.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
                   <button id="excluir-processo-<%= processo.id %>" onclick="location.href='/cadastroProcesso/<%= processo.id %>/excluir_processo?opcao=<%= @opcao %>'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
                 </div>
               </div>
@@ -521,6 +523,16 @@
       }
     }
 
+    function expandeMainProcesso(id_expandir, isCreate) {
+        var div_expandir = document.getElementById('main-' + id_expandir);
+
+        if (div_expandir.classList.contains('hidden') || isCreate == 1) {
+          div_expandir.classList.remove('hidden');
+        } else {
+          div_expandir.classList.add('hidden');
+        }
+      }
+
   </script>
 
 
@@ -638,6 +650,39 @@
       `;
 
       expandeMain('processo-' + dimensao + '-' + processo, 1);
+
+      if(!document.getElementById("editar_processo_" + dimensao + "_" + processo)) {
+        if(document.getElementById("create_new_resultado_" + dimensao + "_" + processo)) {
+          const elementoDescartado = document.getElementById("create_new_resultado_" + dimensao + "_" + processo);
+          elementoDescartado.remove();
+        }
+        const elementoPai = document.getElementById("main-processo-" + dimensao + "-" + processo);
+        elementoPai.insertAdjacentHTML("afterbegin", templateNovoResultadoEsperado);
+      } else {
+        const elementoDescartado = document.getElementById("editar_processo_" + dimensao + "_" + processo);
+        elementoDescartado.remove();
+      }
+    }
+
+    function biuldResultadoFormEditarProcesso(dimensao, processo, descricao) {
+
+      const templateNovoResultadoEsperado = `
+        <div id="editar_processo_${dimensao}_${processo}" class="main-create-level d-flex-center-center dimencao w-100">
+          <p>Editar Processo:</p>
+          <form method="post" action="/cadastroProcesso/${processo}/salvar_processo?opcao=<%= @opcao %>" class="d-flex-center-center flex-column">
+            <div class="form-control d-flex-center-center">
+              <label for="nome-novo">Nome:</label>
+              <textarea type="text" id="nome-novo-resultado-${dimensao}-${processo}" name="descricao">${descricao}</textarea>
+            </div>
+            <div class="main-create-level-buttons">
+              <button class="main-create-level-submit">Salvar</button>
+              <button class="main-create-level-cancel" onclick="biuldResultadoFormEditarProcesso(${dimensao}, ${processo})">cancelar</button>
+            </div>
+          </form>
+        </div> 
+      `;
+
+      expandeMainProcesso('processo-' + dimensao + '-' + processo, 1);
 
       if(!document.getElementById("editar_processo_" + dimensao + "_" + processo)) {
         if(document.getElementById("create_new_resultado_" + dimensao + "_" + processo)) {
