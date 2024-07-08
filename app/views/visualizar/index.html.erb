@@ -101,7 +101,7 @@
                           <div class="table-content">	
                             <% resultado.docs.each do |doc| %>
                               <div class="table-row">	
-                              <%if doc.classificacao == 3%>
+                              <%if doc.classificacao == 3 || doc.classificacao == 2 %>
                                 <% vetorResultado.push(menorContador-1) %>
                               <%end%>	
                                   <div class="table-data d-flex-center-start"><%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %></a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
@@ -164,7 +164,7 @@
                           <div class="table-content">	
                             <% processo.docs.each do |doc| %>
                               <div class="table-row">	
-                              <%if doc.classificacao == 3%>
+                              <%if doc.classificacao == 3 || doc.classificacao == 2%>
                                 <% vetorResultado.push(menorContador-1) %>
                               <%end%>	
                                   <div class="table-data d-flex-center-start" style="width:80%">
@@ -279,7 +279,7 @@
                           <div class="table-content">	
                             <% resultado.docs.each do |doc| %>
                               <div class="table-row">	
-                              <%if doc.classificacao == 3%>
+                              <%if doc.classificacao == 3 || doc.classificacao == 2%>
                                 <% vetorResultado.push(menorContadorContar) %>
                               <%end%>	
                                 <div class="table-data d-flex-center-start">
@@ -344,7 +344,7 @@
                           <div class="table-content">	
                             <% processo.docs.each do |doc| %>
                               <div class="table-row">	
-                              <%if doc.classificacao == 3%>
+                              <%if doc.classificacao == 3 || doc.classificacao == 2%>
                                 <% vetorResultado.push(menorContadorContar) %>
                               <%end%>	
                                   <div class="table-data d-flex-center-start">
@@ -394,8 +394,21 @@
         <div class="popup-titulo">
           <% if vetorResultado[0].nil? %>
             <h2>O nível deste modelo é <%=maturidade_selecionada.menorNivel%></h2>
+            <%puts "foi aqui"%>
           <%else%>
-            <h2>O nível deste modelo é <%=vetorResultado[0]%></h2>
+            <%if maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s%>
+              <%if maturidade_selecionada.menorNivel.to_s > vetorResultado[0].to_s%>
+                <h2>O nível deste modelo é <%=maturidade_selecionada.menorNivel.to_s%></h2>
+              <%else%>
+                <h2>O nível deste modelo é <%=vetorResultado[0]%></h2>
+              <%end%>
+            <%else%>
+              <%if maturidade_selecionada.menorNivel.to_s < vetorResultado[0].to_s%>
+                <h2>O nível deste modelo é <%=maturidade_selecionada.menorNivel%></h2>
+              <%else%>
+                <h2>O nível deste modelo é <%=vetorResultado[0]%></h2>
+              <%end%>
+            <%end%>          
           <%end%>
         </div>
       </div>

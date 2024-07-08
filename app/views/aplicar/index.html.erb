@@ -168,7 +168,7 @@
                                 <h5 class="descricao-artefato"><%= doc.descricao%></h5>
                                 <span class="descricao-artefato">-</span>
                                 <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
-                                <button onclick="show_popup('confirmar_exclusao', '/cadastroProcesso/<%= doc.id %>/excluir_processo_docs')" class="file-galery-item-btn">
+                                <button onclick="show_popup('confirmar_exclusao', '/cadastroProcesso/<%= doc.id %>/excluir_processo_docs?opcao=<%= @opcao %>')" class="file-galery-item-btn">
                                   <%= image_tag('icons/delete_folder.svg', width: '25px', height: '25px') %>
                                 </button>
                               </li>
@@ -177,7 +177,7 @@
                 
                               <!-- Adicionar arquivos -->
                               <li class="file-galery-item d-flex-center-start">
-                                <form action="/cadastroProcesso/<%=processo.id%>/salvar_processo_docs" method="POST" enctype="multipart/form-data">
+                                <form action="/cadastroProcesso/<%=processo.id%>/salvar_processo_docs?opcao=<%= @opcao %>" method="POST" enctype="multipart/form-data">
                                   <input type="file" name="docs"/>
                                   <input name="descricao" class="input-artefato" id="descricao_artefato" placeholder="Descrição do artefato" type="text">
                                   <button type="submit">Cadastrar</button>
@@ -244,7 +244,7 @@
                                             <h5 class="descricao-artefato"><%= doc.descricao%></h5>
                                             <span class="descricao-artefato">-</span>
                                             <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
-                                            <button onclick="show_popup('confirmar_exclusao', '/cadastroresultado/<%= doc.id %>/excluir_resultado_docs')" class="file-galery-item-btn">
+                                            <button onclick="show_popup('confirmar_exclusao', '/cadastroresultado/<%= doc.id %>/excluir_resultado_docs?opcao=<%= @opcao %>')" class="file-galery-item-btn">
                                               <%= image_tag('icons/delete_folder.svg', width: '25px', height: '25px') %>
                                             </button>
                                           </li>
@@ -252,7 +252,7 @@
                                       <% end %>
                                       <!-- Adicionar arquivos -->
                                       <li class="file-galery-item d-flex-center-start">
-                                          <form action="/cadastroResultado/<%=resultado.id%>/salvar_resultado_docs" method="POST" enctype="multipart/form-data">
+                                          <form action="/cadastroResultado/<%=resultado.id%>/salvar_resultado_docs?opcao=<%= @opcao %>" method="POST" enctype="multipart/form-data">
                                           <input type="file" name="docs"/>
                                           <input name="descricao" class="input-artefato" id="descricao_artefato" placeholder="Descrição do artefato" type="text">
                                           <button type="submit">Cadastrar</button>

@@ -101,7 +101,8 @@ class CadastroController < ApplicationController
         blob.update(descricao: params[:descricao])
 
 
-        redirect_to "/aplicar"
+        opcao = params[:opcao]
+        redirect_to aplicar_path(opcao: opcao)
     end
 
     def salvar_processo_nivel
@@ -115,7 +116,8 @@ class CadastroController < ApplicationController
         attachment = ActiveStorage::Attachment.find(params[:id])  # Substitua params[:id] pelo ID correto
         attachment.purge
 
-        redirect_to "/aplicar"
+        opcao = params[:opcao]
+        redirect_to aplicar_path(opcao: opcao)
     end
 
 
@@ -164,7 +166,8 @@ class CadastroController < ApplicationController
         blob = attachment.blob
         blob.update(descricao: params[:descricao])
 
-        redirect_to "/aplicar"
+        opcao = params[:opcao]
+        redirect_to aplicar_path(opcao: opcao)
     end
 
     def salvar_resultado_nivel
@@ -178,7 +181,8 @@ class CadastroController < ApplicationController
         attachment = ActiveStorage::Attachment.find(params[:id])
         attachment.purge
 
-        redirect_to "/aplicar"
+        opcao = params[:opcao]
+        redirect_to aplicar_path(opcao: opcao)
     end
 
     def salvar_classificacao_docs
