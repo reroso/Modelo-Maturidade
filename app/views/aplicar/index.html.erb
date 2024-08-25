@@ -156,7 +156,7 @@
                     <div id="main-processo-<%= dimensao.id %>-<%= processo.id %>" class="expandable-main processo hidden">
 
                       <%if @opcao != 0%>
-                        <%if maturidade_selecionada.nivelEscolha == "1"%> <!--x ESTAMOS AQUI -->
+                        <%if maturidade_selecionada.nivelEscolha == "1" || (maturidade_selecionada.nivelEscolha == "3" && maturidade_selecionada.resultadoEscolha == "1") %> <!--x ESTAMOS AQUI -->
 
                           <div class="file-galery-wrapper dimencao">
                             <h4 class="file-galery-wrapper-title">Upload de artefatos</h4>
@@ -234,7 +234,7 @@
                               </div>
                               <!--A== Main-Resultado -->
                               <div id="main-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-main resultado hidden">
-                                <%if maturidade_selecionada.nivelEscolha == "2"%>
+                                <%if maturidade_selecionada.nivelEscolha == "2" || (maturidade_selecionada.nivelEscolha == "3" && maturidade_selecionada.resultadoEscolha == "2")%>
                                   <div class="file-galery-wrapper dimencao">
                                     <ul class="file-galery">
                                       <% if resultado.docs.attached? %>

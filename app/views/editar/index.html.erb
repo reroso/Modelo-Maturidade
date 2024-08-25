@@ -36,17 +36,12 @@
         <tbody>
       <%if maturidade_selecionada.tipoNivel == "1"%>
         <%if maturidade_selecionada.menorNivel.to_i < maturidade_selecionada.maiorNivel.to_i%>
-          <%menorContador = maturidade_selecionada.menorNivel.to_i%>
-          <%maiorContador = maturidade_selecionada.maiorNivel.to_i%>
-          <%menorContador = menorContador.to_i%>
-          <%maiorContador = maiorContador.to_i%>
+          <% niveis = (maturidade_selecionada.menorNivel.to_i..maturidade_selecionada.maiorNivel.to_i).to_a %>
         <%else%>
-          <%maiorContador = maturidade_selecionada.menorNivel.to_i%>
-          <%menorContador = maturidade_selecionada.maiorNivel.to_i%>
-          <%menorContador = menorContador.to_i%>
-          <%maiorContador = maiorContador.to_i%>
+          <% niveis = (maturidade_selecionada.maiorNivel.to_i..maturidade_selecionada.menorNivel.to_i).to_a.reverse %>
         <%end%>
-        <% while menorContador <= maiorContador do %>
+
+        <% niveis.each do |menorContador| %>
           <% if @levels.empty? %>
             <tr>
               <td class="text-center"><%=menorContador%>.</td>
@@ -98,22 +93,15 @@
             <%end%>
             <%salvarId = 0%>
           <% end %>
-
-          <% menorContador += 1 %>
         <%end%>
       <%elsif maturidade_selecionada.tipoNivel == "2"%>
         <%if maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s%>
-          <%menorContador = maturidade_selecionada.menorNivel.to_s%>
-          <%maiorContador = maturidade_selecionada.maiorNivel.to_s%>
-          <%menorContador = menorContador.to_s%>
-          <%maiorContador = maiorContador.to_s%>
+          <% niveis = (maturidade_selecionada.menorNivel.to_s..maturidade_selecionada.maiorNivel.to_s).to_a %>
         <%else%>
-          <%maiorContador = maturidade_selecionada.menorNivel.to_s%>
-          <%menorContador = maturidade_selecionada.maiorNivel.to_s%>
-          <%menorContador = menorContador.to_s%>
-          <%maiorContador = maiorContador.to_s%>
+          <% niveis = (maturidade_selecionada.maiorNivel.to_s..maturidade_selecionada.menorNivel.to_s).to_a.reverse %>
         <%end%>
-        <% while menorContador <= maiorContador do %>
+
+        <% niveis.each do |menorContador| %>
           <%menorContadorASC = menorContador.ord%>
           
           <% if @levels.empty? %>
@@ -167,7 +155,6 @@
             <%end%>
             <%salvarId = 0%>
           <% end %>
-          <% menorContador = menorContador.next %>
         <%end%>
       <%end%>
         </tbody>

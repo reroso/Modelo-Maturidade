@@ -31,14 +31,18 @@
 <section class="main-content main-visualizar-item">
   <!-- maturidade_selecionada.tipoNivel = 1 é numerico -->
   <%if maturidade_selecionada.tipoNivel == "1"%>
-
     <%if maturidade_selecionada.menorNivel.to_i < maturidade_selecionada.maiorNivel.to_i%>
-      <% niveis = (maturidade_selecionada.menorNivel.to_i..maturidade_selecionada.maiorNivel.to_i).to_a %>
+      <%menorContador = maturidade_selecionada.menorNivel.to_i%>
+      <%maiorContador = maturidade_selecionada.maiorNivel.to_i%>
+      <%menorContador = menorContador.to_i%>
+      <%maiorContador = maiorContador.to_i%>
     <%else%>
-      <% niveis = (maturidade_selecionada.maiorNivel.to_i..maturidade_selecionada.menorNivel.to_i).to_a.reverse %>
+      <%maiorContador = maturidade_selecionada.menorNivel.to_i%>
+      <%menorContador = maturidade_selecionada.maiorNivel.to_i%>
+      <%menorContador = menorContador.to_i%>
+      <%maiorContador = maiorContador.to_i%>
     <%end%>
-
-    <% niveis.each do |menorContador| %>
+    <% while menorContador <= maiorContador do %>
       <!--S== Nivel -->
       <div id="Nivel-<%=menorContador%>" class="nivel">
       <!--A== Header-Nivel -->
@@ -199,16 +203,22 @@
         <%end%>
       <%end%>  
       </div>
+      <% menorContador += 1 %>
     <%end%>
   <!-- maturidade_selecionada.tipoNivel = 2 é alfanumerico -->
   <%elsif maturidade_selecionada.tipoNivel == "2"%>
     <%if maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s%>
-      <% niveis = (maturidade_selecionada.menorNivel.to_s..maturidade_selecionada.maiorNivel.to_s).to_a %>
+      <%menorContador = maturidade_selecionada.menorNivel.to_s%>
+      <%maiorContador = maturidade_selecionada.maiorNivel.to_s%>
+      <%menorContador = menorContador.to_s%>
+      <%maiorContador = maiorContador.to_s%>
     <%else%>
-      <% niveis = (maturidade_selecionada.maiorNivel.to_s..maturidade_selecionada.menorNivel.to_s).to_a.reverse %>
+      <%maiorContador = maturidade_selecionada.menorNivel.to_s%>
+      <%menorContador = maturidade_selecionada.maiorNivel.to_s%>
+      <%menorContador = menorContador.to_s%>
+      <%maiorContador = maiorContador.to_s%>
     <%end%>
-
-    <% niveis.each do |menorContador| %>
+    <% while menorContador <= maiorContador do %>
       <% menorContadorContar = menorContador%>
       <!--S== Nivel -->
       <div id="Nivel-<%=menorContador%>" class="nivel">
@@ -372,6 +382,7 @@
         <%end%>
       <%end%>  
       </div>
+      <% menorContador = menorContador.next %>
     <%end%>
   <%end%>
 </section>
