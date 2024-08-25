@@ -197,6 +197,70 @@
           <%end%>  
         <%end%>
         <%end%>
+      <%elsif maturidade_selecionada.nivelEscolha == "3"%>
+        <% @dimensaos.each do |dimensao| %>
+        <%if dimensao.maturidade_id == @opcao%>
+          <% @processos.each do |processo| %>
+          <%if dimensao.id == processo.dimensao_id%>
+              <%if processo.nivel_selecionado.to_i == menorContador%>
+                <!--A== Main-Nivel-F -->
+                <div id="main-Nivel-<%=menorContador%>" class="expandable-main nivel">
+                    <!--S== Processo-1 -->
+                    <div id="Processo-<%=processo.id%>" class="resultado">
+                    <!--A== Header-Processo-1 -->
+                    <div id="header-Processo-<%=processo.id%>" class="expandable-header d-flex-center-between resultado w-100">
+                        <div class="expandable-header-left d-flex-center-start" style="min-width: 100%!important;" onclick="show_todos_processos(1)">
+                        <!-- o 1 do id é o id da Nivel-->
+                        <div onclick="expandeMain('Processo-<%=processo.id%>')">
+                            <i id="plus-Processo-<%=processo.id%>" class="fa-solid fa-plus"></i>
+                            <i id="minus-Processo-<%=processo.id%>" class="fa-solid fa-minus hidden"></i>
+                        </div>
+                        <h3 id="titulo-Nivel-<%=menorContador%>-1" style="max-height: 25px;" onclick="mostra_titulo('1')"><%=dimensao.descricao%> <strong>→</strong> <%=processo.descricao%></h3>
+                        </div>
+                    </div>
+                    <div id="main-Processo-<%=processo.id%>" class="expandable-main resultado hidden">
+                      <div class="file-galery-wrapper nivel">
+                      <div class="table">
+                          <div class="table-content">	
+                            <% processo.docs.each do |doc| %>
+                              <div class="table-row">	
+                              <%if doc.classificacao == 3 || doc.classificacao == 2%>
+                                <% vetorResultado.push(menorContador-1) %>
+                              <%end%>	
+                                  <div class="table-data d-flex-center-start" style="width:80%">
+                                  <h5 class="descricao-artefato"><%= doc.descricao%></h5>
+                                  <span class="descricao-artefato">-</span>
+                                  <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %></a><button class="file-galery-item-btn"><%= image_tag('icons/download.svg', width: '20px', height: '20px') %></button></div>
+                                  <% if doc.classificacao == 1 %>
+                                    <div class="table-data d-flex-center-end" style="width:20%">
+                                      <p>Atende Totalmente</p>
+                                    </div>
+                                  <% elsif doc.classificacao == 2 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Atende parcialmente</p>
+                                    </div>
+                                  <% elsif doc.classificacao == 3 %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Não Atende</p>
+                                    </div>
+                                  <% else %>
+                                    <div class="table-data d-flex-center-end">
+                                      <p>Artefato não classificado</p>
+                                    </div>
+                                  <% end %>
+                              </div> 
+                            <% end %>                  
+                          </div>	
+                      </div>
+                      </div>
+                  </div>
+                    </div>
+                </div>
+              <%end%>
+          <%end%>
+          <%end%>  
+        <%end%>
+        <%end%>
       <%end%>  
       </div>
     <%end%>
