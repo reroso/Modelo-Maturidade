@@ -6,17 +6,74 @@ class AplicarController < ApplicationController
         @resultados = Resultado.all
         @maturidades = Maturidade.all
         @opcao = params[:opcao].to_i
+        @modelo = params[:modelo].to_i
         @dominios = Dominio.all
-        @modelo_aplicados = ModeloAplicado.all
+        @modelo_aplicado = ModeloAplicado.all
         @levels = Level.all
     end
 
     def atualizar_opcao
 
         @opcao = params[:opcao]
-        redirect_url = url_for(controller: :aplicar, action: :index, opcao: @opcao)
+        @modelo = params[:modelo]
+        redirect_url = url_for(controller: :aplicar, action: :index, opcao: @opcao, modelo: @modelo)
         render json: { redirect_url: redirect_url }
 
+    end
+
+    def salvar_processo_docs
+        processo = Processo.find(params[:id])
+        processo.docs.attach(params[:docs])
+
+        documento_id = processo.docs.last.id
+
+        attachment = ActiveStorage::Attachment.find(documento_id)
+        blob = attachment.blob  # Obtém o blob associado ao attachment
+        blob.update(descricao: params[:descricao])
+        blob.update(modelo: params[:modelo])
+
+        opcao = params[:opcao]
+        modelo = params[:modelo]
+
+        redirect_to aplicar_path(opcao: opcao, modelo: modelo)
+    end
+
+    def excluir_processo_docs
+
+        attachment = ActiveStorage::Attachment.find(params[:id])  # Substitua params[:id] pelo ID correto
+        attachment.purge
+
+        opcao = params[:opcao]
+        modelo = params[:modelo]
+
+        redirect_to aplicar_path(opcao: opcao, modelo: modelo)
+    end
+
+    def salvar_resultado_docs
+        resultado = Resultado.find(params[:id])
+        resultado.docs.attach(params[:docs])
+
+        documento_id = resultado.docs.last.id
+
+        attachment = ActiveStorage::Attachment.find(documento_id)
+        blob = attachment.blob
+        blob.update(descricao: params[:descricao])
+        blob.update(modelo: params[:modelo])
+
+        opcao = params[:opcao]
+        modelo = params[:modelo]
+        redirect_to aplicar_path(opcao: opcao, modelo: modelo)
+    end
+
+    def excluir_resultado_docs
+
+        attachment = ActiveStorage::Attachment.find(params[:id])
+        attachment.purge
+
+        opcao = params[:opcao]
+        modelo = params[:modelo]
+
+        redirect_to aplicar_path(opcao: opcao, modelo: modelo)
     end
 
 end

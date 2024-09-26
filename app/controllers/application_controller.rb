@@ -7,13 +7,11 @@ class ApplicationController < ActionController::Base
 
       # Redireciona baseado no tipo de recurso
       if resource.is_a?(Admin)
-        puts 'Um admin logou emmmmmmmmmm'
         main_screen_path  # Redireciona para o admin
       elsif resource.is_a?(User)
-        puts 'Um usuário logou emmmmmmmm'
-        aplicar_path  # Redireciona para o usuário
+        selecionar_path  # Redireciona para o usuário
       else
-        puts 'O superman chegouooooooooooooooooo'
+
         super  # Chama o método da superclasse Devise::SessionsController
       end
     end

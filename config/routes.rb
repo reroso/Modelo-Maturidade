@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get "/cadastroResultado", to: "cadastro#indexResultado"
   get "/cadastroMaturidade", to: "cadastro#indexMaturidade"
   get "/cadastroDominio", to: "cadastro#indexDominio"
+  get "/selecionar", to: "selecionar#index"
   get "/aplicar", to: "aplicar#index"
   get "/cadastroModeloAplicado", to: "aplicar#indexModeloAplicado"
   get "/avaliar", to: "avaliar#index"
@@ -29,9 +30,9 @@ Rails.application.routes.draw do
   post "/cadastroProcesso/:id/salvar_processo", to: "cadastro#salvar_processo"
   get "/cadastroProcesso/:id/excluir_processo", to: "cadastro#excluir_processo"
   get '/cadastroProcesso/:id', to: 'cadastro#mostrar_processo'
-  post "/cadastroProcesso/:id/salvar_processo_docs", to: "cadastro#salvar_processo_docs"
+  post "/cadastroProcesso/:id/salvar_processo_docs", to: "aplicar#salvar_processo_docs"
   post "/cadastroProcesso/:id/salvar_processo_nivel", to: "cadastro#salvar_processo_nivel"
-  get "/cadastroProcesso/:id/excluir_processo_docs", to: "cadastro#excluir_processo_docs"
+  get "/cadastroProcesso/:id/excluir_processo_docs", to: "aplicar#excluir_processo_docs"
 
   #resultados
 
@@ -40,9 +41,11 @@ Rails.application.routes.draw do
   post "/cadastroResultado/:id/salvar_resultado", to: "cadastro#salvar_resultado"
   get "/cadastroResultado/:id/excluir_resultado", to: "cadastro#excluir_resultado"
   get '/cadastroResultado/:id', to: 'cadastro#mostrar_resultado'
-  post "/cadastroResultado/:id/salvar_resultado_docs", to: "cadastro#salvar_resultado_docs"
+  post "/cadastroResultado/:id/salvar_resultado_docs", to: "aplicar#salvar_resultado_docs"
   post "/cadastroResultado/:id/salvar_resultado_nivel", to: "cadastro#salvar_resultado_nivel"
-  post "/cadastroResultado/:id/excluir_resultado_docs", to: "cadastro#excluir_resultado_docs"
+  
+  get "/cadastroResultado/:id/excluir_resultado_docs", to: "aplicar#excluir_resultado_docs"
+
   post "/cadastroResultado/:id/salvar_classificacao_docs", to: "cadastro#salvar_classificacao_docs"
 
   #maturidades
@@ -57,7 +60,7 @@ Rails.application.routes.draw do
 
   #modelos aplicados
 
-  post "/cadastroModeloAplicado/incluir_modelo_aplicado", to: "cadastro#incluir_modelo_aplicado"
+  post "/cadastroModeloAplicado/incluir_modelo_aplicado", to: "selecionar#incluir_modelo_aplicado"
 
   #nivel
 
@@ -76,8 +79,10 @@ Rails.application.routes.draw do
   post "visualizar/atualizar_opcao", to:"visualizar#atualizar_opcao"
   post "editar/atualizar_opcao", to:"editar#atualizar_opcao"
   post "avaliar/atualizar_opcao", to:"avaliar#atualizar_opcao"
+  post "selecionar/atualizar_opcao", to:"selecionar#atualizar_opcao"
 
   # rotas para o devise
+
   devise_for :users, controllers: {
   sessions: 'users/sessions',
   registrations: 'users/registrations',

@@ -90,34 +90,10 @@ class CadastroController < ApplicationController
         processo.save
     end
 
-    def salvar_processo_docs
-        processo = Processo.find(params[:id])
-        processo.docs.attach(params[:docs])
-
-        documento_id = processo.docs.last.id
-
-        attachment = ActiveStorage::Attachment.find(documento_id)
-        blob = attachment.blob  # Obtém o blob associado ao attachment
-        blob.update(descricao: params[:descricao])
-
-
-        opcao = params[:opcao]
-        redirect_to aplicar_path(opcao: opcao)
-    end
-
     def salvar_processo_nivel
         processo = Processo.find(params[:id])
         processo.nivel_selecionado = params[:nivel_selecionado]
         processo.save
-    end
-
-    def excluir_processo_docs
-
-        attachment = ActiveStorage::Attachment.find(params[:id])  # Substitua params[:id] pelo ID correto
-        attachment.purge
-
-        opcao = params[:opcao]
-        redirect_to aplicar_path(opcao: opcao)
     end
 
 
@@ -156,33 +132,10 @@ class CadastroController < ApplicationController
         resultado.save
     end
 
-    def salvar_resultado_docs
-        resultado = Resultado.find(params[:id])
-        resultado.docs.attach(params[:docs])
-
-        documento_id = resultado.docs.last.id
-
-        attachment = ActiveStorage::Attachment.find(documento_id)
-        blob = attachment.blob
-        blob.update(descricao: params[:descricao])
-
-        opcao = params[:opcao]
-        redirect_to aplicar_path(opcao: opcao)
-    end
-
     def salvar_resultado_nivel
         resultado = Resultado.find(params[:id])
         resultado.nivel_selecionado = params[:nivel_selecionado]
         resultado.save
-    end
-
-    def excluir_resultado_docs
-
-        attachment = ActiveStorage::Attachment.find(params[:id])
-        attachment.purge
-
-        opcao = params[:opcao]
-        redirect_to aplicar_path(opcao: opcao)
     end
 
     def salvar_classificacao_docs
@@ -220,18 +173,6 @@ class CadastroController < ApplicationController
 
     end
 
-    #modelos aplicados
-
-    def incluir_modelo_aplicado
-        modelo_aplicado = ModeloAplicado.new
-        modelo_aplicado.metodo = params[:metodo]
-        modelo_aplicado.instituicao = params[:instituicao]
-        modelo_aplicado.dominio_id = params[:dominio_id]
-        modelo_aplicado.maturidade_id = params[:maturidade_id]
-        modelo_aplicado.save
-
-        redirect_to "/aplicar"
-    end
 
     #dominio
 
@@ -240,7 +181,7 @@ class CadastroController < ApplicationController
         dominio.nome = params[:nome]
         dominio.save
 
-        redirect_to "/aplicar"
+        redirect_to "/selecionar"
     end
 
 end

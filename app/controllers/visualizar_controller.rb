@@ -7,15 +7,17 @@ class VisualizarController < ApplicationController
         @resultados = Resultado.all
         @maturidades = Maturidade.all
         @opcao = params[:opcao].to_i
+        @modelo = params[:modelo].to_i
         @dominios = Dominio.all
-        @modelo_aplicados = ModeloAplicado.all
+        @modelo_aplicado = ModeloAplicado.all
         @levels = Level.all
     end
 
     def atualizar_opcao
 
         @opcao = params[:opcao]
-        redirect_url = url_for(controller: :visualizar, action: :index, opcao: @opcao)
+        @modelo = params[:modelo]
+        redirect_url = url_for(controller: :visualizar, action: :index, opcao: @opcao, modelo: @modelo)
         render json: { redirect_url: redirect_url }
 
     end
