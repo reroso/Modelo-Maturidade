@@ -7,7 +7,6 @@ class SelecionarController < ApplicationController
         @resultados = Resultado.all
         @maturidades = Maturidade.all
         @opcao = params[:opcao].to_i
-        @dominios = Dominio.all
         @modelo_aplicados = ModeloAplicado.all
         @levels = Level.all
     end
@@ -48,9 +47,9 @@ class SelecionarController < ApplicationController
         term = params[:term]
 
         if term.present?
-        dominios = Dominio.where("nome LIKE ?", "%#{term}%").pluck(:nome)
+        dominios = ModeloAplicado.where("nome LIKE ?", "%#{term}%").pluck(:dominio)
         else
-        dominios = Dominio.all.pluck(:nome)
+        dominios = ModeloAplicado.all.pluck(:dominio)
         end
 
         render json: dominios

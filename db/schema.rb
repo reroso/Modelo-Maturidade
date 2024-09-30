@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_25_151801) do
+ActiveRecord::Schema.define(version: 2024_09_30_122325) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -57,12 +57,6 @@ ActiveRecord::Schema.define(version: 2024_08_25_151801) do
     t.index ["maturidade_id"], name: "index_dimensaos_on_maturidade_id"
   end
 
-  create_table "dominios", force: :cascade do |t|
-    t.string "nome"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "levels", force: :cascade do |t|
     t.string "index"
     t.text "descricao"
@@ -88,10 +82,9 @@ ActiveRecord::Schema.define(version: 2024_08_25_151801) do
     t.string "instituicao"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "dominio_id", null: false
     t.integer "maturidade_id", null: false
     t.integer "user_id", null: false
-    t.index ["dominio_id"], name: "index_modelo_aplicados_on_dominio_id"
+    t.string "dominio"
     t.index ["maturidade_id"], name: "index_modelo_aplicados_on_maturidade_id"
     t.index ["user_id"], name: "index_modelo_aplicados_on_user_id"
   end
@@ -128,7 +121,6 @@ ActiveRecord::Schema.define(version: 2024_08_25_151801) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "dimensaos", "maturidades"
-  add_foreign_key "modelo_aplicados", "dominios"
   add_foreign_key "modelo_aplicados", "maturidades"
   add_foreign_key "modelo_aplicados", "users"
   add_foreign_key "processos", "dimensaos"

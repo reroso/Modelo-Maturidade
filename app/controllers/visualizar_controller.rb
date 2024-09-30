@@ -8,7 +8,6 @@ class VisualizarController < ApplicationController
         @maturidades = Maturidade.all
         @opcao = params[:opcao].to_i
         @modelo = params[:modelo].to_i
-        @dominios = Dominio.all
         @modelo_aplicado = ModeloAplicado.all
         @levels = Level.all
     end

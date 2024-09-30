@@ -6,7 +6,6 @@ class CadastroController < ApplicationController
         @resultados = Resultado.all
         @maturidades = Maturidade.all
         @opcao = params[:opcao].to_i
-        @dominios = Dominio.all
         @modelo_aplicados = ModeloAplicado.all
         @levels = Level.all
     end
