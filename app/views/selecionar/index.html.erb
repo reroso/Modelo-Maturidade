@@ -25,16 +25,15 @@
     <section id="config_primaria_modelo" class="main-config d-flex-center-end mb-1">
       <form action="/cadastroModeloAplicado/incluir_modelo_aplicado" method="post" class="form-incluir-modelo-aplicado d-flex-center-end" id="form-incluir-modelo-aplicado">
         <div class="main-config-dominioSelect d-flex-center-center w-25">
-          <%= select_tag "dominio_id", options_from_collection_for_select(@dominios, "id", "nome"), prompt: "Escolha um dominio", class: "corpo_texto_select w-100" %>
-          <button class="header-cadastrar-btn" id="header_cadastrar_dominio_btn" onclick="show_popup('cadastrar_dominio', '')"><i class="icon-plus-sign"></i></button>
+          <%= select_tag "dominio_id", options_from_collection_for_select(@dominios, "id", "nome"), prompt: "Escolha um dominio", class: "corpo_texto_select w-100 modelo_dominio" %>
+          <button  type="button" class="header-cadastrar-btn" id="header_cadastrar_dominio_btn" onclick="show_popup('cadastrar_dominio', '')"><i class="icon-plus-sign"></i></button>
         </div>
         <div class="main-config-instituicao w-25">
-          <input name="instituicao" class="w-93" type="text" placeholder="Digite sua Instituição">
+          <%= select_tag "instituicao", options_from_collection_for_select(@modelo_aplicados, "id", "instituicao"), prompt: "Escolha uma instituicao", class: "corpo_texto_select w-100 modelo_instituicao" %>
         </div>
         <div class="main-config-metodo w-25">
           <input name="metodo" class="w-93" type="text" placeholder="Digite o Método Utilizado">
         </div>
-        <input type="text" id="inputDominio" name="dominio_id" aria-label="Recipient's username" aria-describedby="button-addon2" class="hidden">
         <input type="text" name="maturidade_id" aria-label="Recipient's username" aria-describedby="button-addon2" value="<%=@opcao%>" class="hidden">
         <input type="text" name="user_id" aria-label="Recipient's username" aria-describedby="button-addon2" value="<%= current_user.id %>" class="hidden">
         <div class="main-config-inputLabels d-flex-center-start w-25">
@@ -51,7 +50,7 @@
         </div> 
         -->
         <div id="config_primaria_submitBtn" class="main-config-btns h-100">
-          <button onclick="mostraOpcoesPrimariasModelo(event)" type="button">Salvar</button>
+          <button type="submit">Salvar</button>
         </div>
       </form>
     </section>
@@ -376,7 +375,7 @@
   
 
   <script>
-    
+
  //Expande e contrai main dimensão
     function show_todos_processos(form_id,dimensao){
         if((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-plus")){
@@ -408,6 +407,60 @@
     }     
 
     $(document).ready(function(){
+      
+      $('.modelo_dominio').select2({
+        ajax: {
+          url: '/cadastroDominio/buscar_dominio',
+          dataType: 'json',
+          delay: 250,  // tempo de atraso após o usuário parar de digitar
+          data: function (params) {
+            return {
+              term: params.term // termo pesquisado
+            };
+          },
+          processResults: function (data) {
+            return {
+              results: $.map(data, function (item) {
+                return {
+                  id: item,
+                  text: item
+                };
+              })
+            };
+          },
+          cache: true
+        },
+        placeholder: 'Selecione uma opção',
+        minimumInputLength: 0,
+        tags: true
+      });
+
+      $('.modelo_instituicao').select2({
+        ajax: {
+          url: '/cadastroDominio/buscar_instituicao',
+          dataType: 'json',
+          delay: 250,  // tempo de atraso após o usuário parar de digitar
+          data: function (params) {
+            return {
+              term: params.term // termo pesquisado
+            };
+          },
+          processResults: function (data) {
+            return {
+              results: $.map(data, function (item) {
+                return {
+                  id: item,
+                  text: item
+                };
+              })
+            };
+          },
+          cache: true
+        },
+        placeholder: 'Selecione uma opção',
+        minimumInputLength: 0,
+        tags: true
+      });
 
       $(".header-select #maturidade_id").change(function(){
       var opcaoSelecionada = this.value;
@@ -437,11 +490,6 @@
           }
       }
       }
-
-      $("#dominio_id").change(function(){
-          var inputDominio = document.getElementById("inputDominio");
-          inputDominio.value = this.value;
-      });
 
       var maturidadeSelecionadaNivelEscolha = document.getElementById("maturidadeSelecionadaNivelEscolha");
 
@@ -495,13 +543,5 @@
             div_ModelosSalvos.classList.add('hidden');
         }
     } 
-
-  function mostraOpcoesPrimariasModelo() {
-    var form = document.getElementById("form-incluir-modelo-aplicado");
-    console.log(form);
-    form.submit();
-
-  }
-
 
 </script>

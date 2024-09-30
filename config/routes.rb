@@ -43,7 +43,7 @@ Rails.application.routes.draw do
   get '/cadastroResultado/:id', to: 'cadastro#mostrar_resultado'
   post "/cadastroResultado/:id/salvar_resultado_docs", to: "aplicar#salvar_resultado_docs"
   post "/cadastroResultado/:id/salvar_resultado_nivel", to: "cadastro#salvar_resultado_nivel"
-  
+
   get "/cadastroResultado/:id/excluir_resultado_docs", to: "aplicar#excluir_resultado_docs"
 
   post "/cadastroResultado/:id/salvar_classificacao_docs", to: "cadastro#salvar_classificacao_docs"
@@ -56,7 +56,9 @@ Rails.application.routes.draw do
 
   #dominio
 
-  post "/cadastroDominio/incluir_dominio", to: "cadastro#incluir_dominio"
+  post "/cadastroDominio/incluir_dominio", to: "selecionar#incluir_dominio"
+  get '/cadastroDominio/buscar_dominio', to: 'selecionar#buscar_dominio'
+  get '/cadastroDominio/buscar_instituicao', to: 'selecionar#buscar_instituicao'
 
   #modelos aplicados
 

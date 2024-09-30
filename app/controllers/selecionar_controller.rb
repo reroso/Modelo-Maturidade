@@ -34,4 +34,40 @@ class SelecionarController < ApplicationController
         redirect_to "/selecionar"
     end
 
+    #dominio
+
+    def incluir_dominio
+        dominio = Dominio.new
+        dominio.nome = params[:nome]
+        dominio.save
+
+        redirect_to "/selecionar"
+    end
+
+    def buscar_dominio
+        term = params[:term]
+
+        if term.present?
+        dominios = Dominio.where("nome LIKE ?", "%#{term}%").pluck(:nome)
+        else
+        dominios = Dominio.all.pluck(:nome)
+        end
+
+        render json: dominios
+
+    end
+
+    def buscar_instituicao
+        term = params[:term]
+
+        if term.present?
+        instituicaos = ModeloAplicado.where("instituicao LIKE ?", "%#{term}%").pluck(:instituicao)
+        else
+        instituicaos = ModeloAplicado.all.pluck(:instituicao)
+        end
+
+        render json: instituicaos
+
+    end
+
 end

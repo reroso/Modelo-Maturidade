@@ -173,15 +173,4 @@ class CadastroController < ApplicationController
 
     end
 
-
-    #dominio
-
-    def incluir_dominio
-        dominio = Dominio.new
-        dominio.nome = params[:nome]
-        dominio.save
-
-        redirect_to "/selecionar"
-    end
-
 end
