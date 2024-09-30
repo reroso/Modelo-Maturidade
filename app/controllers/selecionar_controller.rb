@@ -25,20 +25,10 @@ class SelecionarController < ApplicationController
         modelo_aplicado = ModeloAplicado.new
         modelo_aplicado.metodo = params[:metodo]
         modelo_aplicado.instituicao = params[:instituicao]
-        modelo_aplicado.dominio_id = params[:dominio_id]
+        modelo_aplicado.dominio = params[:dominio]
         modelo_aplicado.maturidade_id = params[:maturidade_id]
         modelo_aplicado.user_id = params[:user_id]
         modelo_aplicado.save
-
-        redirect_to "/selecionar"
-    end
-
-    #dominio
-
-    def incluir_dominio
-        dominio = Dominio.new
-        dominio.nome = params[:nome]
-        dominio.save
 
         redirect_to "/selecionar"
     end
@@ -47,7 +37,7 @@ class SelecionarController < ApplicationController
         term = params[:term]
 
         if term.present?
-        dominios = ModeloAplicado.where("nome LIKE ?", "%#{term}%").pluck(:dominio)
+        dominios = ModeloAplicado.where("metodo LIKE ?", "%#{term}%").pluck(:dominio)
         else
         dominios = ModeloAplicado.all.pluck(:dominio)
         end
@@ -66,6 +56,19 @@ class SelecionarController < ApplicationController
         end
 
         render json: instituicaos
+
+    end
+
+    def buscar_metodo
+        term = params[:term]
+
+        if term.present?
+        metodos = ModeloAplicado.where("metodo LIKE ?", "%#{term}%").pluck(:metodo)
+        else
+        metodos = ModeloAplicado.all.pluck(:metodo)
+        end
+
+        render json: metodos
 
     end
 

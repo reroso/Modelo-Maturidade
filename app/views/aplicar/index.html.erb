@@ -3,7 +3,7 @@
               options_for_select(
                 @modelo_aplicado.where(user_id: current_user.id).map do |modelo_aplicado|
                   [
-                    "#{@maturidades.find(modelo_aplicado.maturidade_id).nome} - #{@dominios.find(modelo_aplicado.dominio_id).nome}",
+                    "#{@maturidades.find(modelo_aplicado.maturidade_id).nome} - #{modelo_aplicado.dominio}",
                     modelo_aplicado.id,
                     { class: "#{modelo_aplicado.maturidade_id}" }
                   ]

@@ -56,9 +56,10 @@ Rails.application.routes.draw do
 
   #dominio
 
-  post "/cadastroDominio/incluir_dominio", to: "selecionar#incluir_dominio"
   get '/cadastroDominio/buscar_dominio', to: 'selecionar#buscar_dominio'
   get '/cadastroDominio/buscar_instituicao', to: 'selecionar#buscar_instituicao'
+  get '/cadastroDominio/buscar_metodo', to: 'selecionar#buscar_metodo'
+
 
   #modelos aplicados
 
@@ -97,6 +98,13 @@ Rails.application.routes.draw do
     registrations: 'admins/registrations',
     passwords: 'admins/passwords',
     confirmations: 'admins/confirmations'
+  }
+
+  devise_for :appraisers, controllers: {
+    sessions: 'appraisers/sessions',
+    registrations: 'appraisers/registrations',
+    passwords: 'appraisers/passwords',
+    confirmations: 'appraisers/confirmations'
   }
 
 end
