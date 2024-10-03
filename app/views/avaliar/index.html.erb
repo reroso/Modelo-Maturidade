@@ -1,6 +1,18 @@
           <div class="header-select">
-              <%= select_tag "maturidade_id", options_from_collection_for_select(@maturidades, "id", "nome", @opcao), prompt: "Escolha um modelo", class: "modelo corpo_texto_select" %>
-              
+              <%= select_tag "modelo_aplicado_id", 
+                options_for_select(
+                  @modelo_aplicado.map do |modelo_aplicado|
+                    [
+                      "#{@maturidades.find(modelo_aplicado.maturidade_id).nome} - #{modelo_aplicado.dominio}",
+                      modelo_aplicado.id,
+                      { class: "#{modelo_aplicado.maturidade_id}" }
+                    ]
+                  end,
+                  @modelo
+                ),
+                prompt: "Escolha um modelo",
+                class: "modelo corpo_texto_select"
+              %>
           </div>
         </div>
         <button onclick="showModalInfos()" class="header-title-info d-flex-center-center h-100">
@@ -101,22 +113,24 @@
                             <ul class="file-galery m-0"  style="border: 0px;">
                             <% if processo.docs.attached? %>
                               <% processo.docs.each do |doc| %>
-                              <!-- Arquivo-1-Dimensão-1 -->
-                              <li id="doc-<%= dimensao.id %>-<%= processo.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-between m-0" style="border: 0px 0px 1px 0px; padding: 10px;">
-                                <div class="d-flex-center-start">  
-                                  <h5 class="descricao-artefato"><%= doc.descricao %></h5>
-                                  <span class="descricao-artefato">-</span>
-                                  <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
-                                </div>
-                                <form action="/cadastroResultado/<%= doc.id %>/salvar_classificacao_docs" method="post">
-                                    <select name="classificacao" onchange="this.form.submit()">
-                                        <option value="" disabled selected>Selecione uma opção</option>
-                                        <option value="1" <%= doc.classificacao == 1 ? 'selected' : '' %>>Atende Totalmente</option>
-                                        <option value="2" <%= doc.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
-                                        <option value="3" <%= doc.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
-                                    </select>
-                                </form>
-                              </li>
+                                <%if doc.modelo == @modelo%>
+                                  <!-- Arquivo-1-Dimensão-1 -->
+                                  <li id="doc-<%= dimensao.id %>-<%= processo.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-between m-0" style="border: 0px 0px 1px 0px; padding: 10px;">
+                                    <div class="d-flex-center-start">  
+                                      <h5 class="descricao-artefato"><%= doc.descricao %></h5>
+                                      <span class="descricao-artefato">-</span>
+                                      <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
+                                    </div>
+                                    <form action="/avaliar/<%= doc.id %>/salvar_classificacao_docs" method="post">
+                                        <select name="classificacao" onchange="this.form.submit()">
+                                            <option value="" disabled selected>Selecione uma opção</option>
+                                            <option value="1" <%= doc.classificacao == 1 ? 'selected' : '' %>>Atende Totalmente</option>
+                                            <option value="2" <%= doc.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
+                                            <option value="3" <%= doc.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
+                                        </select>
+                                    </form>
+                                  </li>
+                                <% end %> 
                               <% end %> 
                             <% end %>
                             </ul>
@@ -175,18 +189,20 @@
                                     <ul class="file-galery m-0" style="border: 0px;">
                                       <% if resultado.docs.attached? %>
                                         <% resultado.docs.each do |doc| %>
-                                          <!-- Arquivo-1-Dimensão-1 -->
-                                          <li id="doc-<%= dimensao.id %>-<%= resultado.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-between m-0" style="border: 0px 0px 1px 0px; padding: 10px;">
-                                            <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
-                                            <form action="/cadastroResultado/<%= doc.id %>/salvar_classificacao_docs" method="post">
-                                                <select name="classificacao" onchange="this.form.submit()">
-                                                    <option value="" disabled selected>Selecione uma opção</option>
-                                                    <option value="1" <%= doc.classificacao == 1 ? 'selected' : '' %>>Atende Totalmente</option>
-                                                    <option value="2" <%= doc.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
-                                                    <option value="3" <%= doc.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
-                                                </select>
-                                            </form>
-                                          </li>
+                                          <%if doc.modelo == @modelo%>
+                                            <!-- Arquivo-1-Dimensão-1 -->
+                                            <li id="doc-<%= dimensao.id %>-<%= resultado.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-between m-0" style="border: 0px 0px 1px 0px; padding: 10px;">
+                                              <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
+                                              <form action="/avaliar/<%= doc.id %>/salvar_classificacao_docs" method="post">
+                                                  <select name="classificacao" onchange="this.form.submit()">
+                                                      <option value="" disabled selected>Selecione uma opção</option>
+                                                      <option value="1" <%= doc.classificacao == 1 ? 'selected' : '' %>>Atende Totalmente</option>
+                                                      <option value="2" <%= doc.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
+                                                      <option value="3" <%= doc.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
+                                                  </select>
+                                              </form>
+                                            </li>
+                                          <% end %>
                                         <% end %> 
                                       <% end %>
                                     </ul>
@@ -399,17 +415,20 @@
 
     $(document).ready(function(){
 
-      $(".header-select #maturidade_id").change(function(){
-      var opcaoSelecionada = this.value;
-      
-      axios.post("/avaliar/atualizar_opcao", { opcao: opcaoSelecionada })
-      .then(function(response) {
+      $(".header-select #modelo_aplicado_id").change(function(){
+        var classeDaOpcao = this.value;
+
+        var modeloSelecionado = $(this).find('option:selected');
+        var opcaoSelecionada = modeloSelecionado.attr('class');
+
+        axios.post("/avaliar/atualizar_opcao", { opcao: opcaoSelecionada , modelo: classeDaOpcao})
+        .then(function(response) {
           // Lógica para sucesso na resposta
           var redirectUrl = response.data.redirect_url;
           window.location.href = redirectUrl;
           console.log(response.data);
-      })
-      .catch(function(error) {
+        })
+        .catch(function(error) {
           // Lógica para erro na resposta
           console.error(error);
       });
