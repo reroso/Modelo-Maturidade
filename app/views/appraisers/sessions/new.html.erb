@@ -1,26 +1,47 @@
-<h2>Log in</h2>
-
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
-
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+<main style="width: 800px; height:550px;background:transparent;" class="d-flex-center-center">
+  
+  <div class="userSign-wrapper-left" style="width: 400px; height:550px;z-index: 2;">
+    <div class="userSign w-100 h-100 d-flex-center-between flex-column">
+      <div class="userSign-title w-100 d-flex-center-center">
+        <h2>Login</h2>
+      </div> 
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <div class="field input_dados_text dados_1">
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "E-mail"%>
+          </div>
+          <div class="field input_dados_text dados_2">
+            <%= f.password_field :password, autocomplete: "current-password", placeholder: "Senha" %>
+          </div>
+          <% if devise_mapping.rememberable? %>
+            <div class="field">
+              <%= f.check_box :remember_me %>
+              <%= f.label :remember_me, "Salvar dados de login"%>
+            </div>
+          <% end %>
+          <div class="actions">
+            <%= f.submit "Entrar" %>
+          </div>
+        <% end %>
+        <div class="d-flex-center-center flex-column">
+          <div style="margin-bottom:5px;">
+            <span>Ainda não tem uma conta?</span>
+            <%= link_to "Registrar-se", new_registration_path(resource_name) %><br />
+          </div>
+          <div>
+            <span>Esqueceu sua senha?</span>
+            <%= link_to "Recuperar senha", new_password_path(resource_name) %>
+          </div>
+        </div>
     </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit "Log in" %>
   </div>
-<% end %>
 
-<%= render "appraisers/shared/links" %>
+  <div class="userSign-wrapper-right d-flex-center-center flex-column" style="width: 400px;height:550px">
+    <h4>Bem vindo!</h4>
+    <div class="userSign-right-changesign d-flex-center-center flex-column w-100">
+      <span>Você está atualmente no login de <strong id="SignType_target">Avaliador<i class="bi bi-info-circle"></i></strong>.</span>
+      <span>Gostaria de utilizar um modelo já criado?</span>
+      <a class="redirect-sign-upin" style="margin-top: 10px;" onclick="location.href='/users/sign_in'">Entre como conta de usuário</a>
+      <span>ou gostaria de criar o seu própio modelo?</span>
+      <a class="redirect-sign-upin" style="margin-top: 10px;" onclick="location.href='/admins/sign_in'">Entre como conta de adminitrador</a>
+    </div>
+  </div>

@@ -1,5 +1,5 @@
 class AvaliarController < ApplicationController
-    before_action :authenticate_admin!
+    before_action :authenticate_appraiser!
     def index
         @dimensaos = Dimensao.all
         @processos = Processo.all
