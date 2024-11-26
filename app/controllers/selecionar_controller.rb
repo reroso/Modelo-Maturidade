@@ -7,16 +7,24 @@ class SelecionarController < ApplicationController
         @resultados = Resultado.all
         @maturidades = Maturidade.all
         @opcao = params[:opcao].to_i
-        @modelo_aplicados = ModeloAplicado.all
+        
+        # Carregando apenas valores únicos para cada campo usando pluck e compact
+        @dominios = ModeloAplicado.pluck(:dominio).compact.uniq.sort
+        @instituicoes = ModeloAplicado.pluck(:instituicao).compact.uniq.sort
+        @metodos = ModeloAplicado.pluck(:metodo).compact.uniq.sort
+        
+        # Debug
+        Rails.logger.debug "Dominios: #{@dominios.inspect}"
+        Rails.logger.debug "Instituicoes: #{@instituicoes.inspect}"
+        Rails.logger.debug "Metodos: #{@metodos.inspect}"
+        
         @levels = Level.all
     end
 
     def atualizar_opcao
-
         @opcao = params[:opcao]
         redirect_url = url_for(controller: :selecionar, action: :index, opcao: @opcao)
         render json: { redirect_url: redirect_url }
-
     end
 
     #modelos aplicados

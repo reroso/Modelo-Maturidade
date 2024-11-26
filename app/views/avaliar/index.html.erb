@@ -39,6 +39,7 @@
     </header>
 
     <section class="main-content main-utlizar-modelo">
+      
       <!--S== Dimensão -->
       <% contadorDimensaos = 1 %>
       <% @dimensaos.each do |dimensao| %>
@@ -105,10 +106,8 @@
             
                     <!--A== Main-Processo-1-1 -->
                     <div id="main-processo-<%= dimensao.id %>-<%= processo.id %>" class="expandable-main processo hidden">
-
                       <%if @opcao != 0%>
-                        <%if maturidade_selecionada.nivelEscolha == "1" || (maturidade_selecionada.nivelEscolha == "3" && maturidade_selecionada.resultadoEscolha == "1")%> <!--x ESTAMOS AQUI -->
-
+                        <%if maturidade_selecionada.nivelEscolha == "1" || (maturidade_selecionada.nivelEscolha == "3" && maturidade_selecionada.resultadoEscolha == "1")%> <!--x ESTAMOS AQUI
                           <div class="file-galery-wrapper dimencao">
                             <ul class="file-galery m-0"  style="border: 0px;">
                             <% if processo.docs.attached? %>
@@ -225,285 +224,231 @@
           <%contadorDimensaos = contadorDimensaos + 1%>
         <% end %> <!-- /L -->
       <% end %> <!-- /M -->
-    </section>
 
 
+      <script>
+        //contante de todos os ids de todos os popups da pagina;
+        const listaPopups = ["cadastrar_dominio", "confirmar_exclusao"];
 
+        //Função para mostrar um popup qualquer
+        function show_popup(id_popup, rota) {
+          const popup = document.getElementById(id_popup);
 
+          if(popup) {
+            const popupBg = document.getElementById("popup_background");
 
+            if(popup.classList.contains("hidden")) {
+              popup.classList.remove("hidden");
+              popupBg.classList.remove("hidden");
+            } else {
+              popup.classList.add("hidden");
+              popupBg.classList.add("hidden");
+            }
 
-  
-  
-  </main>
-
-  <section onclick="closeAll_popup(event)" class="popup-background d-flex-center-center hidden" id="popup_background">
-
-    <!-- Cadastrar Novo Dominio para select -->
-    <div id="cadastrar_dominio" class="popup-cadastrar-dominio hidden">
-      <div class="popup-title">
-        <h2>Cadastro de domínio:</h2>
-      </div>
-      <div class="w-100 popup-body">
-        <form action="/cadastroDominio/incluir_dominio" method="post" class="w-100">
-          <div class="form-control w-100">
-            <label for="nome_dominio">Nome do novo domínio:</label>
-            <input name="nome" class="w-100" id="nome_dominio" type="text">
-          </div>
-          <div class="form-btn w-100 d-flex-center-end">
-            <a onclick="show_popup('cadastrar_dominio', '')">cancelar</a>
-            <button type="submit" id="btn_confirm_cadastrar_modelo" class="popup-btn-confirm">Salvar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Confirmação de exclusão de arquivos -->
-    <div id="confirmar_exclusao" class="confirmation-main d-flex-start-evenly flex-column hidden">
-      <h1>Confirmar exclusão de arquivo?</h1>
-      <p>Tem certeza que deseja excluir o arquivo <strong>arquivo01.txt</strong>? Essa alteração não poderá ser desfeita.</p>
-      <p>Digite "confirmo" para executar essa ação</p>
-      <input onkeyup="liberaBotaoExclusao()" type="text" id="input_confirmation_exclusao" placeholder="confirmo">
-      <div class="confirmation-main-btns d-flex-center-end w-100">
-        <button onclick="showModalConfirmacao()" class="confirmation-main-btns-cancelar" value="">Cancelar</button>
-        <button id="btn_confirma_exclusao" class="confirmation-main-btns-confirmar" disabled>Excluir</button>
-      </div>
-    </div>
-  </section>
-
-  
-
-
-
-
-  <script>
-    //contante de todos os ids de todos os popups da pagina;
-    const listaPopups = ["cadastrar_dominio", "confirmar_exclusao"];
-
-    //Função para mostrar um popup qualquer
-    function show_popup(id_popup, rota) {
-      const popup = document.getElementById(id_popup);
-
-      if(popup) {
-        const popupBg = document.getElementById("popup_background");
-
-        if(popup.classList.contains("hidden")) {
-          popup.classList.remove("hidden");
-          popupBg.classList.remove("hidden");
-        } else {
-          popup.classList.add("hidden");
-          popupBg.classList.add("hidden");
+            if(popup == "confirmar_exclusao") {
+              document.getElementById('btn_confirma_exclusao').setAttribute('onclick', `location.href='`+rota+`'`);
+            }
+          }
         }
 
-        if(popup == "confirmar_exclusao") {
-          document.getElementById('btn_confirma_exclusao').setAttribute('onclick', `location.href='`+rota+`'`);
+        //Função para fechar todos os popups abertos
+        function closeAll_popup(event) {
+          const popupBg = document.getElementById("popup_background");
+
+          if(event.target === popupBg) {
+            popupBg.classList.add("hidden");
+            console.log(popupBg.classList);
+            listaPopups.forEach(function(popupId) {
+              let popup = document.getElementById(popupId);
+              if(!popup.classList.contains("hidden")) {
+                popup.classList.add("hidden");
+              }
+            });
+          }
         }
-      }
-    }
+      </script>
 
-    //Função para fechar todos os popups abertos
-    function closeAll_popup(event) {
-      const popupBg = document.getElementById("popup_background");
+      <script>
+        //* Retira o disabled do botao de exclusão do modal de confirmação de exclusão
+        function liberaBotaoExclusao() {
+          let inputConfirmaExclusao = document.getElementById('input_confirmation_exclusao');
+          let btnConfirmaExclusao = document.getElementById('btn_confirma_exclusao');
 
-      if(event.target === popupBg) {
-        popupBg.classList.add("hidden");
-        console.log(popupBg.classList);
-        listaPopups.forEach(function(popupId) {
-          let popup = document.getElementById(popupId);
-          if(!popup.classList.contains("hidden")) {
-            popup.classList.add("hidden");
+          if(inputConfirmaExclusao.value == 'confirmo')
+            btnConfirmaExclusao.disabled = false;
+          else
+            btnConfirmaExclusao.disabled = true;
+        }
+        //* Fim ---
+      </script>
+
+
+        <!--# Função de expandir e retrair as camadas dos modelos -->
+      <script>
+        function expandeMain(id_expandir) {
+          var div_expandir = document.getElementById('main-' + id_expandir);
+          var plus_trocar = document.getElementById('plus-' + id_expandir);
+          var minus_trocar = document.getElementById('minus-' + id_expandir);
+
+          if (div_expandir.classList.contains('hidden')) {
+            div_expandir.classList.remove('hidden');
+            plus_trocar.classList.add('hidden');
+            minus_trocar.classList.remove('hidden');
+
+          } else {
+            div_expandir.classList.add('hidden');
+            plus_trocar.classList.remove('hidden');
+            minus_trocar.classList.add('hidden');
+          }
+        }
+
+        //* Mostrar Modal de confirmação de exclusão:
+        function showModalConfirmacao() {
+          let modalConfirmacao = document.getElementById('modal_confirmacao');
+          let inputConfirmaExclusao = document.getElementById('input_confirmation_exclusao');
+          let btnConfirmaExclusao = document.getElementById('btn_confirma_exclusao');
+
+          if(modalConfirmacao.classList.contains('hidden')) {
+            modalConfirmacao.classList.remove('hidden');
+            inputConfirmaExclusao.value = '';
+            btnConfirmaExclusao.disabled = true;
+          }
+          else
+            modalConfirmacao.classList.add('hidden');
+        }
+        //* Fim ---
+
+        //* Retira o disabled do botao de exclusão do modal de confirmação de exclusão
+        function liberaBotaoExclusao() {
+          let inputConfirmaExclusao = document.getElementById('input_confirmation_exclusao');
+          let btnConfirmaExclusao = document.getElementById('btn_confirma_exclusao');
+
+          if(inputConfirmaExclusao.value == 'confirmo')
+            btnConfirmaExclusao.disabled = false;
+          else
+            btnConfirmaExclusao.disabled = true;
+        }
+        //* Fim ---
+      </script>
+  
+
+      <script>
+        //* Expande e contrai main dimensão
+        function show_todos_processos(form_id,dimensao){
+            if((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-plus")){
+            document.getElementById(`dimensao_child_`+dimensao).classList.remove('hidden');
+            document.getElementById(form_id).classList.remove('icon-plus');
+            document.getElementById(form_id).classList.add('icon-minus');
+            } else if ((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-minus")) {
+            document.getElementById(`dimensao_child_`+dimensao).classList.add('hidden');
+            document.getElementById(form_id).classList.remove('icon-minus');
+            document.getElementById(form_id).classList.add('icon-plus');
+            }
+        }
+
+        //* Expande e contrai main processos
+        function show_todos_resultados(form_id,processo){
+            if((form_id == (`processo_`+processo+`_icon`)) && (document.getElementById(form_id).classList == "icon-plus abrir_form_resultado_esperado")){
+            document.getElementById(`processo_child_`+processo).classList.remove('hidden');
+            document.getElementById(form_id).classList.remove('icon-plus');
+            document.getElementById(form_id).classList.remove('abrir_form_resultado_esperado');
+            document.getElementById(form_id).classList.add('icon-minus');
+            document.getElementById(form_id).classList.add('abrir_form_resultado_esperado');
+            } else if ((form_id == (`processo_`+processo+`_icon`)) && (document.getElementById(form_id).classList == "icon-minus abrir_form_resultado_esperado")) {
+            document.getElementById(`processo_child_`+processo).classList.add('hidden');
+            document.getElementById(form_id).classList.remove('icon-minus');
+            document.getElementById(form_id).classList.remove('abrir_form_resultado_esperado');
+            document.getElementById(form_id).classList.add('icon-plus');
+            document.getElementById(form_id).classList.add('abrir_form_resultado_esperado');
+            }
+        }     
+
+        $(document).ready(function(){
+
+          $(".header-select #modelo_aplicado_id").change(function(){
+            var classeDaOpcao = this.value;
+
+            var modeloSelecionado = $(this).find('option:selected');
+            var opcaoSelecionada = modeloSelecionado.attr('class');
+
+            axios.post("/avaliar/atualizar_opcao", { opcao: opcaoSelecionada , modelo: classeDaOpcao})
+            .then(function(response) {
+              // Lógica para sucesso na resposta
+              var redirectUrl = response.data.redirect_url;
+              window.location.href = redirectUrl;
+              console.log(response.data);
+            })
+            .catch(function(error) {
+              // Lógica para erro na resposta
+              console.error(error);
+            });
+
+          });
+
+          if(document.getElementById("mudancaResultado")) {
+            var test = document.getElementById("mudancaResultado");
+            if (test.classList.value == "1") {
+                var elementos = document.querySelectorAll(".abrir_form_resultado_esperado");
+                
+                for (var i = 0; i < elementos.length; i++) {
+                    elementos[i].classList.remove('icon-plus');
+                    elementos[i].classList.add('icon-caret-right');
+                }
+            }
+          }
+
+          $("#dominio_id").change(function(){
+              var inputDominio = document.getElementById("inputDominio");
+              inputDominio.value = this.value;
+          });
+
+          var maturidadeSelecionadaNivelEscolha = document.getElementById("maturidadeSelecionadaNivelEscolha");
+
+          if(maturidadeSelecionadaNivelEscolha.classList.value == "1" || maturidadeSelecionadaNivelEscolha.classList.value == "3")
+          {
+              var elementos = document.querySelectorAll('.processoNivelSelecionado');
+              elementos.forEach(elemento => {
+                  elemento.classList.remove('hidden');
+              });
+          }
+          else if(maturidadeSelecionadaNivelEscolha.classList.value == "2")
+          {
+              var elementos = document.querySelectorAll('.resultadoNivelSelecionado');
+              elementos.forEach(elemento => {
+                  elemento.classList.remove('hidden');
+              });
           }
         });
-      }
-    }
-  </script>
 
-  <script>
-    //* Retira o disabled do botao de exclusão do modal de confirmação de exclusão
-    function liberaBotaoExclusao() {
-      let inputConfirmaExclusao = document.getElementById('input_confirmation_exclusao');
-      let btnConfirmaExclusao = document.getElementById('btn_confirma_exclusao');
-
-      if(inputConfirmaExclusao.value == 'confirmo')
-        btnConfirmaExclusao.disabled = false;
-      else
-        btnConfirmaExclusao.disabled = true;
-    }
-    //* Fim ---
-  </script>
-
-
-    <!--# Função de expandir e retrair as camadas dos modelos -->
-  <script>
-    function expandeMain(id_expandir) {
-      var div_expandir = document.getElementById('main-' + id_expandir);
-      var plus_trocar = document.getElementById('plus-' + id_expandir);
-      var minus_trocar = document.getElementById('minus-' + id_expandir);
-
-      if (div_expandir.classList.contains('hidden')) {
-        div_expandir.classList.remove('hidden');
-        plus_trocar.classList.add('hidden');
-        minus_trocar.classList.remove('hidden');
-
-      } else {
-        div_expandir.classList.add('hidden');
-        plus_trocar.classList.remove('hidden');
-        minus_trocar.classList.add('hidden');
-      }
-    }
-
-    //* Mostrar Modal de confirmação de exclusão:
-    function showModalConfirmacao() {
-      let modalConfirmacao = document.getElementById('modal_confirmacao');
-      let inputConfirmaExclusao = document.getElementById('input_confirmation_exclusao');
-      let btnConfirmaExclusao = document.getElementById('btn_confirma_exclusao');
-
-      if(modalConfirmacao.classList.contains('hidden')) {
-        modalConfirmacao.classList.remove('hidden');
-        inputConfirmaExclusao.value = '';
-        btnConfirmaExclusao.disabled = true;
-      }
-      else
-        modalConfirmacao.classList.add('hidden');
-    }
-    //* Fim ---
-
-    //* Retira o disabled do botao de exclusão do modal de confirmação de exclusão
-    function liberaBotaoExclusao() {
-      let inputConfirmaExclusao = document.getElementById('input_confirmation_exclusao');
-      let btnConfirmaExclusao = document.getElementById('btn_confirma_exclusao');
-
-      if(inputConfirmaExclusao.value == 'confirmo')
-        btnConfirmaExclusao.disabled = false;
-      else
-        btnConfirmaExclusao.disabled = true;
-    }
-    //* Fim ---
-  </script>
-  
-
-  <script>
-    
- //Expande e contrai main dimensão
-    function show_todos_processos(form_id,dimensao){
-        if((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-plus")){
-        document.getElementById(`dimensao_child_`+dimensao).classList.remove('hidden');
-        document.getElementById(form_id).classList.remove('icon-plus');
-        document.getElementById(form_id).classList.add('icon-minus');
-        } else if ((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-minus")) {
-        document.getElementById(`dimensao_child_`+dimensao).classList.add('hidden');
-        document.getElementById(form_id).classList.remove('icon-minus');
-        document.getElementById(form_id).classList.add('icon-plus');
+        function resultado_escolha(escolha){
+            if(escolha == "2"){
+                document.getElementById("nivel_escolha").classList.remove("hidden");
+                
+            } else if(escolha == "1"){
+                document.getElementById("nivel_escolha").classList.add("hidden");
+            }
         }
-    }
 
-    //Expande e contrai main processos
-    function show_todos_resultados(form_id,processo){
-        if((form_id == (`processo_`+processo+`_icon`)) && (document.getElementById(form_id).classList == "icon-plus abrir_form_resultado_esperado")){
-        document.getElementById(`processo_child_`+processo).classList.remove('hidden');
-        document.getElementById(form_id).classList.remove('icon-plus');
-        document.getElementById(form_id).classList.remove('abrir_form_resultado_esperado');
-        document.getElementById(form_id).classList.add('icon-minus');
-        document.getElementById(form_id).classList.add('abrir_form_resultado_esperado');
-        } else if ((form_id == (`processo_`+processo+`_icon`)) && (document.getElementById(form_id).classList == "icon-minus abrir_form_resultado_esperado")) {
-        document.getElementById(`processo_child_`+processo).classList.add('hidden');
-        document.getElementById(form_id).classList.remove('icon-minus');
-        document.getElementById(form_id).classList.remove('abrir_form_resultado_esperado');
-        document.getElementById(form_id).classList.add('icon-plus');
-        document.getElementById(form_id).classList.add('abrir_form_resultado_esperado');
+        function show_dimensao(form_id){
+            if (form_id == "abrir_form") {
+                document.getElementById("form_dimensao_1").classList.remove('hidden');
+            } else if (form_id == "cancelar_form") {
+                document.getElementById("form_dimensao_1").classList.add('hidden');
+            }
         }
-    }     
 
-    $(document).ready(function(){
-
-      $(".header-select #modelo_aplicado_id").change(function(){
-        var classeDaOpcao = this.value;
-
-        var modeloSelecionado = $(this).find('option:selected');
-        var opcaoSelecionada = modeloSelecionado.attr('class');
-
-        axios.post("/avaliar/atualizar_opcao", { opcao: opcaoSelecionada , modelo: classeDaOpcao})
-        .then(function(response) {
-          // Lógica para sucesso na resposta
-          var redirectUrl = response.data.redirect_url;
-          window.location.href = redirectUrl;
-          console.log(response.data);
-        })
-        .catch(function(error) {
-          // Lógica para erro na resposta
-          console.error(error);
-      });
-
-      });
-
-      if(document.getElementById("mudancaResultado")) {
-      var test = document.getElementById("mudancaResultado");
-      if (test.classList.value == "1") {
-          var elementos = document.querySelectorAll(".abrir_form_resultado_esperado");
-          
-          for (var i = 0; i < elementos.length; i++) {
-              elementos[i].classList.remove('icon-plus');
-              elementos[i].classList.add('icon-caret-right');
-          }
-      }
-      }
-
-      $("#dominio_id").change(function(){
-          var inputDominio = document.getElementById("inputDominio");
-          inputDominio.value = this.value;
-      });
-
-      var maturidadeSelecionadaNivelEscolha = document.getElementById("maturidadeSelecionadaNivelEscolha");
-
-      if(maturidadeSelecionadaNivelEscolha.classList.value == "1" || maturidadeSelecionadaNivelEscolha.classList.value == "3")
-      {
-          var elementos = document.querySelectorAll('.processoNivelSelecionado');
-          elementos.forEach(elemento => {
-              elemento.classList.remove('hidden');
-          });
-      }
-      else if(maturidadeSelecionadaNivelEscolha.classList.value == "2")
-      {
-          var elementos = document.querySelectorAll('.resultadoNivelSelecionado');
-          elementos.forEach(elemento => {
-              elemento.classList.remove('hidden');
-          });
-      }
-    });
-
-    function resultado_escolha(escolha){
-        if(escolha == "2"){
-            document.getElementById("nivel_escolha").classList.remove("hidden");
-            
-        } else if(escolha == "1"){
-            document.getElementById("nivel_escolha").classList.add("hidden");
+        function mostraModelosSalvos() {
+            screenFade = document.getElementById('screen-fade');
+            div_ModelosSalvos = document.getElementById('modelos-salvos');
+            if(screenFade.classList.contains('hidden')) {
+                if(div_ModelosSalvos.classList.contains('hidden')) {
+                    screenFade.classList.remove('hidden');
+                    div_ModelosSalvos.classList.remove('hidden');
+                } 
+            }
+            else {
+                screenFade.classList.add('hidden');
+                div_ModelosSalvos.classList.add('hidden');
+            }
         }
-    }
-
-    function show_dimensao(form_id){
-        if (form_id == "abrir_form") {
-        document.getElementById("form_dimensao_1").classList.remove('hidden');
-        } else if (form_id == "cancelar_form") {
-        document.getElementById("form_dimensao_1").classList.add('hidden');
-        }
-        
-    }
-
-    
-
- function mostraModelosSalvos() {
-        screenFade = document.getElementById('screen-fade');
-        div_ModelosSalvos = document.getElementById('modelos-salvos');
-        if(screenFade.classList.contains('hidden')) {
-            if(div_ModelosSalvos.classList.contains('hidden')) {
-            screenFade.classList.remove('hidden');
-            div_ModelosSalvos.classList.remove('hidden');
-            } 
-        }
-        else {
-            screenFade.classList.add('hidden');
-            div_ModelosSalvos.classList.add('hidden');
-        }
-    } 
-
-
 </script>

@@ -24,6 +24,8 @@ gem 'jbuilder', '~> 2.7'
 gem 'carrierwave'
 gem 'devise'
 gem 'select2-rails'
+gem 'chartkick'
+gem 'gruff'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'

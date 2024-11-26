@@ -1,4 +1,4 @@
-        <%= select_tag "modelo_aplicado_id", 
+            <%= select_tag "modelo_aplicado_id", 
           options_for_select(
             @modelo_aplicado.where(user_id: current_user.id).map do |modelo_aplicado|
               [
@@ -21,17 +21,22 @@
     <%end%>
     <button onclick="showModalInfos()" class="header-title-info d-flex-center-center h-100">
         <%= image_tag('icons/info.svg', width: '25px', height: '25px') %>
-        
     </button>
     </div>
     <% vetorResultado = [] %>
     <div class="header-links d-flex-center-start h-100 w-fit">
-    <div class="header-links-wrapper d-flex-center-center">
-        <div onclick="mostra_CalcularNivel()" class="header-link d-flex-center-start h-fit">
-        <img src="https://icons.iconarchive.com/icons/fatcow/farm-fresh/32/calculator-icon.png" width="20" height="20" alt="Calculator Icon">
-        <a>Calcular Nivel</a>
+        <div class="header-links-wrapper d-flex-center-center">
+            <% if @modelo != 0 %>
+                <div onclick="mostra_CalcularNivel()" class="header-link d-flex-center-start h-fit">
+                    <img src="https://icons.iconarchive.com/icons/justicon/free-simple-line/256/Office-Banking-Finance-Bank-Accounting-icon.png" width="20" height="20" alt="Calculator Icon">
+                    <a>Calcular Nivel</a>
+                </div>
+                <div onclick="mostra_Grafico()" class="header-link d-flex-center-start h-fit" style="margin-left: 20px;">
+                    <img src="https://icons.iconarchive.com/icons/justicon/free-simple-line/256/Website-Analysis-Browser-Seo-Data-icon.png" width="20" height="20" alt="Chart Icon">
+                    <a>Ver Gráfico</a>
+                </div>
+            <% end %>
         </div>
-    </div>
     </div>
 </header>
 <!-- <div class="main-config-priorizacao w-93" style="visibility: hidden;" id="config-priorizacao-options" class="">
@@ -266,7 +271,7 @@
                                         <p>Artefato não classificado</p>
                                       </div>
                                     <% end %>
-                                </div> 
+                                </div>
                               <%end%>
                             <% end %>                  
                           </div>	
@@ -492,13 +497,23 @@
     </div>
   </section>
 
-
-
-
-<!-- Fim do conteúdo central -->
-
-
-
+  <!-- Modal do Gráfico -->
+  <section class="pop-up-calcularNivel d-flex-center-center hidden" id="popup_Grafico">
+      <div class="popup-main d-flex-center-evenly flex-column" style="height: auto; min-height: 400px; width: 500px;" id="popup_GraficoMain">
+          <div class="popup-header d-flex-center-between w-100">
+              <h3>Gráfico de avaliação</h3>
+              <button onclick="mostra_Grafico()" class="close-button">X</button>
+          </div>
+          
+          <div class="popup-content" style="width: 100%; padding: 20px;">
+              <canvas id="classificacoesChart"></canvas>
+          </div>
+          
+          <div class="popup-btn popup-padding d-flex-center-center w-100">
+              <button onclick="mostra_Grafico()">Fechar</button>
+          </div>
+      </div>
+  </section>
 
 <script>
     //*Função de expandir e retrair as camadas dos modelos
@@ -625,6 +640,64 @@ function mostra_CalcularNivel() {
 }
 //* Fim ---
 
+//* Função para mostrar/esconder o modal do gráfico
+function mostra_Grafico() {
+    let popup = document.getElementById('popup_Grafico');
+    
+    if(popup.classList.contains('hidden')) {
+        popup.classList.remove('hidden');
+        // Inicializa o gráfico quando o modal é aberto
+        <% if @modelo != 0 && @chart_data.present? %>
+            var ctx = document.getElementById('classificacoesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: <%= raw @chart_data.to_json %>,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribuição de Classificações',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
+                                    const percentage = ((value * 100) / total).toFixed(1);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            formatter: (value, ctx) => {
+                                const total = ctx.dataset.data.reduce((acc, curr) => acc + curr, 0);
+                                const percentage = ((value * 100) / total).toFixed(1);
+                                return percentage + '%';
+                            },
+                            color: '#fff',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        <% end %>
+    } else {
+        popup.classList.add('hidden');
+    }
+}
+
 $(document).ready(function(){
   $(".header-select #modelo_aplicado_id").change(function(){
     var classeDaOpcao = this.value;
@@ -661,4 +734,3 @@ $(document).ready(function(){
 
 
 </script>
-

@@ -27,6 +27,4 @@ class AvaliarController < ApplicationController
         blob.update(classificacao: params[:classificacao])
 
     end
-
-
 end

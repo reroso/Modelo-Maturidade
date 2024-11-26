@@ -80,6 +80,7 @@ GEM
       image_processing (~> 1.1)
       marcel (~> 1.0.0)
       ssrf_filter (~> 1.0)
+    chartkick (5.0.7)
     concurrent-ruby (1.2.2)
     crass (1.0.6)
     date (3.3.3)
@@ -93,6 +94,10 @@ GEM
     ffi (1.15.5)
     globalid (1.1.0)
       activesupport (>= 5.0)
+    gruff (0.24.0)
+      histogram
+      rmagick (>= 5.3)
+    histogram (0.2.4.1)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     image_processing (1.12.2)
@@ -135,7 +140,9 @@ GEM
       racc (~> 1.4)
     nokogiri (1.15.2-x86_64-linux)
       racc (~> 1.4)
+    observer (0.1.2)
     orm_adapter (0.5.0)
+    pkg-config (1.5.6)
     public_suffix (5.0.1)
     puma (4.3.12)
       nio4r (~> 2.0)
@@ -181,6 +188,9 @@ GEM
       actionpack (>= 5.2)
       railties (>= 5.2)
     rexml (3.2.5)
+    rmagick (5.5.0)
+      observer (~> 0.1)
+      pkg-config (~> 1.4)
     ruby-vips (2.1.4)
       ffi (~> 1.12)
     rubyzip (2.3.2)
@@ -255,7 +265,9 @@ DEPENDENCIES
   byebug
   capybara (>= 2.15)
   carrierwave
+  chartkick
   devise
+  gruff
   jbuilder (~> 2.7)
   listen (~> 3.2)
   puma (~> 4.1)

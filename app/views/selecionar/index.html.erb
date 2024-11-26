@@ -24,15 +24,33 @@
     <!-- Section: configurações primárias -->
     <section id="config_primaria_modelo" class="main-config d-flex-center-end mb-1">
     <%if @opcao != 0%>  
-      <form action="/cadastroModeloAplicado/incluir_modelo_aplicado" method="post" class="form-incluir-modelo-aplicado d-flex-center-end" id="form-incluir-modelo-aplicado">
+      <form action="/cadastroModeloAplicado/incluir_modelo_aplicado" method="post" class="form-incluir-modelo-aplicado d-flex-center-end" id="form-incluir-modelo-aplicado" onsubmit="return validarFormulario(event)">
         <div class="main-config-dominioSelect" style="width: 23%;">
-          <%= select_tag "dominio", options_from_collection_for_select(@modelo_aplicados, "id", "dominio"), prompt: "Escolha um dominio", class: "corpo_texto_select modelo_dominio ", style: "width: 90%;" %>
+          <%= select_tag "dominio", 
+              options_for_select(@dominios), 
+              prompt: "Escolha um dominio", 
+              class: "corpo_texto_select modelo_dominio", 
+              style: "width: 90%;"
+          %>
+          <div class="error-message" id="dominio-error">Por favor, selecione um domínio</div>
         </div>
         <div class="main-config-instituicao" style="width: 23%;">
-          <%= select_tag "instituicao", options_from_collection_for_select(@modelo_aplicados, "id", "instituicao"), prompt: "Escolha uma instituicao", class: "corpo_texto_select modelo_instituicao", style: "width: 90%;" %>
+          <%= select_tag "instituicao", 
+              options_for_select(@instituicoes), 
+              prompt: "Escolha uma instituicao", 
+              class: "corpo_texto_select modelo_instituicao", 
+              style: "width: 90%;"
+          %>
+          <div class="error-message" id="instituicao-error">Por favor, selecione uma instituição</div>
         </div>
         <div class="main-config-metodo" style="width: 23%;">
-          <%= select_tag "metodo", options_from_collection_for_select(@modelo_aplicados, "id", "metodo"), prompt: "Escolha um metodo", class: "corpo_texto_select modelo_metodo", style: "width: 90%;" %>
+          <%= select_tag "metodo", 
+              options_for_select(@metodos), 
+              prompt: "Escolha um metodo", 
+              class: "corpo_texto_select modelo_metodo", 
+              style: "width: 90%;"
+          %>
+          <div class="error-message" id="metodo-error">Por favor, selecione um método</div>
         </div>
         <input type="text" name="maturidade_id" aria-label="Recipient's username" aria-describedby="button-addon2" value="<%=@opcao%>" class="hidden">
         <input type="text" name="user_id" aria-label="Recipient's username" aria-describedby="button-addon2" value="<%= current_user.id %>" class="hidden">
@@ -229,8 +247,7 @@
   
   </main>
 
-  <section onclick="closeAll_popup(event)" class="popup-background d-flex-center-center hidden" id="popup_background">
-
+  <section onclick="closeAll_popup(event)" class="popup-background d-flex-center-center hidden" id="popup_background ">
     <!-- Confirmação de exclusão de arquivos -->
     <div id="confirmar_exclusao" class="confirmation-main d-flex-start-evenly flex-column hidden">
       <h1>Confirmar exclusão de arquivo?</h1>
@@ -391,81 +408,42 @@
     $(document).ready(function(){
       
       $('.modelo_dominio').select2({
-        ajax: {
-          url: '/cadastroDominio/buscar_dominio',
-          dataType: 'json',
-          delay: 250,  // tempo de atraso após o usuário parar de digitar
-          data: function (params) {
-            return {
-              term: params.term // termo pesquisado
-            };
-          },
-          processResults: function (data) {
-            return {
-              results: $.map(data, function (item) {
-                return {
-                  id: item,
-                  text: item
-                };
-              })
-            };
-          },
-          cache: true
-        },
+        data: <%= raw @dominios.map { |d| {id: d, text: d} }.to_json %>,
         minimumInputLength: 0,
-        tags: true
+        tags: true,
+        createTag: function (params) {
+          return {
+            id: params.term,
+            text: params.term,
+            newOption: true
+          }
+        }
       });
 
       $('.modelo_instituicao').select2({
-        ajax: {
-          url: '/cadastroDominio/buscar_instituicao',
-          dataType: 'json',
-          delay: 250,  // tempo de atraso após o usuário parar de digitar
-          data: function (params) {
-            return {
-              term: params.term // termo pesquisado
-            };
-          },
-          processResults: function (data) {
-            return {
-              results: $.map(data, function (item) {
-                return {
-                  id: item,
-                  text: item
-                };
-              })
-            };
-          },
-          cache: true
-        },
+        data: <%= raw @instituicoes.map { |i| {id: i, text: i} }.to_json %>,
         minimumInputLength: 0,
-        tags: true
+        tags: true,
+        createTag: function (params) {
+          return {
+            id: params.term,
+            text: params.term,
+            newOption: true
+          }
+        }
       });
 
       $('.modelo_metodo').select2({
-        ajax: {
-          url: '/cadastroDominio/buscar_metodo',
-          dataType: 'json',
-          delay: 250,  // tempo de atraso após o usuário parar de digitar
-          data: function (params) {
-            return {
-              term: params.term // termo pesquisado
-            };
-          },
-          processResults: function (data) {
-            return {
-              results: $.map(data, function (item) {
-                return {
-                  id: item,
-                  text: item
-                };
-              })
-            };
-          },
-          cache: true
-        },
+        data: <%= raw @metodos.map { |m| {id: m, text: m} }.to_json %>,
         minimumInputLength: 0,
-        tags: true
+        tags: true,
+        createTag: function (params) {
+          return {
+            id: params.term,
+            text: params.term,
+            newOption: true
+          }
+        }
       });
 
       $(".header-select #maturidade_id").change(function(){
@@ -550,4 +528,85 @@
         }
     } 
 
-</script>
+    function validarFormulario(event) {
+        var dominio = document.querySelector('.modelo_dominio').value;
+        var instituicao = document.querySelector('.modelo_instituicao').value;
+        var metodo = document.querySelector('.modelo_metodo').value;
+        var isValid = true;
+
+        // Limpa mensagens de erro anteriores
+        document.querySelectorAll('.error-message').forEach(function(el) {
+            el.style.display = 'none';
+        });
+
+        // Verifica cada campo
+        if (!dominio || dominio.trim() === '') {
+            document.getElementById('dominio-error').style.display = 'block';
+            isValid = false;
+        }
+        if (!instituicao || instituicao.trim() === '') {
+            document.getElementById('instituicao-error').style.display = 'block';
+            isValid = false;
+        }
+        if (!metodo || metodo.trim() === '') {
+            document.getElementById('metodo-error').style.display = 'block';
+            isValid = false;
+        }
+
+        if (!isValid && event) {
+            event.preventDefault();
+        }
+
+        return isValid;
+    }
+
+    // Esconde as mensagens de erro quando o usuário seleciona um valor
+    $(document).ready(function(){
+        $('.modelo_dominio').on('select2:select', function() {
+            document.getElementById('dominio-error').style.display = 'none';
+        });
+        
+        $('.modelo_instituicao').on('select2:select', function() {
+            document.getElementById('instituicao-error').style.display = 'none';
+        });
+        
+        $('.modelo_metodo').on('select2:select', function() {
+            document.getElementById('metodo-error').style.display = 'none';
+        });
+    });
+  </script>
+
+  <style>
+    .error-message {
+      position: absolute;
+      background-color: #fff;
+      border: 1px solid #dc3545;
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 12px;
+      color: #dc3545;
+      margin-top: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1000;
+      display: none;
+    }
+
+    .error-message::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 10px;
+      width: 10px;
+      height: 10px;
+      background-color: #fff;
+      border-left: 1px solid #dc3545;
+      border-top: 1px solid #dc3545;
+      transform: rotate(45deg);
+    }
+
+    .main-config-dominioSelect,
+    .main-config-instituicao,
+    .main-config-metodo {
+      position: relative;
+    }
+  </style>
