@@ -1,4 +1,5 @@
           <div class="header-select">
+            <% if @modelo_aplicado.any? %>
               <%= select_tag "modelo_aplicado_id", 
                 options_for_select(
                   @modelo_aplicado.map do |modelo_aplicado|
@@ -10,9 +11,17 @@
                   end,
                   @modelo
                 ),
-                prompt: "Escolha um modelo",
+                prompt: "Escolha um modelo para avaliar",
                 class: "modelo corpo_texto_select"
               %>
+            <% else %>
+              <%= select_tag "modelo_aplicado_id",
+                options_for_select([]),
+                prompt: "Nenhum modelo disponível para suas áreas de atuação",
+                disabled: true,
+                class: "modelo corpo_texto_select"
+              %>
+            <% end %>
           </div>
         </div>
         <button onclick="showModalInfos()" class="header-title-info d-flex-center-center h-100">

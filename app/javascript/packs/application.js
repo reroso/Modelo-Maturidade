@@ -8,7 +8,6 @@ require("turbolinks").start();
 require("@rails/activestorage").start();
 require("channels");
 
-
 import $ from 'jquery';
 import 'select2/dist/css/select2.css';
 import 'select2';

@@ -9,15 +9,18 @@
       <%= render "users/shared/error_messages", resource: resource %>
 
         <div class="field input_dados_text dados_1">
+          <%= f.text_field :name, autofocus: true, placeholder: "Nome" %>
+        </div>
+        <div class="field input_dados_text dados_2">
           <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "E-mail" %>
         </div>
-        <div class="field input_dados_text dados_2 w-100">
+        <div class="field input_dados_text dados_3 w-100">
           <%= f.password_field :password, autocomplete: "new-password", placeholder: "Senha" %>
           <% if @minimum_password_length %>
             <span style="font-size: 12px;margin:5px 0 0 5px;">*Mínimo de <%= @minimum_password_length %> characteres</span>
           <% end %><br />
         </div>
-        <div class="field input_dados_text dados_3">
+        <div class="field input_dados_text dados_4">
           <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirmar Senha"  %>
         </div>
         <div class="actions">
@@ -44,3 +47,4 @@
     </div>
   </div>
 
+</main>

@@ -1,29 +1,48 @@
 <main style="width: 800px;background:transparent;" class="d-flex-center-center">
-
   <div class="userSign-wrapper-left" style="width: 400px; height:600px;z-index: 2;">
     <div class="userSign w-100 h-100 d-flex-center-between flex-column">
       <div class="userSign-title w-100 d-flex-center-center">
         <h2>Cadastro</h2>
       </div> 
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-      <%= render "users/shared/error_messages", resource: resource %>
+        <%= render "appraisers/shared/error_messages", resource: resource %>
 
         <div class="field input_dados_text dados_1">
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "E-mail" %>
+          <%= f.text_field :name, autofocus: true, placeholder: "Nome" %>
         </div>
-        <div class="field input_dados_text dados_2 w-100">
+
+        <div class="field input_dados_text dados_2">
+          <%= f.email_field :email, autocomplete: "email", placeholder: "E-mail" %>
+        </div>
+
+        <div class="field input_dados_text dados_3">
+          <%= f.label :expertise_area_ids, "Áreas de Atuação", class: "corpo_texto", style: "margin-bottom: 10px;" %>
+          <div class="expertise-areas-container">
+            <%= f.collection_check_boxes :expertise_area_ids, @expertise_areas, :id, :name do |b| %>
+              <div class="expertise-area-item">
+                <%= b.check_box %>
+                <%= b.label(class: "corpo_texto") %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="field input_dados_text dados_4">
           <%= f.password_field :password, autocomplete: "new-password", placeholder: "Senha" %>
           <% if @minimum_password_length %>
-            <span style="font-size: 12px;margin:5px 0 0 5px;">*Mínimo de <%= @minimum_password_length %> characteres</span>
-          <% end %><br />
+            <span style="font-size: 12px;margin:5px 0 0 5px;">*Mínimo de <%= @minimum_password_length %> caracteres</span>
+          <% end %>
         </div>
-        <div class="field input_dados_text dados_3">
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirmar Senha"  %>
+
+        <div class="field input_dados_text dados_5">
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirmar Senha" %>
         </div>
+
         <div class="actions">
-          <%= f.submit "Registrar-se" %>
+          <%= f.submit "Cadastrar", class: "btn btn-primary corpo_texto" %>
         </div>
       <% end %>
+
       <div class="d-flex-center-center flex-column">
         <div style="margin-bottom:5px;">
           <span>Já tem uma conta?</span>
@@ -39,7 +58,59 @@
       <span>Você está atualmente no cadastro de <strong id="SignType_target">Avaliador<i class="bi bi-info-circle"></i></strong>.</span>
       <span>Gostaria de utilizar um modelo já criado?</span>
       <a class="redirect-sign-upin" style="margin-top: 10px;" onclick="location.href='/users/sign_up'">Cadastrar conta de usuário</a>
-      <span>ou gostaria de cria seu própio modelo ?</span>
+      <span>ou gostaria de criar seu próprio modelo?</span>
       <a class="redirect-sign-upin" style="margin-top: 10px;" onclick="location.href='/admins/sign_up'">Cadastrar conta de administrador</a>
     </div>
   </div>
+</main>
+
+<style>
+.expertise-areas-container {
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  background: white;
+}
+
+.expertise-area-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.expertise-area-item:last-child {
+  margin-bottom: 0;
+}
+
+.expertise-area-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+.expertise-area-item label {
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Estilização da scrollbar */
+.expertise-areas-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.expertise-areas-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.expertise-areas-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.expertise-areas-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+</style>

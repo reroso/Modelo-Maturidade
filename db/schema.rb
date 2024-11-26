@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_09_30_174801) do
+ActiveRecord::Schema.define(version: 2024_11_26_192358) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -44,8 +44,18 @@ ActiveRecord::Schema.define(version: 2024_09_30_174801) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
+  end
+
+  create_table "appraiser_expertise_areas", force: :cascade do |t|
+    t.integer "appraiser_id"
+    t.integer "expertise_area_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["appraiser_id"], name: "index_appraiser_expertise_areas_on_appraiser_id"
+    t.index ["expertise_area_id"], name: "index_appraiser_expertise_areas_on_expertise_area_id"
   end
 
   create_table "appraisers", force: :cascade do |t|
@@ -56,6 +66,7 @@ ActiveRecord::Schema.define(version: 2024_09_30_174801) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
     t.index ["email"], name: "index_appraisers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_appraisers_on_reset_password_token", unique: true
   end
@@ -67,6 +78,12 @@ ActiveRecord::Schema.define(version: 2024_09_30_174801) do
     t.integer "maturidade_id", null: false
     t.string "nivel_selecionado"
     t.index ["maturidade_id"], name: "index_dimensaos_on_maturidade_id"
+  end
+
+  create_table "expertise_areas", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "levels", force: :cascade do |t|
@@ -127,11 +144,14 @@ ActiveRecord::Schema.define(version: 2024_09_30_174801) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "appraiser_expertise_areas", "appraisers"
+  add_foreign_key "appraiser_expertise_areas", "expertise_areas"
   add_foreign_key "dimensaos", "maturidades"
   add_foreign_key "modelo_aplicados", "maturidades"
   add_foreign_key "modelo_aplicados", "users"
