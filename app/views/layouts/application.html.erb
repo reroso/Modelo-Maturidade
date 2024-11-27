@@ -73,7 +73,7 @@
         <div class="aside-user w-100">
           <div class="aside-user-infos d-flex-center-center w-100" style="cursor: pointer;" data-user-type="user">
             <%= image_tag('icons/user.svg', width: '70px', height: '70px') %>
-            <h5><%= current_user.name %></h5>
+            <h5><%= current_user.name.present? ? current_user.name : current_user.email %></h5>
           </div>
           <%= button_to 'Sair', destroy_user_session_path, method: :delete %>
         </div>
@@ -89,7 +89,7 @@
         <div class="aside-user w-100">
           <div class="aside-user-infos d-flex-center-center w-100" style="cursor: pointer;" data-user-type="appraiser">
             <%= image_tag('icons/user.svg', width: '70px', height: '70px') %>
-            <h5><%= current_appraiser.email %></h5>
+            <h5><%= current_appraiser.name.present? ? current_appraiser.name : current_appraiser.email %></h5>
           </div>
           <%= button_to 'Sair', destroy_appraiser_session_path, method: :delete %>
         </div>

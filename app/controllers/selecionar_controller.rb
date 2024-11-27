@@ -9,6 +9,7 @@ class SelecionarController < ApplicationController
         @opcao = params[:opcao].to_i
         
         # Carregando apenas valores únicos para cada campo usando pluck e compact
+        @expertise_areas = ExpertiseArea.all.pluck(:name)
         @dominios = ModeloAplicado.pluck(:dominio).compact.uniq.sort
         @instituicoes = ModeloAplicado.pluck(:instituicao).compact.uniq.sort
         @metodos = ModeloAplicado.pluck(:metodo).compact.uniq.sort

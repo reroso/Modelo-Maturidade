@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   get "/avaliar", to: "avaliar#index"
   get "/visualizar", to: "visualizar#index"
 
+  # Expertise Areas
+  post "/appraisers/expertise_areas", to: "appraisers/expertise_areas#create"
+
   #dimensaos
 
   post "/cadastro/incluir_dimensao", to: "cadastro#incluir_dimensao"

@@ -471,9 +471,9 @@
     <div class="popup-main d-flex-center-evenly flex-column" style="height:150px;" id="popup_CalcularNivelMain">
       <div> 
         <div class="popup-titulo">
+          <h2> nivel teste dessa porra: <%= @nivel_atual%></h2>
           <% if vetorResultado[0].nil? %>
             <h2>O nível deste modelo é <%=maturidade_selecionada.menorNivel%></h2>
-            <%puts "foi aqui"%>
           <%else%>
             <%if maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s%>
               <%if maturidade_selecionada.menorNivel.to_s > vetorResultado[0].to_s%>
@@ -504,11 +504,15 @@
               <h3>Gráfico de avaliação</h3>
               <button onclick="mostra_Grafico()" class="close-button">X</button>
           </div>
-          
           <div class="popup-content" style="width: 100%; padding: 20px;">
               <canvas id="classificacoesChart"></canvas>
+              <div class="text-center" style="margin-top: 15px;">
+                  <button onclick="downloadChart()" class="btn btn-primary" style="padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                      <%= image_tag('icons/download.svg', width: '20px', height: '20px', style: 'margin-right: 5px; vertical-align: middle;') %>
+                      Download Gráfico
+                  </button>
+              </div>
           </div>
-          
           <div class="popup-btn popup-padding d-flex-center-center w-100">
               <button onclick="mostra_Grafico()">Fechar</button>
           </div>
@@ -649,7 +653,7 @@ function mostra_Grafico() {
         // Inicializa o gráfico quando o modal é aberto
         <% if @modelo != 0 && @chart_data.present? %>
             var ctx = document.getElementById('classificacoesChart').getContext('2d');
-            new Chart(ctx, {
+            window.chartInstance = new Chart(ctx, {
                 type: 'pie',
                 data: <%= raw @chart_data.to_json %>,
                 options: {
@@ -660,9 +664,35 @@ function mostra_Grafico() {
                         },
                         title: {
                             display: true,
-                            text: 'Distribuição de Classificações',
+                            text: [
+                                <% if @modelo != 0 %>
+                                'Instituição: <%= ModeloAplicado.find(@modelo).instituicao %>',
+                                'Modelo: <%= Maturidade.find(ModeloAplicado.find(@modelo).maturidade_id).nome %>',
+                                'Método: <%= ModeloAplicado.find(@modelo).metodo %>',
+                                'Domínio: <%= ModeloAplicado.find(@modelo).dominio %>',
+                                'Nível do Modelo: <%= 
+                                    if vetorResultado[0].nil?
+                                        maturidade_selecionada.menorNivel
+                                    elsif maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s
+                                        if maturidade_selecionada.menorNivel.to_s > vetorResultado[0].to_s
+                                            maturidade_selecionada.menorNivel.to_s
+                                        else
+                                            vetorResultado[0].to_s
+                                        end
+                                    else
+                                        maturidade_selecionada.menorNivel
+                                    end
+                                %>'
+                                <% else %>
+                                'Selecione um modelo para visualizar as informações'
+                                <% end %>
+                            ],
                             font: {
-                                size: 16
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                bottom: 20
                             }
                         },
                         tooltip: {
@@ -698,6 +728,20 @@ function mostra_Grafico() {
     }
 }
 
+function downloadChart() {
+    const canvas = document.getElementById('classificacoesChart');
+    const link = document.createElement('a');
+    
+    // Formata o nome do arquivo com as informações do modelo
+    const fileName = <% if @modelo != 0 %>'<%= ModeloAplicado.find(@modelo).instituicao %>_<%= Maturidade.find(ModeloAplicado.find(@modelo).maturidade_id).nome %>_<%= ModeloAplicado.find(@modelo).metodo %>_<%= ModeloAplicado.find(@modelo).dominio %>'<% else %> 'grafico'<% end %>.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.png';
+    
+    link.download = fileName;
+    link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
 $(document).ready(function(){
   $(".header-select #modelo_aplicado_id").change(function(){
     var classeDaOpcao = this.value;
@@ -715,8 +759,9 @@ $(document).ready(function(){
     .catch(function(error) {
       // Lógica para erro na resposta
       console.error(error);
+    });
   });
-  });
+
   if(document.getElementById("mudancaResultado")) {
     var test = document.getElementById("mudancaResultado");
     
@@ -731,6 +776,4 @@ $(document).ready(function(){
     }
   }
 });
-
-
 </script>

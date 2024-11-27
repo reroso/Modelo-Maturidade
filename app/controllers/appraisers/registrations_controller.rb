@@ -69,9 +69,6 @@ class Appraisers::RegistrationsController < Devise::RegistrationsController
   private
 
   def load_expertise_areas
-    # Busca os domínios únicos da tabela modelos_aplicados
-    @expertise_areas = ModeloAplicado.distinct.pluck(:dominio).compact.map do |domain|
-      ExpertiseArea.find_or_create_by(name: domain)
-    end
+    @expertise_areas = ExpertiseArea.all.order(:name)
   end
 end

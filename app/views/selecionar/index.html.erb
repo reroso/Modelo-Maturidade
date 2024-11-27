@@ -27,7 +27,7 @@
       <form action="/cadastroModeloAplicado/incluir_modelo_aplicado" method="post" class="form-incluir-modelo-aplicado d-flex-center-end" id="form-incluir-modelo-aplicado" onsubmit="return validarFormulario(event)">
         <div class="main-config-dominioSelect" style="width: 23%;">
           <%= select_tag "dominio", 
-              options_for_select(@dominios), 
+              options_for_select(@expertise_areas), 
               prompt: "Escolha um dominio", 
               class: "corpo_texto_select modelo_dominio", 
               style: "width: 90%;"
@@ -408,7 +408,7 @@
     $(document).ready(function(){
       
       $('.modelo_dominio').select2({
-        data: <%= raw @dominios.map { |d| {id: d, text: d} }.to_json %>,
+        data: <%= raw @expertise_areas.map { |d| {id: d, text: d} }.to_json %>,
         minimumInputLength: 0,
         tags: true,
         createTag: function (params) {
