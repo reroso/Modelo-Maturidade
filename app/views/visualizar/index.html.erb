@@ -471,24 +471,7 @@
     <div class="popup-main d-flex-center-evenly flex-column" style="height:150px;" id="popup_CalcularNivelMain">
       <div> 
         <div class="popup-titulo">
-          <h2> nivel teste dessa porra: <%= @nivel_atual%></h2>
-          <% if vetorResultado[0].nil? %>
-            <h2>O nível deste modelo é <%=maturidade_selecionada.menorNivel%></h2>
-          <%else%>
-            <%if maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s%>
-              <%if maturidade_selecionada.menorNivel.to_s > vetorResultado[0].to_s%>
-                <h2>O nível deste modelo é <%=maturidade_selecionada.menorNivel.to_s%></h2>
-              <%else%>
-                <h2>O nível deste modelo é <%=vetorResultado[0]%></h2>
-              <%end%>
-            <%else%>
-              <%if maturidade_selecionada.menorNivel.to_s < vetorResultado[0].to_s%>
-                <h2>O nível deste modelo é <%=maturidade_selecionada.menorNivel%></h2>
-              <%else%>
-                <h2>O nível deste modelo é <%=vetorResultado[0]%></h2>
-              <%end%>
-            <%end%>          
-          <%end%>
+          <h2> O nível deste modelo é <%= @nivel_atual%></h2>
         </div>
       </div>
       <div class="popup-btn popup-padding d-flex-center-center w-100">
@@ -499,22 +482,16 @@
 
   <!-- Modal do Gráfico -->
   <section class="pop-up-calcularNivel d-flex-center-center hidden" id="popup_Grafico">
-      <div class="popup-main d-flex-center-evenly flex-column" style="height: auto; min-height: 400px; width: 500px;" id="popup_GraficoMain">
-          <div class="popup-header d-flex-center-between w-100">
-              <h3>Gráfico de avaliação</h3>
-              <button onclick="mostra_Grafico()" class="close-button">X</button>
-          </div>
-          <div class="popup-content" style="width: 100%; padding: 20px;">
-              <canvas id="classificacoesChart"></canvas>
+      <div class="popup-main d-flex-center-evenly flex-column" style="height: auto; min-height: 700px; width: 900px; padding: 20px;" id="popup_GraficoMain">
+          <button onclick="mostra_Grafico()" style="align-self: flex-end; background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-size: 18px; cursor: pointer; margin-bottom: 10px;">X</button>
+          <div class="popup-content" style="width: 100%; height: 600px;">
+              <canvas id="classificacoesChart" style="width: 100%; height: 100%;"></canvas>
               <div class="text-center" style="margin-top: 15px;">
                   <button onclick="downloadChart()" class="btn btn-primary" style="padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
                       <%= image_tag('icons/download.svg', width: '20px', height: '20px', style: 'margin-right: 5px; vertical-align: middle;') %>
                       Download Gráfico
                   </button>
               </div>
-          </div>
-          <div class="popup-btn popup-padding d-flex-center-center w-100">
-              <button onclick="mostra_Grafico()">Fechar</button>
           </div>
       </div>
   </section>
@@ -654,13 +631,69 @@ function mostra_Grafico() {
         <% if @modelo != 0 && @chart_data.present? %>
             var ctx = document.getElementById('classificacoesChart').getContext('2d');
             window.chartInstance = new Chart(ctx, {
-                type: 'pie',
+                type: 'radar',
                 data: <%= raw @chart_data.to_json %>,
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                display: false
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            angleLines: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 18,
+                                    weight: 'bold'
+                                },
+                                color: '#000'
+                            }
+                        }
+                    },
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                },
+                                padding: 20,
+                                color: '#000'
+                            }
+                        },
+                        tooltip: {
+                            titleFont: {
+                                size: 16
+                            },
+                            bodyFont: {
+                                size: 16
+                            },
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + '%';
+                                }
+                            }
+                        },
+                        datalabels: {
+                            color: '#000',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            formatter: function(value) {
+                                return value + '%';
+                            }
                         },
                         title: {
                             display: true,
@@ -670,19 +703,7 @@ function mostra_Grafico() {
                                 'Modelo: <%= Maturidade.find(ModeloAplicado.find(@modelo).maturidade_id).nome %>',
                                 'Método: <%= ModeloAplicado.find(@modelo).metodo %>',
                                 'Domínio: <%= ModeloAplicado.find(@modelo).dominio %>',
-                                'Nível do Modelo: <%= 
-                                    if vetorResultado[0].nil?
-                                        maturidade_selecionada.menorNivel
-                                    elsif maturidade_selecionada.menorNivel.to_s < maturidade_selecionada.maiorNivel.to_s
-                                        if maturidade_selecionada.menorNivel.to_s > vetorResultado[0].to_s
-                                            maturidade_selecionada.menorNivel.to_s
-                                        else
-                                            vetorResultado[0].to_s
-                                        end
-                                    else
-                                        maturidade_selecionada.menorNivel
-                                    end
-                                %>'
+                                'Nível do Modelo: <%= @nivel_atual %>'
                                 <% else %>
                                 'Selecione um modelo para visualizar as informações'
                                 <% end %>
@@ -692,7 +713,8 @@ function mostra_Grafico() {
                                 weight: 'bold'
                             },
                             padding: {
-                                bottom: 20
+                                top: 10,
+                                bottom: 10
                             }
                         },
                         tooltip: {
@@ -704,18 +726,6 @@ function mostra_Grafico() {
                                     const percentage = ((value * 100) / total).toFixed(1);
                                     return `${label}: ${value} (${percentage}%)`;
                                 }
-                            }
-                        },
-                        datalabels: {
-                            formatter: (value, ctx) => {
-                                const total = ctx.dataset.data.reduce((acc, curr) => acc + curr, 0);
-                                const percentage = ((value * 100) / total).toFixed(1);
-                                return percentage + '%';
-                            },
-                            color: '#fff',
-                            font: {
-                                weight: 'bold',
-                                size: 14
                             }
                         }
                     }
