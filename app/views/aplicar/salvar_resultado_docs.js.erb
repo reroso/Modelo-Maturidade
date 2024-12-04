@@ -1,0 +1,15 @@
+var fileList = document.querySelector("#main-resultado-<%= @dimensao.id %>-<%= @resultado.processo.id %>-<%= @resultado.id %> .file-galery");
+
+var novoArquivo = `<%= j render partial: 'documento_item', locals: { 
+  doc: @attachment, 
+  dimensao_id: @dimensao.id, 
+  resultado_id: @resultado.id, 
+  opcao: @opcao, 
+  modelo: @modelo 
+} %>`;
+
+var uploadForm = fileList.querySelector("li:last-child");
+uploadForm.insertAdjacentHTML('beforebegin', novoArquivo);
+
+var form = fileList.querySelector("form");
+form.reset();

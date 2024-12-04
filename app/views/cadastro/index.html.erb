@@ -195,7 +195,7 @@
           </div>
         </div>
         <!--# Fim do Header da Dimensão X -->
-
+        
         <!--# Início do Main expandível da Dimensão X -->
         <div id="main-dimencao-<%= dimensao.id %>" class="expandable-main dimencao hidden">
 
@@ -224,7 +224,7 @@
                   <i id="plus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid icon-caret-right abrir_form_resultado_esperado"></i>   
                 <%end%>                
                 
-                <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>')"><strong><%=contadorDimensaos%>.<%=contadorProcessos%> - </strong><%= processo.descricao %></h3>
+                <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>" style="height: auto; white-space: normal; word-wrap: break-word;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>')"><strong><%=contadorDimensaos%>.<%=contadorProcessos%> - </strong><%= processo.descricao %></h3>
 
                 <%if maturidade_selecionada.nivelEscolha == "1"%>
                   <form id="meu_formulario_resultados" action="/cadastroProcesso/<%= processo.id %>/salvar_processo_nivel" method="post">
@@ -337,11 +337,13 @@
               </div>
             </div>  
             <!--# Fim do cabeçalho do Processo Y da Dimensão X -->
-
+            
             <!--# Início do main expansível do Processo Y da Dimensão X -->
             <div id="main-processo-<%= dimensao.id %>-<%= processo.id %>" class="expandable-main processo hidden">
 
+
               <!-- SE ESTIVER PROCURANDO O FORM DE CRIAÇÃO DE RESULTADOS ESPERADOS, VEJA O SCRIPT AO FIM DA PÁGINA -->
+
 
               <!--# Início do loop de resultados do processo Y da dimensão X-->
               <%if maturidade_selecionada.resultadoEscolha == "2"%>
@@ -356,7 +358,7 @@
                 <div id="header-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-header d-flex-center-between resultado w-100">
                   <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(1)"><!-- o 1 do id é o id da dimensão-->
                       <i id="plus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid icon-caret-right"></i>
-                    <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')"><strong><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> - </strong><%= resultado.descricao %></h3>
+                    <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" style="height: auto; white-space: normal; word-wrap: break-word;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')"><strong><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> - </strong><%= resultado.descricao %></h3>
 
                     <%if maturidade_selecionada.nivelEscolha == "2"%>
                     <form id="meu_formulario_resultados" action="/cadastroResultado/<%= resultado.id %>/salvar_resultado_nivel" method="post">
@@ -470,13 +472,13 @@
                   </div>
                 </div>
                 <!--# Fim do header do resultado Z do processo Y da dimensão X -->
-
+                
                 <!--# Início do main expansivel do resultado Z do processo Y da dimensão X -->
                 <div id="main-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-main resultado">
 
+
                 </div>
                 <!--# Fim do main expansivel do resultado Z do processo Y da dimensão X -->
-
               </div>
               <!--# Fim do resultado Z do processo Y da dimensão X -->
               <%contadorResultados = contadorResultados + 1%>
@@ -500,11 +502,10 @@
       <%end%>
       <%end%>
       <!--# Fim do Loop de dimensões -->
-
     </section>
   </main>
   <!--# Fim do conteúdo central -->
-
+  
   <!--# Função de expandir e retrair as camadas dos modelos -->
   <script>
     function expandeMain(id_expandir, isCreate) {
@@ -565,7 +566,6 @@
 
     //Função de abrir e fechar o form de criação de novos processos
     function biuldProcessoForm(dimensao) {
-
 
       const templateNovoProcesso = `
         <div id="create_new_processo_${dimensao}" class="main-create-level d-flex-center-center dimencao w-100">

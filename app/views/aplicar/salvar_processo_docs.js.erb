@@ -1,0 +1,17 @@
+var fileList = document.querySelector("#main-processo-<%= @dimensao.id %>-<%= @processo.id %> .file-galery");
+
+var novoArquivo = `<%= j render partial: 'processo_documento_item', locals: { 
+  doc: @attachment, 
+  dimensao_id: @dimensao.id, 
+  processo_id: @processo.id, 
+  opcao: @opcao, 
+  modelo: @modelo 
+} %>`;
+
+// Adiciona o novo arquivo antes do formulário de upload
+var uploadForm = fileList.querySelector("li:last-child");
+uploadForm.insertAdjacentHTML('beforebegin', novoArquivo);
+
+// Limpa o formulário
+var form = fileList.querySelector("form");
+form.reset();

@@ -125,10 +125,8 @@
             
                     <!--A== Main-Processo-1-1 -->
                     <div id="main-processo-<%= dimensao.id %>-<%= processo.id %>" class="expandable-main processo hidden">
-
                       <%if @opcao != 0%>
-                        <%if maturidade_selecionada.nivelEscolha == "1" || (maturidade_selecionada.nivelEscolha == "3" && maturidade_selecionada.resultadoEscolha == "1") %> <!--x ESTAMOS AQUI -->
-
+                        <%if maturidade_selecionada.nivelEscolha == "1" || (maturidade_selecionada.nivelEscolha == "3" && maturidade_selecionada.resultadoEscolha == "1") %> <!--x ESTAMOS AQUI
                           <div class="file-galery-wrapper dimencao">
                             <h4 class="file-galery-wrapper-title">Upload de artefatos</h4>
                             <ul class="file-galery">
@@ -149,12 +147,13 @@
                             <% end %>
                               <!-- Adicionar arquivos -->
                               <li class="file-galery-item d-flex-center-start">
-                                <form action="/cadastroProcesso/<%=processo.id%>/salvar_processo_docs?opcao=<%= @opcao %>" method="POST" enctype="multipart/form-data">
-                                  <input type="file" name="docs"/>
-                                  <input name="descricao" class="input-artefato" id="descricao_artefato" placeholder="Descrição do artefato" type="text">
-                                  <input name="modelo" class="input-artefato hidden" id="" value="<%= @modelo%>" type="text">
-                                  <button type="submit">Cadastrar</button>
-                                </form>
+                                <%= form_with(url: "/cadastroProcesso/#{processo.id}/salvar_processo_docs", method: :post, local: false, multipart: true, data: { remote: true }) do |f| %>
+                                  <%= f.file_field :docs, required: true %>
+                                  <%= f.text_field :descricao, class: "input-artefato", id: "descricao_artefato", placeholder: "Descrição do artefato", required: true %>
+                                  <%= f.hidden_field :modelo, value: @modelo %>
+                                  <%= f.hidden_field :opcao, value: @opcao %>
+                                  <%= f.submit "Cadastrar", class: "btn-cadastrar", data: { disable_with: "Enviando..." } %>
+                                <% end %>
                               </li>
                             </ul>
                           </div>
@@ -227,12 +226,13 @@
                                       <% end %>
                                       <!-- Adicionar arquivos -->
                                       <li class="file-galery-item d-flex-center-start">
-                                          <form action="/cadastroResultado/<%=resultado.id%>/salvar_resultado_docs?opcao=<%= @opcao %>" method="POST" enctype="multipart/form-data">
-                                          <input type="file" name="docs"/>
-                                          <input name="descricao" class="input-artefato" id="descricao_artefato" placeholder="Descrição do artefato" type="text">
-                                          <input name="modelo" class="input-artefato hidden" id="" value="<%= @modelo%>" type="text">
-                                          <button type="submit">Cadastrar</button>
-                                        </form>
+                                          <%= form_with(url: "/cadastroResultado/#{resultado.id}/salvar_resultado_docs", method: :post, local: false, multipart: true, data: { remote: true }) do |f| %>
+                                          <%= f.file_field :docs, required: true %>
+                                          <%= f.text_field :descricao, class: "input-artefato", id: "descricao_artefato", placeholder: "Descrição do artefato", required: true %>
+                                          <%= f.hidden_field :modelo, value: @modelo %>
+                                          <%= f.hidden_field :opcao, value: @opcao %>
+                                          <%= f.submit "Cadastrar", class: "btn-cadastrar", data: { disable_with: "Enviando..." } %>
+                                        <% end %>
                                       </li>
                                     </ul>
                                   </div>

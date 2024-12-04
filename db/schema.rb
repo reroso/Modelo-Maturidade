@@ -128,7 +128,7 @@ ActiveRecord::Schema.define(version: 2024_11_26_192358) do
   end
 
   create_table "resultados", force: :cascade do |t|
-    t.string "descricao"
+    t.text "descricao"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "processo_id", null: false

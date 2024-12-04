@@ -21,20 +21,24 @@ class AplicarController < ApplicationController
     end
 
     def salvar_processo_docs
-        processo = Processo.find(params[:id])
-        processo.docs.attach(params[:docs])
+        @processo = Processo.find(params[:id])
+        @processo.docs.attach(params[:docs])
 
-        documento_id = processo.docs.last.id
+        documento_id = @processo.docs.last.id
 
-        attachment = ActiveStorage::Attachment.find(documento_id)
-        blob = attachment.blob  # Obtém o blob associado ao attachment
+        @attachment = ActiveStorage::Attachment.find(documento_id)
+        blob = @attachment.blob
         blob.update(descricao: params[:descricao])
         blob.update(modelo: params[:modelo])
 
-        opcao = params[:opcao]
-        modelo = params[:modelo]
-
-        redirect_to aplicar_path(opcao: opcao, modelo: modelo)
+        @opcao = params[:opcao]
+        @modelo = params[:modelo]
+        @dimensao = @processo.dimensao
+        
+        respond_to do |format|
+            format.html { redirect_to aplicar_path(opcao: @opcao, modelo: @modelo) }
+            format.js
+        end
     end
 
     def excluir_processo_docs
@@ -49,19 +53,24 @@ class AplicarController < ApplicationController
     end
 
     def salvar_resultado_docs
-        resultado = Resultado.find(params[:id])
-        resultado.docs.attach(params[:docs])
+        @resultado = Resultado.find(params[:id])
+        @resultado.docs.attach(params[:docs])
 
-        documento_id = resultado.docs.last.id
+        documento_id = @resultado.docs.last.id
 
-        attachment = ActiveStorage::Attachment.find(documento_id)
-        blob = attachment.blob
+        @attachment = ActiveStorage::Attachment.find(documento_id)
+        blob = @attachment.blob
         blob.update(descricao: params[:descricao])
         blob.update(modelo: params[:modelo])
 
-        opcao = params[:opcao]
-        modelo = params[:modelo]
-        redirect_to aplicar_path(opcao: opcao, modelo: modelo)
+        @opcao = params[:opcao]
+        @modelo = params[:modelo]
+        @dimensao = @resultado.processo.dimensao
+        
+        respond_to do |format|
+            format.html { redirect_to aplicar_path(opcao: @opcao, modelo: @modelo) }
+            format.js
+        end
     end
 
     def excluir_resultado_docs

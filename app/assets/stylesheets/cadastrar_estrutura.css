@@ -49,3 +49,41 @@
   background-color: transparent;
   cursor: pointer;
 }
+.expandable-header-left h3 {
+  height: auto !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  margin: 10px 0;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.btn-cadastrar {
+  background-color: #9bc03c;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.btn-cadastrar:hover {
+  background-color: #8aaf35;
+}
+
+.btn-cadastrar:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.file-galery-item form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.file-galery-item form input[type="file"] {
+  max-width: 200px;
+}

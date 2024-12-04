@@ -1,0 +1,9 @@
+<%# Este partial espera as seguintes variáveis locais: doc, dimensao_id, resultado_id, opcao, modelo %>
+<li id="doc-<%= dimensao_id %>-<%= resultado_id %>--<%= doc.id %>" class="file-galery-item d-flex-center-start">
+  <h5 class="descricao-artefato"><%= doc.descricao%></h5>
+  <span class="descricao-artefato">-</span>
+  <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
+  <button onclick="show_popup('confirmar_exclusao', '/cadastroResultado/<%= doc.id %>/excluir_resultado_docs?opcao=<%= opcao %>&modelo=<%= modelo %>')" class="file-galery-item-btn">
+    <%= image_tag('icons/delete_folder.svg', width: '25px', height: '25px') %>
+  </button>
+</li>

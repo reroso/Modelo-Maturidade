@@ -213,53 +213,150 @@ class VisualizarController < ApplicationController
     end
 
     def prepare_chart_data
-        # Inicializa contadores para cada classificação
-        @nao_atende = 0
-        @atende_parcialmente = 0
-        @atende_totalmente = 0
-        @nao_classificado = 0
+        Rails.logger.debug "\n=== PREPARANDO DADOS DO GRÁFICO ==="
+        Rails.logger.debug "Modelo selecionado: #{@modelo}"
+        
+        return if @modelo == 0
 
-        # Conta documentos por classificação
-        @processos.each do |processo|
-            processo.docs.each do |doc|
-                if doc.modelo == @modelo
-                    case doc.classificacao
-                    when 1
-                        @atende_totalmente += 1
-                    when 2
-                        @atende_parcialmente += 1
-                    when 3
-                        @nao_atende += 1
-                    when nil
-                        @nao_classificado += 1
+        modelo_aplicado = ModeloAplicado.find(@modelo)
+        maturidade = Maturidade.find(modelo_aplicado.maturidade_id)
+        
+        # Determina os níveis disponíveis
+        is_alpha = maturidade.menorNivel.to_s.match?(/[A-Za-z]/)
+        if is_alpha
+            nivel_atual = maturidade.menorNivel.upcase.ord - 64
+            maior_nivel = maturidade.maiorNivel.upcase.ord - 64
+            niveis = (maior_nivel..nivel_atual).to_a.reverse.map { |n| (n + 64).chr }
+        else
+            nivel_atual = maturidade.menorNivel.to_i
+            maior_nivel = maturidade.maiorNivel.to_i
+            niveis = (nivel_atual..maior_nivel).to_a
+        end
+        
+        Rails.logger.debug "Níveis disponíveis: #{niveis.inspect}"
+        
+        # Prepara dados para cada nível
+        @chart_data_por_nivel = {}
+        
+        niveis.each do |nivel|
+            classificacoes = {
+                atende_totalmente: 0,   # 1
+                atende_parcialmente: 0, # 2
+                nao_atende: 0,         # 3
+                nao_classificado: 0    # nil ou outro
+            }
+            
+            total_docs = 0
+            
+            case maturidade.nivelEscolha
+            when "2" # Resultados
+                Rails.logger.debug "Modo de avaliação: Resultados - Nível #{nivel}"
+                @dimensaos.each do |dimensao|
+                    next unless dimensao.maturidade_id == @opcao
+                    
+                    @processos.each do |processo|
+                        next unless dimensao.id == processo.dimensao_id
+                        
+                        @resultados.each do |resultado|
+                            next unless processo.id == resultado.processo_id && 
+                                      resultado.nivel_selecionado.to_s == nivel.to_s
+                            
+                            resultado.docs.each do |doc|
+                                next unless doc.modelo == @modelo
+                                
+                                total_docs += 1
+                                case doc.classificacao
+                                when 1 then classificacoes[:atende_totalmente] += 1
+                                when 2 then classificacoes[:atende_parcialmente] += 1
+                                when 3 then classificacoes[:nao_atende] += 1
+                                else classificacoes[:nao_classificado] += 1
+                                end
+                            end
+                        end
+                    end
+                end
+            when "1" # Processos
+                Rails.logger.debug "Modo de avaliação: Processos - Nível #{nivel}"
+                @dimensaos.each do |dimensao|
+                    next unless dimensao.maturidade_id == @opcao
+                    
+                    @processos.each do |processo|
+                        next unless dimensao.id == processo.dimensao_id && 
+                                  processo.nivel_selecionado.to_s == nivel.to_s
+                        
+                        processo.docs.each do |doc|
+                            next unless doc.modelo == @modelo
+                            
+                            total_docs += 1
+                            case doc.classificacao
+                            when 1 then classificacoes[:atende_totalmente] += 1
+                            when 2 then classificacoes[:atende_parcialmente] += 1
+                            when 3 then classificacoes[:nao_atende] += 1
+                            else classificacoes[:nao_classificado] += 1
+                            end
+                        end
                     end
                 end
             end
+
+            Rails.logger.debug "\nContagem de documentos para nível #{nivel}:"
+            Rails.logger.debug "Total de documentos: #{total_docs}"
+            classificacoes.each do |tipo, contagem|
+                Rails.logger.debug "#{tipo.to_s.humanize}: #{contagem}"
+            end
+
+            # Calcula porcentagens
+            porcentagens = {}
+            if total_docs > 0
+                classificacoes.each do |tipo, contagem|
+                    porcentagens[tipo] = (contagem.to_f / total_docs * 100).round(1)
+                end
+            else
+                classificacoes.keys.each { |tipo| porcentagens[tipo] = 0.0 }
+            end
+
+            # Prepara dados do gráfico para este nível
+            @chart_data_por_nivel[nivel] = {
+                labels: ['Atende Totalmente', 'Atende Parcialmente', 'Não Atende', 'Não Classificado'],
+                datasets: [{
+                    label: "Distribuição de Classificações - Nível #{nivel}",
+                    data: [
+                        porcentagens[:atende_totalmente],
+                        porcentagens[:atende_parcialmente],
+                        porcentagens[:nao_atende],
+                        porcentagens[:nao_classificado]
+                    ],
+                    fill: true,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgb(75, 192, 192)',
+                    borderWidth: 2,
+                    pointBackgroundColor: [
+                        'rgb(75, 192, 192)',   # Verde para Atende Totalmente
+                        'rgb(255, 205, 86)',   # Amarelo para Atende Parcialmente
+                        'rgb(255, 99, 132)',   # Vermelho para Não Atende
+                        'rgb(201, 203, 207)'   # Cinza para Não Classificado
+                    ],
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: [
+                        'rgb(75, 192, 192)',   # Verde
+                        'rgb(255, 205, 86)',   # Amarelo
+                        'rgb(255, 99, 132)',   # Vermelho
+                        'rgb(201, 203, 207)'   # Cinza
+                    ],
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            }
         end
-
-        # Calcula o total de documentos
-        total_docs = @nao_atende + @atende_parcialmente + @atende_totalmente + @nao_classificado
-
-        # Calcula as porcentagens
-        porcentagem_nao_atende = total_docs > 0 ? (@nao_atende.to_f / total_docs * 100).round(1) : 0
-        porcentagem_atende_parcialmente = total_docs > 0 ? (@atende_parcialmente.to_f / total_docs * 100).round(1) : 0
-        porcentagem_atende_totalmente = total_docs > 0 ? (@atende_totalmente.to_f / total_docs * 100).round(1) : 0
-        porcentagem_nao_classificado = total_docs > 0 ? (@nao_classificado.to_f / total_docs * 100).round(1) : 0
-
-        # Prepara dados para o gráfico de radar
-        @chart_data = {
-            labels: ['Não Atende', 'Atende Parcialmente', 'Atende Totalmente', 'Não Classificado'],
-            datasets: [{
-                label: 'Distribuição de Classificações (%)',
-                data: [porcentagem_nao_atende, porcentagem_atende_parcialmente, porcentagem_atende_totalmente, porcentagem_nao_classificado],
-                fill: true,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgb(54, 162, 235)',
-                pointBackgroundColor: 'rgb(54, 162, 235)',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: 'rgb(54, 162, 235)'
-            }]
-        }
+        
+        Rails.logger.debug "\nDados dos gráficos gerados por nível:"
+        @chart_data_por_nivel.each do |nivel, data|
+            Rails.logger.debug "Nível #{nivel}: #{JSON.pretty_generate(data)}"
+        end
+        Rails.logger.debug "=== FIM DA PREPARAÇÃO DOS DADOS DO GRÁFICO ===\n"
+        
+        # Disponibiliza os dados para a view
+        @chart_data_por_nivel
     end
 end

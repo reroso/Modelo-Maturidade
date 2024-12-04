@@ -84,6 +84,11 @@
         </div>
         <%salvarDescricao = ""%>
         <%contadorExistencia = 0%>
+        <div class="expandable-header-right">
+          <button onclick="showModal('<%=menorContador%>')" class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-chart-line"></i> Ver Gráfico
+          </button>
+        </div>
       </div>
       <!-- maturidade_selecionada.nivelEscolha = 1 é em processos = 2 em resultados -->
       <%if maturidade_selecionada.nivelEscolha == "2"%>
@@ -325,6 +330,10 @@
         </div>
         <%salvarDescricao = ""%>
         <%contadorExistencia = 0%>
+        <div class="expandable-header-right">
+          <button onclick="showModal('<%=menorContador%>')" class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-chart-line"></i> Ver Gráfico
+          </button>
         </div>
       </div>
       <!-- maturidade_selecionada.nivelEscolha = 1 é em processos = 2 em resultados -->
@@ -465,7 +474,288 @@
     <%end%>
   <%end%>
 </section>
-</main>
+
+<style>
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .canvas-container {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    min-height: 400px;
+    margin-top: 20px;
+  }
+
+  .close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .close:hover {
+    color: #333;
+  }
+
+  .expandable-header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+  }
+  
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-sm:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-sm i {
+    font-size: 14px;
+  }
+
+  #colocarGrafico {
+    display: none;
+  }
+</style>
+
+<style>
+  .expandable-header {
+    position: relative;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .expandable-header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    padding-right: 10px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .expandable-header-left {
+    flex: 1;
+    padding-right: 120px; /* Make space for the button */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .btn-sm:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-sm i {
+    font-size: 14px;
+  }
+
+  h3 {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>
+
+<div id="modaisGraficos">
+  <% @chart_data_por_nivel.each do |nivel, chart_data| %>
+    <div id="modalNivel<%= nivel %>" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('<%= nivel %>')">&times;</span>
+        <h3>Gráfico do Nível <%= nivel %></h3>
+        <div class="canvas-container">
+          <canvas id="graficoNivel<%= nivel %>"></canvas>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  var chartInstances = {};
+  var chartData = {};
+
+  // Armazenar os dados dos gráficos
+  <% @chart_data_por_nivel.each do |nivel, data| %>
+    chartData['<%= nivel %>'] = <%= raw data.to_json %>;
+  <% end %>
+
+  function createChart(nivel) {
+    // Destruir gráfico existente se houver
+    if (chartInstances[nivel]) {
+      chartInstances[nivel].destroy();
+      delete chartInstances[nivel];
+    }
+
+    var canvas = document.getElementById('graficoNivel' + nivel);
+    var ctx = canvas.getContext('2d');
+    
+    // Limpar o canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Criar novo gráfico
+    chartInstances[nivel] = new Chart(ctx, {
+      type: 'radar',
+      data: chartData[nivel],
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            ticks: {
+              display: false
+            },
+            grid: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            },
+            angleLines: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            },
+            pointLabels: {
+              font: {
+                size: 14,
+                weight: 'bold'
+              },
+              color: '#000'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              font: {
+                size: 12,
+                weight: 'bold'
+              },
+              padding: 15,
+              color: '#000',
+              usePointStyle: true,
+              pointStyle: 'circle'
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            titleFont: {
+              size: 14,
+              weight: 'bold'
+            },
+            bodyFont: {
+              size: 14
+            },
+            padding: 10,
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ': ' + context.raw + '%';
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function showModal(nivel) {
+    var modal = document.getElementById('modalNivel' + nivel);
+    modal.style.display = 'block';
+    
+    // Pequeno delay para garantir que o modal está visível
+    setTimeout(() => {
+      createChart(nivel);
+    }, 100);
+  }
+
+  function closeModal(nivel) {
+    var modal = document.getElementById('modalNivel' + nivel);
+    modal.style.display = 'none';
+    
+    if (chartInstances[nivel]) {
+      chartInstances[nivel].destroy();
+      delete chartInstances[nivel];
+    }
+  }
+
+  // Fechar modal quando clicar fora dele
+  window.onclick = function(event) {
+    <% @chart_data_por_nivel.each do |nivel, _| %>
+      var modal = document.getElementById('modalNivel<%= nivel %>');
+      if (event.target == modal) {
+        closeModal('<%= nivel %>');
+      }
+    <% end %>
+  }
+
+  // Ajustar tamanho do canvas quando a janela é redimensionada
+  window.addEventListener('resize', function() {
+    <% @chart_data_por_nivel.each do |nivel, _| %>
+      if (chartInstances['<%= nivel %>']) {
+        chartInstances['<%= nivel %>'].resize();
+      }
+    <% end %>
+  });
+</script>
 
 <section class="pop-up-calcularNivel d-flex-center-center hidden" id="popup_CalcularNivel">
     <div class="popup-main d-flex-center-evenly flex-column" style="height:150px;" id="popup_CalcularNivelMain">
