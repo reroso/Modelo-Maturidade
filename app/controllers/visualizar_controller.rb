@@ -13,8 +13,10 @@ class VisualizarController < ApplicationController
 
         if @modelo != 0
             prepare_chart_data
+            prepare_artifact_data
             @nivel_atual = avaliar_nivel_maturidade
         end
+
     end
 
     def atualizar_opcao
@@ -359,4 +361,93 @@ class VisualizarController < ApplicationController
         # Disponibiliza os dados para a view
         @chart_data_por_nivel
     end
+
+    def prepare_artifact_data
+        Rails.logger.debug "\n=== PREPARANDO DADOS DOS ARTEFATOS ==="
+        Rails.logger.debug "Modelo selecionado: #{@modelo}"
+        return if @modelo == 0
+
+        modelo_aplicado = ModeloAplicado.find(@modelo)
+        maturidade = Maturidade.find(modelo_aplicado.maturidade_id)
+
+        # Determina os níveis disponíveis
+        is_alpha = maturidade.menorNivel.to_s.match?(/[A-Za-z]/)
+        if is_alpha
+            nivel_atual = maturidade.menorNivel.upcase.ord - 64
+            maior_nivel = maturidade.maiorNivel.upcase.ord - 64
+            niveis = (maior_nivel..nivel_atual).to_a.reverse.map { |n| (n + 64).chr }
+        else
+            nivel_atual = maturidade.menorNivel.to_i
+            maior_nivel = maturidade.maiorNivel.to_i
+            niveis = (nivel_atual..maior_nivel).to_a
+        end
+
+        Rails.logger.debug "Níveis disponíveis: #{niveis.inspect}"
+
+        # Prepara dados para cada nível
+        @artifact_data_por_nivel = {}
+
+        niveis.each do |nivel|
+            artefatos = []
+
+            case maturidade.nivelEscolha
+            when "2" # Resultados
+                Rails.logger.debug "Modo de avaliação: Resultados - Nível #{nivel}"
+                @dimensaos.each do |dimensao|
+                    next unless dimensao.maturidade_id == @opcao
+
+                    @processos.each do |processo|
+                        next unless dimensao.id == processo.dimensao_id
+
+                        @resultados.each do |resultado|
+                            next unless processo.id == resultado.processo_id && 
+                                      resultado.nivel_selecionado.to_s == nivel.to_s
+
+                            resultado.docs.each do |doc|
+                                next unless doc.modelo == @modelo
+
+                                artefatos << {
+                                    descricao: doc.descricao,
+                                    classificacao: doc.classificacao
+                                }
+                            end
+                        end
+                    end
+                end
+            when "1" # Processos
+                Rails.logger.debug "Modo de avaliação: Processos - Nível #{nivel}"
+                @dimensaos.each do |dimensao|
+                    next unless dimensao.maturidade_id == @opcao
+
+                    @processos.each do |processo|
+                        next unless dimensao.id == processo.dimensao_id && 
+                                  processo.nivel_selecionado.to_s == nivel.to_s
+
+                        processo.docs.each do |doc|
+                            next unless doc.modelo == @modelo
+
+                            artefatos << {
+                                descricao: doc.descricao,
+                                classificacao: doc.classificacao
+                            }
+                        end
+                    end
+                end
+            end
+
+            @artifact_data_por_nivel[nivel] = artefatos
+        end
+
+        Rails.logger.debug "\nDados dos artefatos gerados por nível:"
+        @artifact_data_por_nivel.each do |nivel, artefatos|
+            Rails.logger.debug "Nível #{nivel}:"
+            artefatos.each do |artefato|
+                Rails.logger.debug "  - #{artefato[:descricao]}: #{artefato[:classificacao]}"
+            end
+        end
+        Rails.logger.debug "=== FIM DA PREPARAÇÃO DOS DADOS DOS ARTEFATOS ===\n"
+
+        @artifact_data_por_nivel
+    end
+
 end

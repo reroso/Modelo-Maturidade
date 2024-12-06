@@ -276,7 +276,7 @@
                                         <p>Artefato não classificado</p>
                                       </div>
                                     <% end %>
-                                </div>
+                                </div> 
                               <%end%>
                             <% end %>                  
                           </div>	
@@ -476,6 +476,173 @@
 </section>
 
 <style>
+  #threejs-container {
+    width: 100%;
+    height: 400px;
+    margin-top: 20px;
+  }
+  .legend {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+  }
+  .legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+</style>
+
+<div id="threejs-container"></div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Configuração básica da cena
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth * 0.8, 400); // Ajustar a altura do renderizador
+    renderer.setClearColor(0xFFFFFF, 1); // Define o fundo do gráfico como branco
+    document.getElementById('threejs-container').appendChild(renderer.domElement);
+
+    // Adicionando OrbitControls
+    var controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+    // Dados dos artefatos por nível
+    var artifactData = <%= @artifact_data_por_nivel.to_json.html_safe %>;
+
+    var colors = {
+      1: 0x4CAF50, // Verde para Atende Totalmente
+      2: 0xFFEB3B, // Amarelo para Atende Parcialmente
+      3: 0xF44336, // Vermelho para Não Atende
+      default: 0x9E9E9E // Cinza para Não Classificado
+    };
+
+    var heights = {
+      1: 6, // Maior para Atende Totalmente
+      2: 4, // Intermediário para Atende Parcialmente
+      3: 2,  // Menor para Não Atende
+      default: 1  // Marca no chão para Não Avaliado
+    };
+
+    var maxColumns = Math.max(...Object.values(artifactData).map(level => level.length));
+    var columnWidth = 1.0; // Largura padrão de cada coluna
+
+    Object.keys(artifactData).forEach(function(nivel, nivelIndex) {
+      var artefatos = artifactData[nivel];
+      var nivelWidth = maxColumns * columnWidth; // Largura total do nível
+      var spacing = nivelWidth / artefatos.length; // Espaçamento entre as colunas
+      var xOffset = 0; // Resetar xOffset para cada nível
+
+      artefatos.forEach(function(artefato, index) {
+        var color = colors[artefato.classificacao] || colors.default;
+        var height = heights[artefato.classificacao] || 1;
+        var geometry = new THREE.BoxGeometry(spacing * 0.8, height, columnWidth);
+        var material = new THREE.MeshBasicMaterial({color: color});
+        var building = new THREE.Mesh(geometry, material);
+        building.position.set(xOffset, height / 2, nivelIndex * -2);
+        scene.add(building);
+
+        // Adiciona texto para cada artefato apenas uma vez
+        if (index === 0) { // Apenas para o primeiro artefato de cada nível
+          var loader = new THREE.FontLoader();
+          loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+            var textGeometry = new THREE.TextGeometry('Nivel ' + nivel, {
+              font: font,
+              size: 0.5,
+              height: 0.1
+            });
+            var textMaterial = new THREE.MeshBasicMaterial({color: 0x000000});
+            var textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            textMesh.position.set(xOffset, height + 0.5, nivelIndex * -2);
+            scene.add(textMesh);
+
+            // Atualiza a rotação do texto a cada frame
+            animateText(textMesh);
+          });
+        }
+
+        xOffset += spacing; // Ajuste para espaçamento entre as barras
+      });
+
+      function animateText(textMesh) {
+        requestAnimationFrame(() => animateText(textMesh));
+        textMesh.lookAt(camera.position); // Faz o texto sempre olhar para a câmera
+      }
+    });
+
+    camera.position.set(5, 5, 15);
+    camera.lookAt(new THREE.Vector3(5, 0, 0));
+
+    // Função de animação
+    var animate = function () {
+      requestAnimationFrame(animate);
+      controls.update(); // Atualiza os controles a cada frame
+      renderer.render(scene, camera);
+    };
+
+    animate();
+  });
+</script>
+
+<script>
+  function mostra_Grafico() {
+    let popup = document.getElementById('popup_Grafico');
+    if(popup.classList.contains('hidden')) {
+        popup.classList.remove('hidden');
+    } else {
+        popup.classList.add('hidden');
+    }
+  }
+</script>
+
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-color" style="background-color: #4CAF50;"></div>
+    <span>Atende Totalmente</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-color" style="background-color: #FFEB3B;"></div>
+    <span>Atende Parcialmente</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-color" style="background-color: #F44336;"></div>
+    <span>Não Atende</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-color" style="background-color: #9E9E9E;"></div>
+    <span>Não Classificado</span>
+  </div>
+</div>
+
+<div id="graficoModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="fecha_Grafico()">&times;</span>
+  </div>
+</div>
+
+<script>
+  function fecha_Grafico() {
+    var modal = document.getElementById("graficoModal");
+    modal.style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    var modal = document.getElementById("graficoModal");
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+<style>
   .modal {
     display: none;
     position: fixed;
@@ -617,16 +784,18 @@
 </style>
 
 <div id="modaisGraficos">
-  <% @chart_data_por_nivel.each do |nivel, chart_data| %>
-    <div id="modalNivel<%= nivel %>" class="modal">
-      <div class="modal-content">
-        <span class="close" onclick="closeModal('<%= nivel %>')">&times;</span>
-        <h3>Gráfico do Nível <%= nivel %></h3>
-        <div class="canvas-container">
-          <canvas id="graficoNivel<%= nivel %>"></canvas>
+  <% if @chart_data_por_nivel.present? %>
+    <% @chart_data_por_nivel.each do |nivel, chart_data| %>
+      <div id="modalNivel<%= nivel %>" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeModal('<%= nivel %>')">&times;</span>
+          <h3>Gráfico do Nível <%= nivel %></h3>
+          <div class="canvas-container">
+            <canvas id="graficoNivel<%= nivel %>"></canvas>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
   <% end %>
 </div>
 
@@ -635,8 +804,10 @@
   var chartData = {};
 
   // Armazenar os dados dos gráficos
-  <% @chart_data_por_nivel.each do |nivel, data| %>
-    chartData['<%= nivel %>'] = <%= raw data.to_json %>;
+  <% if @chart_data_por_nivel.present? %>
+    <% @chart_data_por_nivel.each do |nivel, data| %>
+      chartData['<%= nivel %>'] = <%= raw data.to_json %>;
+    <% end %>
   <% end %>
 
   function createChart(nivel) {
@@ -739,20 +910,24 @@
 
   // Fechar modal quando clicar fora dele
   window.onclick = function(event) {
-    <% @chart_data_por_nivel.each do |nivel, _| %>
-      var modal = document.getElementById('modalNivel<%= nivel %>');
-      if (event.target == modal) {
-        closeModal('<%= nivel %>');
-      }
+    <% if @chart_data_por_nivel.present? %>
+      <% @chart_data_por_nivel.each do |nivel, _| %>
+        var modal = document.getElementById('modalNivel<%= nivel %>');
+        if (event.target == modal) {
+          closeModal('<%= nivel %>');
+        }
+      <% end %>
     <% end %>
   }
 
   // Ajustar tamanho do canvas quando a janela é redimensionada
   window.addEventListener('resize', function() {
-    <% @chart_data_por_nivel.each do |nivel, _| %>
-      if (chartInstances['<%= nivel %>']) {
-        chartInstances['<%= nivel %>'].resize();
-      }
+    <% if @chart_data_por_nivel.present? %>
+      <% @chart_data_por_nivel.each do |nivel, _| %>
+        if (chartInstances['<%= nivel %>']) {
+          chartInstances['<%= nivel %>'].resize();
+        }
+      <% end %>
     <% end %>
   });
 </script>
