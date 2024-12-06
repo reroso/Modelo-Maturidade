@@ -497,8 +497,6 @@
   }
 </style>
 
-<div id="threejs-container"></div>
-
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     // Configuração básica da cena
@@ -600,30 +598,6 @@
   }
 </script>
 
-<div class="legend">
-  <div class="legend-item">
-    <div class="legend-color" style="background-color: #4CAF50;"></div>
-    <span>Atende Totalmente</span>
-  </div>
-  <div class="legend-item">
-    <div class="legend-color" style="background-color: #FFEB3B;"></div>
-    <span>Atende Parcialmente</span>
-  </div>
-  <div class="legend-item">
-    <div class="legend-color" style="background-color: #F44336;"></div>
-    <span>Não Atende</span>
-  </div>
-  <div class="legend-item">
-    <div class="legend-color" style="background-color: #9E9E9E;"></div>
-    <span>Não Classificado</span>
-  </div>
-</div>
-
-<div id="graficoModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="fecha_Grafico()">&times;</span>
-  </div>
-</div>
 
 <script>
   function fecha_Grafico() {
@@ -846,7 +820,7 @@
             },
             pointLabels: {
               font: {
-                size: 14,
+                size: 18,
                 weight: 'bold'
               },
               color: '#000'
@@ -858,33 +832,73 @@
             position: 'bottom',
             labels: {
               font: {
-                size: 12,
+                size: 16,
                 weight: 'bold'
               },
-              padding: 15,
-              color: '#000',
-              usePointStyle: true,
-              pointStyle: 'circle'
+              padding: 20,
+              color: '#000'
             }
           },
           tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
             titleFont: {
-              size: 14,
-              weight: 'bold'
+              size: 16
             },
             bodyFont: {
-              size: 14
+              size: 16
             },
-            padding: 10,
+            padding: 12,
             callbacks: {
               label: function(context) {
                 return context.dataset.label + ': ' + context.raw + '%';
               }
             }
+          },
+          datalabels: {
+            color: '#000',
+            font: {
+              weight: 'bold',
+              size: 14
+            },
+            formatter: function(value) {
+              return value + '%';
+            }
+          },
+          title: {
+            display: true,
+            text: [
+              <% if @modelo != 0 %>
+              'Instituição: <%= ModeloAplicado.find(@modelo).instituicao %>',
+              'Modelo: <%= Maturidade.find(ModeloAplicado.find(@modelo).maturidade_id).nome %>',
+              'Método: <%= ModeloAplicado.find(@modelo).metodo %>',
+              'Domínio: <%= ModeloAplicado.find(@modelo).dominio %>',
+              'Nível do Modelo: <%= @nivel_atual %>'
+              <% else %>
+              'Selecione um modelo para visualizar as informações'
+              <% end %>
+            ],
+            font: {
+              size: 14,
+              weight: 'bold'
+            },
+            padding: {
+              top: 10,
+              bottom: 10
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const label = context.label || '';
+                const value = context.raw || 0;
+                const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
+                const percentage = ((value * 100) / total).toFixed(1);
+                return `${label}: ${value} (${percentage}%)`;
+              }
+            }
           }
         }
-      }
+      },
+      plugins: [ChartDataLabels]
     });
   }
 
@@ -946,20 +960,14 @@
   </section>
 
   <!-- Modal do Gráfico -->
-  <section class="pop-up-calcularNivel d-flex-center-center hidden" id="popup_Grafico">
-      <div class="popup-main d-flex-center-evenly flex-column" style="height: auto; min-height: 700px; width: 900px; padding: 20px;" id="popup_GraficoMain">
-          <button onclick="mostra_Grafico()" style="align-self: flex-end; background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-size: 18px; cursor: pointer; margin-bottom: 10px;">X</button>
-          <div class="popup-content" style="width: 100%; height: 600px;">
-              <canvas id="classificacoesChart" style="width: 100%; height: 100%;"></canvas>
-              <div class="text-center" style="margin-top: 15px;">
-                  <button onclick="downloadChart()" class="btn btn-primary" style="padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                      <%= image_tag('icons/download.svg', width: '20px', height: '20px', style: 'margin-right: 5px; vertical-align: middle;') %>
-                      Download Gráfico
-                  </button>
-              </div>
-          </div>
-      </div>
-  </section>
+<section class="pop-up-calcularNivel d-flex-center-center hidden" id="popup_Grafico">
+    <div class="popup-main d-flex-center-evenly flex-column" style="height: auto; min-height: 800px; width: 90vw; max-width: 1800px; padding: 20px;" id="popup_GraficoMain">
+        <button onclick="mostra_Grafico()" style="align-self: flex-end; background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-size: 18px; cursor: pointer; margin-bottom: 10px;">X</button>
+        <div class="popup-content" style="width: 100%; height: 700px; overflow: hidden;">
+            <div id="threejs-container" style="width: 100%; height: 100%; position: relative;"></div>
+        </div>
+    </div>
+</section>
 
 <script>
     //*Função de expandir e retrair as camadas dos modelos
