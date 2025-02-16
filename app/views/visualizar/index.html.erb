@@ -33,7 +33,7 @@
                 </div>
                 <div onclick="mostra_Grafico()" class="header-link d-flex-center-start h-fit" style="margin-left: 20px;">
                     <img src="https://icons.iconarchive.com/icons/justicon/free-simple-line/256/Website-Analysis-Browser-Seo-Data-icon.png" width="20" height="20" alt="Chart Icon">
-                    <a>Ver Gráfico</a>
+                    <a>Ver Gráfico Geral</a>
                 </div>
             <% end %>
         </div>
@@ -498,103 +498,31 @@
 </style>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Configuração básica da cena
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-    var renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth * 0.8, 400); // Ajustar a altura do renderizador
-    renderer.setClearColor(0xFFFFFF, 1); // Define o fundo do gráfico como branco
-    document.getElementById('threejs-container').appendChild(renderer.domElement);
-
-    // Adicionando OrbitControls
-    var controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-    // Dados dos artefatos por nível
-    var artifactData = <%= @artifact_data_por_nivel.to_json.html_safe %>;
-
-    var colors = {
-      1: 0x4CAF50, // Verde para Atende Totalmente
-      2: 0xFFEB3B, // Amarelo para Atende Parcialmente
-      3: 0xF44336, // Vermelho para Não Atende
-      default: 0x9E9E9E // Cinza para Não Classificado
-    };
-
-    var heights = {
-      1: 6, // Maior para Atende Totalmente
-      2: 4, // Intermediário para Atende Parcialmente
-      3: 2,  // Menor para Não Atende
-      default: 1  // Marca no chão para Não Avaliado
-    };
-
-    var maxColumns = Math.max(...Object.values(artifactData).map(level => level.length));
-    var columnWidth = 1.0; // Largura padrão de cada coluna
-
-    Object.keys(artifactData).forEach(function(nivel, nivelIndex) {
-      var artefatos = artifactData[nivel];
-      var nivelWidth = maxColumns * columnWidth; // Largura total do nível
-      var spacing = nivelWidth / artefatos.length; // Espaçamento entre as colunas
-      var xOffset = 0; // Resetar xOffset para cada nível
-
-      artefatos.forEach(function(artefato, index) {
-        var color = colors[artefato.classificacao] || colors.default;
-        var height = heights[artefato.classificacao] || 1;
-        var geometry = new THREE.BoxGeometry(spacing * 0.8, height, columnWidth);
-        var material = new THREE.MeshBasicMaterial({color: color});
-        var building = new THREE.Mesh(geometry, material);
-        building.position.set(xOffset, height / 2, nivelIndex * -2);
-        scene.add(building);
-
-        // Adiciona texto para cada artefato apenas uma vez
-        if (index === 0) { // Apenas para o primeiro artefato de cada nível
-          var loader = new THREE.FontLoader();
-          loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-            var textGeometry = new THREE.TextGeometry('Nivel ' + nivel, {
-              font: font,
-              size: 0.5,
-              height: 0.1
-            });
-            var textMaterial = new THREE.MeshBasicMaterial({color: 0x000000});
-            var textMesh = new THREE.Mesh(textGeometry, textMaterial);
-            textMesh.position.set(xOffset, height + 0.5, nivelIndex * -2);
-            scene.add(textMesh);
-
-            // Atualiza a rotação do texto a cada frame
-            animateText(textMesh);
-          });
-        }
-
-        xOffset += spacing; // Ajuste para espaçamento entre as barras
-      });
-
-      function animateText(textMesh) {
-        requestAnimationFrame(() => animateText(textMesh));
-        textMesh.lookAt(camera.position); // Faz o texto sempre olhar para a câmera
-      }
-    });
-
-    camera.position.set(5, 5, 15);
-    camera.lookAt(new THREE.Vector3(5, 0, 0));
-
-    // Função de animação
-    var animate = function () {
-      requestAnimationFrame(animate);
-      controls.update(); // Atualiza os controles a cada frame
-      renderer.render(scene, camera);
-    };
-
-    animate();
-  });
-</script>
-
-<script>
   function mostra_Grafico() {
-    let popup = document.getElementById('popup_Grafico');
-    if(popup.classList.contains('hidden')) {
-        popup.classList.remove('hidden');
-    } else {
-        popup.classList.add('hidden');
-    }
+      let popup = document.getElementById('popup_Grafico');
+      
+      if(popup.classList.contains('hidden')) {
+          popup.classList.remove('hidden');
+          
+          // Adiciona verificação do canvas
+          const canvas = document.getElementById('classificacoesChart');
+          if(canvas) {
+              var ctx = canvas.getContext('2d');
+              <% if @modelo != 0 && @general_chart_data.present? %>
+                  window.chartInstance = new Chart(ctx, {
+                      type: 'radar',
+                      data: <%= raw @general_chart_data.to_json %>,
+                      // ... resto das opções do gráfico
+                  });
+              <% end %>
+          }
+      } else {
+          popup.classList.add('hidden');
+          // Destroi o gráfico quando o modal é fechado
+          if(window.chartInstance) {
+              window.chartInstance.destroy();
+          }
+      }
   }
 </script>
 
@@ -615,6 +543,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <style>
   .modal {
@@ -964,7 +894,8 @@
     <div class="popup-main d-flex-center-evenly flex-column" style="height: auto; min-height: 800px; width: 90vw; max-width: 1800px; padding: 20px;" id="popup_GraficoMain">
         <button onclick="mostra_Grafico()" style="align-self: flex-end; background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-size: 18px; cursor: pointer; margin-bottom: 10px;">X</button>
         <div class="popup-content" style="width: 100%; height: 700px; overflow: hidden;">
-            <div id="threejs-container" style="width: 100%; height: 100%; position: relative;"></div>
+            <!-- Adicione o canvas aqui -->
+            <canvas id="classificacoesChart" style="width: 100%; height: 100%;"></canvas>
         </div>
     </div>
 </section>
@@ -1101,11 +1032,11 @@ function mostra_Grafico() {
     if(popup.classList.contains('hidden')) {
         popup.classList.remove('hidden');
         // Inicializa o gráfico quando o modal é aberto
-        <% if @modelo != 0 && @chart_data.present? %>
+        <% if @modelo != 0 && @general_chart_data.present? %>
             var ctx = document.getElementById('classificacoesChart').getContext('2d');
             window.chartInstance = new Chart(ctx, {
                 type: 'radar',
-                data: <%= raw @chart_data.to_json %>,
+                data: <%= raw @general_chart_data.to_json %>,
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -1154,7 +1085,7 @@ function mostra_Grafico() {
                             padding: 12,
                             callbacks: {
                                 label: function(context) {
-                                    return context.dataset.label + ': ' + context.raw + '%';
+                                    return 'Nível ' + context.label + ': ' + context.raw + '% de atendimento total';
                                 }
                             }
                         },
@@ -1172,11 +1103,12 @@ function mostra_Grafico() {
                             display: true,
                             text: [
                                 <% if @modelo != 0 %>
+                                'Visão Geral por Níveis',
                                 'Instituição: <%= ModeloAplicado.find(@modelo).instituicao %>',
                                 'Modelo: <%= Maturidade.find(ModeloAplicado.find(@modelo).maturidade_id).nome %>',
                                 'Método: <%= ModeloAplicado.find(@modelo).metodo %>',
                                 'Domínio: <%= ModeloAplicado.find(@modelo).dominio %>',
-                                'Nível do Modelo: <%= @nivel_atual %>'
+                                'Nível Atual do Modelo: <%= @nivel_atual %>'
                                 <% else %>
                                 'Selecione um modelo para visualizar as informações'
                                 <% end %>
@@ -1189,17 +1121,6 @@ function mostra_Grafico() {
                                 top: 10,
                                 bottom: 10
                             }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
-                                    const percentage = ((value * 100) / total).toFixed(1);
-                                    return `${label}: ${value} (${percentage}%)`;
-                                }
-                            }
                         }
                     }
                 },
@@ -1208,6 +1129,10 @@ function mostra_Grafico() {
         <% end %>
     } else {
         popup.classList.add('hidden');
+        // Destroi o gráfico quando o modal é fechado para evitar problemas de memória
+        if(window.chartInstance) {
+            window.chartInstance.destroy();
+        }
     }
 }
 

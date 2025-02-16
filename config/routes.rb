@@ -86,7 +86,7 @@ Rails.application.routes.draw do
   post "editar/atualizar_opcao", to:"editar#atualizar_opcao"
   post "avaliar/atualizar_opcao", to:"avaliar#atualizar_opcao"
   post "selecionar/atualizar_opcao", to:"selecionar#atualizar_opcao"
-
+  
   # rotas para o devise
 
   devise_for :users, controllers: {

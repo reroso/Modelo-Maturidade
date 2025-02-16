@@ -13,7 +13,7 @@ class VisualizarController < ApplicationController
 
         if @modelo != 0
             prepare_chart_data
-            prepare_artifact_data
+            prepare_general_chart_data
             @nivel_atual = avaliar_nivel_maturidade
         end
 
@@ -219,7 +219,7 @@ class VisualizarController < ApplicationController
         Rails.logger.debug "Modelo selecionado: #{@modelo}"
         
         return if @modelo == 0
-
+    
         modelo_aplicado = ModeloAplicado.find(@modelo)
         maturidade = Maturidade.find(modelo_aplicado.maturidade_id)
         
@@ -237,22 +237,152 @@ class VisualizarController < ApplicationController
         
         Rails.logger.debug "Níveis disponíveis: #{niveis.inspect}"
         
-        # Prepara dados para cada nível
         @chart_data_por_nivel = {}
         
         niveis.each do |nivel|
-            classificacoes = {
-                atende_totalmente: 0,   # 1
-                atende_parcialmente: 0, # 2
-                nao_atende: 0,         # 3
-                nao_classificado: 0    # nil ou outro
-            }
-            
-            total_docs = 0
+            processos_do_nivel = []
+            dados_processos = {}
             
             case maturidade.nivelEscolha
             when "2" # Resultados
-                Rails.logger.debug "Modo de avaliação: Resultados - Nível #{nivel}"
+                @dimensaos.each do |dimensao|
+                    next unless dimensao.maturidade_id == @opcao
+                    
+                    @processos.each do |processo|
+                        next unless dimensao.id == processo.dimensao_id
+                        
+                        @resultados.each do |resultado|
+                            next unless processo.id == resultado.processo_id && 
+                                      resultado.nivel_selecionado.to_s == nivel.to_s
+                            
+                            # Adiciona o processo se ainda não estiver na lista
+                            unless processos_do_nivel.include?(processo.descricao)
+                                processos_do_nivel << processo.descricao
+                                dados_processos[processo.descricao] = {
+                                    total_docs: 0,
+                                    docs_atende_totalmente: 0
+                                }
+                            end
+                            
+                            # Conta os documentos deste processo
+                            resultado.docs.each do |doc|
+                                next unless doc.modelo == @modelo
+                                
+                                dados_processos[processo.descricao][:total_docs] += 1
+                                if doc.classificacao == 1 # Atende Totalmente
+                                    dados_processos[processo.descricao][:docs_atende_totalmente] += 1
+                                end
+                            end
+                        end
+                    end
+                end
+                
+            when "1" # Processos
+                @dimensaos.each do |dimensao|
+                    next unless dimensao.maturidade_id == @opcao
+                    
+                    @processos.each do |processo|
+                        next unless dimensao.id == processo.dimensao_id && 
+                                  processo.nivel_selecionado.to_s == nivel.to_s
+                        
+                        # Adiciona o processo
+                        processos_do_nivel << processo.descricao
+                        dados_processos[processo.descricao] = {
+                            total_docs: 0,
+                            docs_atende_totalmente: 0
+                        }
+                        
+                        # Conta os documentos deste processo
+                        processo.docs.each do |doc|
+                            next unless doc.modelo == @modelo
+                            
+                            dados_processos[processo.descricao][:total_docs] += 1
+                            if doc.classificacao == 1 # Atende Totalmente
+                                dados_processos[processo.descricao][:docs_atende_totalmente] += 1
+                            end
+                        end
+                    end
+                end
+            end
+            
+            next if processos_do_nivel.empty?
+            
+            # Calcula as porcentagens para cada processo
+            porcentagens = processos_do_nivel.map do |processo|
+                dados = dados_processos[processo]
+                if dados[:total_docs] > 0
+                    (dados[:docs_atende_totalmente].to_f / dados[:total_docs] * 100).round(1)
+                else
+                    0.0
+                end
+            end
+            
+            # Prepara dados do gráfico radar para este nível
+            @chart_data_por_nivel[nivel] = {
+                labels: processos_do_nivel,
+                datasets: [{
+                    label: "Atendimento Total dos Processos - Nível #{nivel}",
+                    data: porcentagens,
+                    fill: true,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgb(75, 192, 192)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgb(75, 192, 192)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(75, 192, 192)',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            }
+            
+            Rails.logger.debug "\nNível #{nivel}:"
+            processos_do_nivel.each_with_index do |processo, index|
+                Rails.logger.debug "  #{processo}:"
+                Rails.logger.debug "    Total de documentos: #{dados_processos[processo][:total_docs]}"
+                Rails.logger.debug "    Documentos que atendem totalmente: #{dados_processos[processo][:docs_atende_totalmente]}"
+                Rails.logger.debug "    Porcentagem: #{porcentagens[index]}%"
+            end
+        end
+        
+        Rails.logger.debug "=== FIM DA PREPARAÇÃO DOS DADOS DO GRÁFICO ===\n"
+        
+        @chart_data_por_nivel
+    end
+
+    def prepare_general_chart_data
+        Rails.logger.debug "\n=== PREPARANDO DADOS DO GRÁFICO GERAL ==="
+        Rails.logger.debug "Modelo selecionado: #{@modelo}"
+        
+        return if @modelo == 0
+    
+        modelo_aplicado = ModeloAplicado.find(@modelo)
+        maturidade = Maturidade.find(modelo_aplicado.maturidade_id)
+        
+        # Determina os níveis disponíveis
+        is_alpha = maturidade.menorNivel.to_s.match?(/[A-Za-z]/)
+        if is_alpha
+            nivel_atual = maturidade.menorNivel.upcase.ord - 64
+            maior_nivel = maturidade.maiorNivel.upcase.ord - 64
+            niveis = (maior_nivel..nivel_atual).to_a.reverse.map { |n| (n + 64).chr }
+        else
+            nivel_atual = maturidade.menorNivel.to_i
+            maior_nivel = maturidade.maiorNivel.to_i
+            niveis = (nivel_atual..maior_nivel).to_a
+        end
+        
+        Rails.logger.debug "Níveis disponíveis: #{niveis.inspect}"
+        
+        dados_niveis = {}
+        
+        niveis.each do |nivel|
+            dados_niveis[nivel] = {
+                total_docs: 0,
+                docs_atende_totalmente: 0
+            }
+            
+            case maturidade.nivelEscolha
+            when "2" # Resultados
                 @dimensaos.each do |dimensao|
                     next unless dimensao.maturidade_id == @opcao
                     
@@ -266,19 +396,16 @@ class VisualizarController < ApplicationController
                             resultado.docs.each do |doc|
                                 next unless doc.modelo == @modelo
                                 
-                                total_docs += 1
-                                case doc.classificacao
-                                when 1 then classificacoes[:atende_totalmente] += 1
-                                when 2 then classificacoes[:atende_parcialmente] += 1
-                                when 3 then classificacoes[:nao_atende] += 1
-                                else classificacoes[:nao_classificado] += 1
+                                dados_niveis[nivel][:total_docs] += 1
+                                if doc.classificacao == 1 # Atende Totalmente
+                                    dados_niveis[nivel][:docs_atende_totalmente] += 1
                                 end
                             end
                         end
                     end
                 end
+                
             when "1" # Processos
-                Rails.logger.debug "Modo de avaliação: Processos - Nível #{nivel}"
                 @dimensaos.each do |dimensao|
                     next unless dimensao.maturidade_id == @opcao
                     
@@ -289,165 +416,55 @@ class VisualizarController < ApplicationController
                         processo.docs.each do |doc|
                             next unless doc.modelo == @modelo
                             
-                            total_docs += 1
-                            case doc.classificacao
-                            when 1 then classificacoes[:atende_totalmente] += 1
-                            when 2 then classificacoes[:atende_parcialmente] += 1
-                            when 3 then classificacoes[:nao_atende] += 1
-                            else classificacoes[:nao_classificado] += 1
+                            dados_niveis[nivel][:total_docs] += 1
+                            if doc.classificacao == 1 # Atende Totalmente
+                                dados_niveis[nivel][:docs_atende_totalmente] += 1
                             end
                         end
                     end
                 end
             end
-
-            Rails.logger.debug "\nContagem de documentos para nível #{nivel}:"
-            Rails.logger.debug "Total de documentos: #{total_docs}"
-            classificacoes.each do |tipo, contagem|
-                Rails.logger.debug "#{tipo.to_s.humanize}: #{contagem}"
-            end
-
-            # Calcula porcentagens
-            porcentagens = {}
-            if total_docs > 0
-                classificacoes.each do |tipo, contagem|
-                    porcentagens[tipo] = (contagem.to_f / total_docs * 100).round(1)
-                end
+        end
+        
+        # Calcula as porcentagens para cada nível
+        porcentagens = niveis.map do |nivel|
+            dados = dados_niveis[nivel]
+            if dados[:total_docs] > 0
+                (dados[:docs_atende_totalmente].to_f / dados[:total_docs] * 100).round(1)
             else
-                classificacoes.keys.each { |tipo| porcentagens[tipo] = 0.0 }
+                0.0
             end
-
-            # Prepara dados do gráfico para este nível
-            @chart_data_por_nivel[nivel] = {
-                labels: ['Atende Totalmente', 'Atende Parcialmente', 'Não Atende', 'Não Classificado'],
-                datasets: [{
-                    label: "Distribuição de Classificações - Nível #{nivel}",
-                    data: [
-                        porcentagens[:atende_totalmente],
-                        porcentagens[:atende_parcialmente],
-                        porcentagens[:nao_atende],
-                        porcentagens[:nao_classificado]
-                    ],
-                    fill: true,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgb(75, 192, 192)',
-                    borderWidth: 2,
-                    pointBackgroundColor: [
-                        'rgb(75, 192, 192)',   # Verde para Atende Totalmente
-                        'rgb(255, 205, 86)',   # Amarelo para Atende Parcialmente
-                        'rgb(255, 99, 132)',   # Vermelho para Não Atende
-                        'rgb(201, 203, 207)'   # Cinza para Não Classificado
-                    ],
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: [
-                        'rgb(75, 192, 192)',   # Verde
-                        'rgb(255, 205, 86)',   # Amarelo
-                        'rgb(255, 99, 132)',   # Vermelho
-                        'rgb(201, 203, 207)'   # Cinza
-                    ],
-                    pointRadius: 5,
-                    pointHoverRadius: 7
-                }]
-            }
         end
         
-        Rails.logger.debug "\nDados dos gráficos gerados por nível:"
-        @chart_data_por_nivel.each do |nivel, data|
-            Rails.logger.debug "Nível #{nivel}: #{JSON.pretty_generate(data)}"
-        end
-        Rails.logger.debug "=== FIM DA PREPARAÇÃO DOS DADOS DO GRÁFICO ===\n"
+        # Prepara dados do gráfico radar geral
+        @general_chart_data = {
+            labels: niveis,
+            datasets: [{
+                label: "Porcentagem de Atendimento Total por Nível",
+                data: porcentagens,
+                fill: true,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgb(54, 162, 235)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgb(54, 162, 235)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(54, 162, 235)',
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        }
         
-        # Disponibiliza os dados para a view
-        @chart_data_por_nivel
-    end
-
-    def prepare_artifact_data
-        Rails.logger.debug "\n=== PREPARANDO DADOS DOS ARTEFATOS ==="
-        Rails.logger.debug "Modelo selecionado: #{@modelo}"
-        return if @modelo == 0
-
-        modelo_aplicado = ModeloAplicado.find(@modelo)
-        maturidade = Maturidade.find(modelo_aplicado.maturidade_id)
-
-        # Determina os níveis disponíveis
-        is_alpha = maturidade.menorNivel.to_s.match?(/[A-Za-z]/)
-        if is_alpha
-            nivel_atual = maturidade.menorNivel.upcase.ord - 64
-            maior_nivel = maturidade.maiorNivel.upcase.ord - 64
-            niveis = (maior_nivel..nivel_atual).to_a.reverse.map { |n| (n + 64).chr }
-        else
-            nivel_atual = maturidade.menorNivel.to_i
-            maior_nivel = maturidade.maiorNivel.to_i
-            niveis = (nivel_atual..maior_nivel).to_a
+        Rails.logger.debug "\nDados do gráfico geral:"
+        niveis.each_with_index do |nivel, index|
+            Rails.logger.debug "  Nível #{nivel}:"
+            Rails.logger.debug "    Total de documentos: #{dados_niveis[nivel][:total_docs]}"
+            Rails.logger.debug "    Documentos que atendem totalmente: #{dados_niveis[nivel][:docs_atende_totalmente]}"
+            Rails.logger.debug "    Porcentagem: #{porcentagens[index]}%"
         end
-
-        Rails.logger.debug "Níveis disponíveis: #{niveis.inspect}"
-
-        # Prepara dados para cada nível
-        @artifact_data_por_nivel = {}
-
-        niveis.each do |nivel|
-            artefatos = []
-
-            case maturidade.nivelEscolha
-            when "2" # Resultados
-                Rails.logger.debug "Modo de avaliação: Resultados - Nível #{nivel}"
-                @dimensaos.each do |dimensao|
-                    next unless dimensao.maturidade_id == @opcao
-
-                    @processos.each do |processo|
-                        next unless dimensao.id == processo.dimensao_id
-
-                        @resultados.each do |resultado|
-                            next unless processo.id == resultado.processo_id && 
-                                      resultado.nivel_selecionado.to_s == nivel.to_s
-
-                            resultado.docs.each do |doc|
-                                next unless doc.modelo == @modelo
-
-                                artefatos << {
-                                    descricao: doc.descricao,
-                                    classificacao: doc.classificacao
-                                }
-                            end
-                        end
-                    end
-                end
-            when "1" # Processos
-                Rails.logger.debug "Modo de avaliação: Processos - Nível #{nivel}"
-                @dimensaos.each do |dimensao|
-                    next unless dimensao.maturidade_id == @opcao
-
-                    @processos.each do |processo|
-                        next unless dimensao.id == processo.dimensao_id && 
-                                  processo.nivel_selecionado.to_s == nivel.to_s
-
-                        processo.docs.each do |doc|
-                            next unless doc.modelo == @modelo
-
-                            artefatos << {
-                                descricao: doc.descricao,
-                                classificacao: doc.classificacao
-                            }
-                        end
-                    end
-                end
-            end
-
-            @artifact_data_por_nivel[nivel] = artefatos
-        end
-
-        Rails.logger.debug "\nDados dos artefatos gerados por nível:"
-        @artifact_data_por_nivel.each do |nivel, artefatos|
-            Rails.logger.debug "Nível #{nivel}:"
-            artefatos.each do |artefato|
-                Rails.logger.debug "  - #{artefato[:descricao]}: #{artefato[:classificacao]}"
-            end
-        end
-        Rails.logger.debug "=== FIM DA PREPARAÇÃO DOS DADOS DOS ARTEFATOS ===\n"
-
-        @artifact_data_por_nivel
+        Rails.logger.debug "=== FIM DA PREPARAÇÃO DOS DADOS DO GRÁFICO GERAL ===\n"
+        
+        @general_chart_data
     end
 
 end
