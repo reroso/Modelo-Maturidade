@@ -41,7 +41,7 @@
                   <i id="plus-dimencao-<%= dimensao.id %>" class="fa-solid fa-plus"></i>
                   <i id="minus-dimencao-<%= dimensao.id %>" class="fa-solid fa-minus hidden"></i>
                 </div>
-                <h3 id="titulo-nivel-<%= dimensao.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>')"> <strong><%= contadorDimensaos %>- </strong><%= dimensao.descricao %></h3>
+                <h3 id="titulo-nivel-<%= dimensao.id %>" onclick="mostra_titulo('<%= dimensao.id %>')"> <strong><%= contadorDimensaos %>- </strong><%= dimensao.descricao %></h3>
                 <% if dimensao.nivel_selecionado %>
                   <%if maturidade_selecionada.tipoNivel == "1"%>
                     <%salvarDescricao = ""%>
@@ -89,7 +89,7 @@
                           <i id="plus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid fa-plus abrir_form_resultado_esperado"></i>
                           <i id="minus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid fa-minus hidden"></i>
                         </div>
-                        <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>')"><strong><%= contadorDimensaos %>.<%= contadorProcessos %> - </strong><%= processo.descricao %></h3>
+                        <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>')"><strong><%= contadorDimensaos %>.<%= contadorProcessos %> - </strong><%= processo.descricao %></h3>
                         <% if processo.nivel_selecionado %>
                           <%if maturidade_selecionada.tipoNivel == "1"%>
                             <%salvarDescricao = ""%>
@@ -168,12 +168,12 @@
                             <div id="resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="resultado">
                               <!--A== Header-Resultado -->
                               <div id="header-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-header d-flex-center-between resultado w-100">
-                                <div class="expandable-header-left d-flex-center-start" style="min-width: 100%!important;" onclick="show_todos_processos(1)"><!-- o 1 do id é o id da dimensão-->
+                                <div class="expandable-header-left d-flex-center-start" style="min-width: 100%!important;" onclick="show_todos_processos(<%= resultado.id %>)"><!-- o 1 do id é o id da dimensão-->
                                   <div onclick="expandeMain('resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')">
                                     <i id="plus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid fa-plus"></i>
                                     <i id="minus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid fa-minus hidden"></i>
                                   </div>
-                                  <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')"><strong><%= contadorDimensaos %>.<%= contadorProcessos %>.<%= contadorResultados %> - </strong><%= resultado.descricao %></h3>
+                                  <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')"><strong><%= contadorDimensaos %>.<%= contadorProcessos %>.<%= contadorResultados %> - </strong><%= resultado.descricao %></h3>
                                   <%if maturidade_selecionada.tipoNivel == "1"%>
                                     <%salvarDescricao = ""%>
                                     <%contadorExistencia = 0%>
@@ -255,14 +255,6 @@
         <% end %> <!-- /L -->
       <% end %> <!-- /M -->
     </section>
-
-
-
-
-
-
-  
-  
   </main>
 
   <section onclick="closeAll_popup(event)" class="popup-background d-flex-center-center hidden" id="popup_background">
@@ -301,7 +293,16 @@
 
   
 
+<style>
 
+  h3 {
+  width: auto; /* Permite que o h3 ocupe a largura disponível */
+  white-space: normal; /* Permite a quebra de linhas */
+  overflow: visible; /* Exibe o conteúdo excedente */
+  word-wrap: break-word; /* Força a quebra de palavras longas */
+  }
+  
+</style>
 
 
   <script>
