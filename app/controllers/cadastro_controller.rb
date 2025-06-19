@@ -68,8 +68,15 @@ class CadastroController < ApplicationController
         processo.dimensao_id = params[:dimensao_id]
         processo.save
 
-        opcao = params[:opcao]
-        redirect_to cadastro_path(opcao: opcao)
+        respond_to do |format|
+            format.html {
+                opcao = params[:opcao]
+                redirect_to cadastro_path(opcao: opcao)
+            }
+            format.json {
+                render json: { id: processo.id, descricao: processo.descricao, dimensao_id: processo.dimensao_id }
+            }
+        end
     end
 
     def salvar_processo
@@ -77,16 +84,21 @@ class CadastroController < ApplicationController
         processo.descricao = params[:descricao]
         processo.save
 
-        opcao = params[:opcao]
-        redirect_to cadastro_path(opcao: opcao)
+        respond_to do |format|
+            format.html { opcao = params[:opcao]; redirect_to cadastro_path(opcao: opcao) }
+            format.json { render json: { id: processo.id, descricao: processo.descricao, dimensao_id: processo.dimensao_id } }
+        end
     end
 
-    def excluir_processo #######
+    def excluir_processo
         processo = Processo.find(params[:id])
+        dimensao_id = processo.dimensao_id
         processo.destroy
 
-        opcao = params[:opcao]
-        redirect_to cadastro_path(opcao: opcao)
+        respond_to do |format|
+            format.html { opcao = params[:opcao]; redirect_to cadastro_path(opcao: opcao) }
+            format.json { render json: { id: params[:id], dimensao_id: dimensao_id } }
+        end
     end
 
     def alterar_processo
@@ -110,8 +122,15 @@ class CadastroController < ApplicationController
         resultado.processo_id = params[:processo_id]
         resultado.save
 
-        opcao = params[:opcao]
-        redirect_to cadastro_path(opcao: opcao)
+        respond_to do |format|
+            format.html {
+                opcao = params[:opcao]
+                redirect_to cadastro_path(opcao: opcao)
+            }
+            format.json {
+                render json: { id: resultado.id, descricao: resultado.descricao, processo_id: resultado.processo_id }
+            }
+        end
     end
 
     def salvar_resultado

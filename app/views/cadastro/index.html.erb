@@ -77,7 +77,7 @@
     <% @dimensaos.each do |dimensao| %>
     <%if dimensao.maturidade_id == @opcao%>
     <!--# Início da Dimensão X -->
-      <div id="dimencao-<%= dimensao.id %>" class="dimencao dimensao-lista">
+      <div id="dimencao-<%= dimensao.id %>" class="dimencao dimensao-lista" data-resultado-escolha="<%= salvar_resultado_escolha %>">
         <!--# Início do Header da Dimensão X -->
         <div id="header-dimencao-<%= dimensao.id %>" class="expandable-header d-flex-center-between dimencao w-100">
           <!-- #expandeMain(grau do modelo + '-' + id) -->
@@ -86,7 +86,7 @@
               <i id="plus-dimencao-<%= dimensao.id %>"  class="icon-plus"></i>
               <i id="minus-dimencao-<%= dimensao.id %>"  class="icon-minus hidden"></i>
             </div>
-            <h3 id="titulo-nivel-<%= dimensao.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>')"><strong></strong><%= dimensao.descricao %></h3>
+            <h3 id="titulo-nivel-<%= dimensao.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>')"><strong class="numero-dimensao"></strong><%= dimensao.descricao %></h3>
             
             <%if maturidade_selecionada.nivelEscolha == "3"%>
               <form id="meu_formulario_dimensoes" action="/cadastro/<%= dimensao.id %>/salvar_dimensao_nivel" method="post">
@@ -209,7 +209,7 @@
           <%if dimensao.id == processo.dimensao_id%>
 
           <!--# Início do Processo Y da Dimensão X -->
-          <div id="processo-<%= dimensao.id %>-<%= processo.id %>" class="processo">
+          <div id="processo-<%= dimensao.id %>-<%= processo.id %>" class="processo processo-lista">
 
             <!--# Início do cabeçalho do Processo Y da Dimensão X -->
             <div id="header-processo-<%= dimensao.id %>-<%= processo.id %>" class="expandable-header d-flex-center-between processo w-100">
@@ -224,7 +224,7 @@
                   <i id="plus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid icon-caret-right abrir_form_resultado_esperado"></i>   
                 <%end%>                
                 
-                <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>" style="height: auto; white-space: normal; word-wrap: break-word;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>')"><strong><%=contadorDimensaos%>.<%=contadorProcessos%> - </strong><%= processo.descricao %></h3>
+                <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>" style="height: auto; white-space: normal; word-wrap: break-word;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>')"><strong class="numero-processo"></strong><%= processo.descricao %></h3>
 
                 <%if maturidade_selecionada.nivelEscolha == "1"%>
                   <form id="meu_formulario_resultados" action="/cadastroProcesso/<%= processo.id %>/salvar_processo_nivel" method="post">
@@ -332,7 +332,7 @@
                   <%else%>
                     <button onclick="biuldResultadoFormEditarProcesso(<%= dimensao.id %>, <%= processo.id %>, '<%= processo.descricao %>')" id="editar-processo-<%= processo.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
                   <%end%>
-                  <button id="excluir-processo-<%= processo.id %>" onclick="location.href='/cadastroProcesso/<%= processo.id %>/excluir_processo?opcao=<%= @opcao %>'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
+                  <button type="button" id="excluir-processo-<%= processo.id %>" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
                 </div>
               </div>
             </div>  
@@ -467,7 +467,7 @@
                   <div class="resultado-header-right">
                     <div class="expandable-header-right">
                       <button onclick="biuldEsperadoForm(<%= dimensao.id %>, <%= processo.id %>, <%= resultado.id %>, '<%= resultado.descricao %>')" id="editar-resultado-<%= resultado.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
-                      <button id="excluir-resultado-<%= resultado.id %>" onclick="location.href='/cadastroResultado/<%= resultado.id %>/excluir_resultado?opcao=<%= @opcao %>'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
+                      <button type="button" id="excluir-resultado-<%= resultado.id %>" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
                     </div>
                   </div>
                 </div>
@@ -802,7 +802,7 @@
       if (section) {
         const dimElements = Array.from(section.querySelectorAll('.dimencao.dimensao-lista')).filter(el => el.offsetParent !== null);
         dimElements.forEach((el, idx) => {
-          const strong = el.querySelector('h3 strong');
+          const strong = el.querySelector('h3 strong.numero-dimensao');
           if (strong) strong.textContent = (idx + 1) + ' - ';
         });
       }
@@ -820,14 +820,14 @@
             if (response.data && response.data.id) {
               // Monta o HTML da nova dimensão
               const html = `
-                <div id="dimencao-${response.data.id}" class="dimencao dimensao-lista">
+                <div id="dimencao-${response.data.id}" class="dimencao dimensao-lista" data-resultado-escolha="${salvar_resultado_escolha}">
                   <div id="header-dimencao-${response.data.id}" class="expandable-header d-flex-center-between dimencao w-100">
                     <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(${response.data.id})">
                       <div class="h-100" onclick="expandeMain('dimencao-${response.data.id}')">
                         <i id="plus-dimencao-${response.data.id}"  class="icon-plus"></i>
                         <i id="minus-dimencao-${response.data.id}"  class="icon-minus hidden"></i>
                       </div>
-                      <h3 id="titulo-nivel-${response.data.id}" style="max-height: 25px;" onclick="mostra_titulo('${response.data.id}')"><strong></strong> ${response.data.descricao}</h3>
+                      <h3 id="titulo-nivel-${response.data.id}" style="max-height: 25px;" onclick="mostra_titulo('${response.data.id}')"><strong class="numero-dimensao"></strong> ${response.data.descricao}</h3>
                     </div>
                     <div class="expandable-header-right">
                       <button onclick="biuldProcessoForm(${response.data.id})" id="novo-dimencao-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/plus.svg" width="16" height="16"></button>
@@ -844,7 +844,7 @@
               // Recalcula a numeração de todas as dimensões
               const dimElements = Array.from(section.querySelectorAll('.dimencao.dimensao-lista')).filter(el => el.offsetParent !== null);
               dimElements.forEach((el, idx) => {
-                const strong = el.querySelector('h3 strong');
+                const strong = el.querySelector('h3 strong.numero-dimensao');
                 if (strong) strong.textContent = (idx + 1) + ' - ';
               });
             }
@@ -876,8 +876,8 @@
               const h3 = document.querySelector(`#titulo-nivel-${response.data.id}`);
               if (h3) {
                 // Mantém o número e só troca o nome
-                const strong = h3.querySelector('strong');
-                h3.innerHTML = `<strong>${strong ? strong.textContent : ''}</strong>${response.data.descricao}`;
+                const strong = h3.querySelector('strong.numero-dimensao');
+                h3.innerHTML = `<strong class="numero-dimensao"></strong>${response.data.descricao}`;
               }
             }
             // Fecha o form de edição
@@ -917,7 +917,7 @@
               const section = document.querySelector('.main-content.main-utlizar-modelo');
               const dimElements = Array.from(section.querySelectorAll('.dimencao.dimensao-lista')).filter(el => el.offsetParent !== null);
               dimElements.forEach((el, idx) => {
-                const strong = el.querySelector('h3 strong');
+                const strong = el.querySelector('h3 strong.numero-dimensao');
                 if (strong) strong.textContent = (idx + 1) + ' - ';
               });
             }
@@ -927,5 +927,231 @@
           });
         }
       });
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Intercepta submit do form de criação de processo (delegação para forms dinâmicos)
+      document.body.addEventListener('submit', function(e) {
+        const form = e.target;
+        if (form && form.action && form.action.includes('/cadastroProcesso/incluir_processo')) {
+          e.preventDefault();
+          const descricao = form.querySelector('textarea[name="descricao"]').value;
+          const dimensao_id = form.querySelector('input[name="dimensao_id"]').value;
+          axios.post('/cadastroProcesso/incluir_processo', {
+            descricao: descricao,
+            dimensao_id: dimensao_id
+          }, {
+            headers: { 'Accept': 'application/json' }
+          })
+          .then(function(response) {
+            if (response.data && response.data.id) {
+              // Monta o HTML do novo processo
+              const mainDim = document.getElementById('main-dimencao-' + response.data.dimensao_id);
+              const dimDiv = document.getElementById('dimencao-' + response.data.dimensao_id);
+              const resultadoEscolha = dimDiv ? dimDiv.getAttribute('data-resultado-escolha') : null;
+              let iconeExpandir = '';
+              if (resultadoEscolha === '2') {
+                iconeExpandir = `<i id="plus-processo-${response.data.dimensao_id}-${response.data.id}" class="fa-solid icon-plus abrir_form_resultado_esperado"></i>\n<i id="minus-processo-${response.data.dimensao_id}-${response.data.id}" class="fa-solid icon-minus hidden"></i>`;
+              } else {
+                iconeExpandir = `<i id="plus-processo-${response.data.dimensao_id}-${response.data.id}" class="fa-solid icon-caret-right abrir_form_resultado_esperado"></i>`;
+              }
+              const html = `
+                <div id="processo-${response.data.dimensao_id}-${response.data.id}" class="processo processo-lista">
+                  <div id="header-processo-${response.data.dimensao_id}-${response.data.id}" class="expandable-header d-flex-center-between processo w-100">
+                    <div class="expandable-header-left d-flex-center-start" onclick="expandeMain('processo-${response.data.dimensao_id}-${response.data.id}')">
+                      ${iconeExpandir}
+                      <h3 id="titulo-nivel-${response.data.dimensao_id}-${response.data.id}" style="height: auto; white-space: normal; word-wrap: break-word;" onclick="mostra_titulo('${response.data.dimensao_id}-${response.data.id}')"><strong class="numero-processo"></strong> ${response.data.descricao}</h3>
+                    </div>
+                    <div class="processo-header-right">
+                      <div class="expandable-header-right">
+                        <button onclick="biuldResultadoForm(${response.data.dimensao_id}, ${response.data.id})" id="novo-resultado-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/plus.svg" width="16" height="16"></button>
+                        <button onclick="biuldResultadoFormEditarProcesso(${response.data.dimensao_id}, ${response.data.id}, '${response.data.descricao}')" id="editar-processo-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/edit.svg" width="15" height="15"></button>
+                        <button type="button" id="excluir-processo-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/delete.svg" width="16" height="16"></button>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="main-processo-${response.data.dimensao_id}-${response.data.id}" class="expandable-main processo hidden"></div>
+                </div>
+              `;
+              if (mainDim) {
+                mainDim.insertAdjacentHTML('beforeend', html);
+                // Renumera os processos apenas dentro deste main
+                const processos = mainDim.querySelectorAll('.processo.processo-lista');
+                const dimIdx = Array.from(document.querySelectorAll('.dimencao.dimensao-lista')).indexOf(mainDim.closest('.dimencao.dimensao-lista'));
+                processos.forEach((el, idx) => {
+                  const strong = el.querySelector('h3 strong.numero-processo');
+                  if (strong) strong.textContent = (dimIdx + 1) + '.' + (idx + 1) + ' - ';
+                });
+              }
+              // Remove o form de criação
+              if (form.parentElement && form.parentElement.parentElement && form.parentElement.parentElement.id.startsWith('create_new_processo_')) {
+                form.parentElement.parentElement.remove();
+              }
+            }
+            // Fecha o modal de criação de processo
+            if (typeof biuldProcessoForm === 'function') {
+              biuldProcessoForm(response.data.dimensao_id);
+            }
+          })
+          .catch(function(error) {
+            alert('Erro ao cadastrar processo!');
+          });
+        }
+      });
+    });
+  </script>
+
+  <script>
+    function renumerarDimensoesEProcessos() {
+      const section = document.querySelector('.main-content.main-utlizar-modelo');
+      if (!section) return;
+      const dimElements = Array.from(section.querySelectorAll('.dimencao.dimensao-lista')).filter(el => el.offsetParent !== null);
+      dimElements.forEach((dimEl, dimIdx) => {
+        // Renumera dimensão
+        const strongDim = dimEl.querySelector('h3 strong.numero-dimensao');
+        if (strongDim) strongDim.textContent = (dimIdx + 1) + ' - ';
+        // Renumera processos dessa dimensão
+        const mainDim = dimEl.querySelector('[id^="main-dimencao-"]');
+        if (mainDim) {
+          const processos = mainDim.querySelectorAll('.processo.processo-lista');
+          processos.forEach((procEl, procIdx) => {
+            const strongProc = procEl.querySelector('h3 strong.numero-processo');
+            if (strongProc) strongProc.textContent = (dimIdx + 1) + '.' + (procIdx + 1) + ' - ';
+          });
+        }
+      });
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      renumerarDimensoesEProcessos();
+    });
+  </script>
+
+  <script>
+    // Intercepta submit do form de edição de processo (delegação para forms dinâmicos)
+    document.body.addEventListener('submit', function(e) {
+      const form = e.target;
+      if (form && form.action && form.action.includes('/cadastroProcesso/') && form.action.includes('/salvar_processo')) {
+        e.preventDefault();
+        const descricao = form.querySelector('textarea[name="descricao"]').value;
+        axios.post(form.action, {
+          descricao: descricao
+        }, {
+          headers: { 'Accept': 'application/json' }
+        })
+        .then(function(response) {
+          if (response.data && response.data.id) {
+            // Atualiza o nome do processo na lista
+            const h3 = document.querySelector(`#titulo-nivel-${response.data.dimensao_id}-${response.data.id}`);
+            if (h3) {
+              const strong = h3.querySelector('strong.numero-processo');
+              h3.innerHTML = `<strong class="numero-processo">${strong ? strong.textContent : ''}</strong> ${response.data.descricao}`;
+            }
+            // Fecha o modal de edição de processo
+            if (typeof biuldResultadoFormEditarProcesso === 'function') {
+              biuldResultadoFormEditarProcesso(response.data.dimensao_id, response.data.id);
+            }
+          }
+        })
+        .catch(function(error) {
+          alert('Erro ao editar processo!');
+        });
+      }
+    });
+  </script>
+
+  <script>
+    // Delegação de evento para exclusão de processo
+    document.querySelector('.main-content.main-utlizar-modelo').addEventListener('click', function(e) {
+      const btn = e.target.closest('.expandable-header-btn[id^="excluir-processo-"]');
+      if (btn) {
+        e.preventDefault();
+        if (!confirm('Tem certeza que deseja excluir este processo?')) return;
+        const id = btn.id.replace('excluir-processo-', '');
+        // Descobre a dimensão do processo pelo DOM
+        const processoDiv = document.getElementById('processo-' + btn.closest('.processo').id.split('-').slice(-2).join('-'));
+        const mainDim = btn.closest('[id^="main-dimencao-"]');
+        const opcao = document.getElementById('maturidade_dimensao') ? document.getElementById('maturidade_dimensao').value : '';
+        axios.get(`/cadastroProcesso/${id}/excluir_processo`, {
+          params: { opcao: opcao },
+          headers: { 'Accept': 'application/json' }
+        })
+        .then(function(response) {
+          if (response.data && response.data.id) {
+            // Remove o processo do DOM
+            const div = document.getElementById('processo-' + response.data.dimensao_id + '-' + response.data.id);
+            if (div) div.remove();
+            // Renumera os processos dentro da dimensão
+            if (mainDim) {
+              const processos = mainDim.querySelectorAll('.processo.processo-lista');
+              const dimIdx = Array.from(document.querySelectorAll('.dimencao.dimensao-lista')).indexOf(mainDim.closest('.dimencao.dimensao-lista'));
+              processos.forEach((el, idx) => {
+                const strong = el.querySelector('h3 strong.numero-processo');
+                if (strong) strong.textContent = (dimIdx + 1) + '.' + (idx + 1) + ' - ';
+              });
+            }
+          }
+        })
+        .catch(function(error) {
+          alert('Erro ao excluir processo!');
+        });
+      }
+    });
+  </script>
+
+  <script>
+    // Intercepta submit do form de criação de resultado esperado (delegação para forms dinâmicos)
+    document.body.addEventListener('submit', function(e) {
+      const form = e.target;
+      if (form && form.action && form.action.includes('/cadastroResultado/incluir_resultado')) {
+        e.preventDefault();
+        const descricao = form.querySelector('textarea[name="descricao"]').value;
+        const processo_id = form.querySelector('input[name="processo_id"]').value;
+        axios.post('/cadastroResultado/incluir_resultado', {
+          descricao: descricao,
+          processo_id: processo_id
+        }, {
+          headers: { 'Accept': 'application/json' }
+        })
+        .then(function(response) {
+          if (response.data && response.data.id) {
+            // Monta o HTML do novo resultado
+            const mainProc = document.getElementById('main-processo-' + response.data.processo_id.split('-')[0] + '-' + response.data.processo_id);
+            const html = `
+              <div id="resultado-${response.data.processo_id}-${response.data.id}" class="resultado resultado-lista">
+                <div id="header-resultado-${response.data.processo_id}-${response.data.id}" class="expandable-header d-flex-center-between resultado w-100">
+                  <div class="expandable-header-left d-flex-center-start">
+                    <i id="plus-resultado-${response.data.processo_id}-${response.data.id}" class="fa-solid icon-caret-right"></i>
+                    <h3 id="titulo-nivel-${response.data.processo_id}-${response.data.id}" style="height: auto; white-space: normal; word-wrap: break-word;"><strong class="numero-resultado"></strong> ${response.data.descricao}</h3>
+                  </div>
+                  <div class="resultado-header-right">
+                    <div class="expandable-header-right">
+                      <button type="button" id="excluir-resultado-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/delete.svg" width="16" height="16"></button>
+                    </div>
+                  </div>
+                </div>
+                <div id="main-resultado-${response.data.processo_id}-${response.data.id}" class="expandable-main resultado"></div>
+              </div>
+            `;
+            if (mainProc) {
+              mainProc.insertAdjacentHTML('beforeend', html);
+              // Renumera os resultados dentro deste processo
+              const resultados = mainProc.querySelectorAll('.resultado.resultado-lista');
+              resultados.forEach((el, idx) => {
+                const strong = el.querySelector('h3 strong.numero-resultado');
+                if (strong) strong.textContent = (idx + 1) + ' - ';
+              });
+            }
+            // Fecha o modal de criação de resultado esperado
+            if (typeof biuldResultadoForm === 'function') {
+              biuldResultadoForm(response.data.processo_id.split('-')[0], response.data.processo_id);
+            }
+          }
+        })
+        .catch(function(error) {
+          alert('Erro ao cadastrar resultado!');
+        });
+      }
     });
   </script>
