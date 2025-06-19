@@ -5,7 +5,7 @@ class AvaliarController < ApplicationController
     def index
         # Busca as áreas de atuação do avaliador atual
         appraiser_domains = current_appraiser.expertise_areas.pluck(:name)
-        
+
         # Filtra os modelos aplicados que correspondem às áreas de atuação do avaliador
         @modelo_aplicado = if appraiser_domains.any?
           ModeloAplicado.where(dominio: appraiser_domains)
@@ -32,11 +32,9 @@ class AvaliarController < ApplicationController
     end
 
     def salvar_classificacao_docs
-
         attachment = ActiveStorage::Attachment.find(params[:id])
         blob = attachment.blob  # Obtém o blob associado ao attachment
-        blob.update(classificacao: params[:classificacao])
-
+        blob.update(classificacao: params[:classificacao], descricao_avaliador: params[:descricao_avaliador])
     end
 
     def show

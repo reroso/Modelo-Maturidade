@@ -309,3 +309,43 @@ h1,h2,h3,h4,h5,h6 {
 	}
 	
 }
+
+.avaliacao-bloco {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #f7fbe9;
+  border: 1px solid #dbe7c9;
+  border-radius: 7px;
+  padding: 10px 16px;
+  margin: 10px 0 10px 0;
+  min-width: 220px;
+  box-shadow: 0 1px 4px rgba(180,200,140,0.08);
+}
+.avaliacao-label {
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 2px;
+  font-size: 15px;
+}
+.avaliacao-valor {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.avaliacao-valor.atende-totalmente { color: #4e8e0b; }
+.avaliacao-valor.atende-parcialmente { color: #bfae0d; }
+.avaliacao-valor.nao-atende { color: #c13d1a; }
+.avaliacao-valor.nao-classificado { color: #888; }
+.descricao-avaliador-bloco {
+  background: #f3f3f3;
+  border-left: 4px solid #8eb729;
+  padding: 7px 12px;
+  margin-top: 6px;
+  border-radius: 4px;
+  color: #444;
+  font-size: 14px;
+  font-style: italic;
+  max-width: 420px;
+  word-break: break-word;
+}

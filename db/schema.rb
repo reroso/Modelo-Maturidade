@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_11_26_192358) do
+ActiveRecord::Schema.define(version: 2025_06_19_053116) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2024_11_26_192358) do
     t.integer "classificacao"
     t.text "descricao"
     t.integer "modelo"
+    t.text "descricao_avaliador"
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 

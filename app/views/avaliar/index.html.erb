@@ -136,6 +136,7 @@
                                             <option value="2" <%= doc.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
                                             <option value="3" <%= doc.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
                                         </select>
+                                        <textarea name="descricao_avaliador" placeholder="Justifique sua escolha" rows="2" style="width:100%;margin-top:5px;" onchange="this.form.submit()"><%= doc.descricao_avaliador %></textarea>
                                     </form>
                                   </li>
                                 <% end %> 
@@ -208,6 +209,7 @@
                                                       <option value="2" <%= doc.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
                                                       <option value="3" <%= doc.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
                                                   </select>
+                                                  <textarea name="descricao_avaliador" placeholder="Justifique sua escolha" rows="2" style="width:100%;margin-top:5px;" onchange="this.form.submit()"><%= doc.descricao_avaliador %></textarea>
                                               </form>
                                             </li>
                                           <% end %>
