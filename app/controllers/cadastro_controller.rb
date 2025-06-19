@@ -18,8 +18,10 @@ class CadastroController < ApplicationController
         dimensao.maturidade_id = params[:maturidade_id]
         dimensao.save
 
-        opcao = params[:maturidade_id]
-        redirect_to cadastro_path(opcao: opcao)
+        respond_to do |format|
+            format.html { redirect_to cadastro_path(opcao: params[:maturidade_id]) }
+            format.json { render json: { id: dimensao.id, descricao: dimensao.descricao, maturidade_id: dimensao.maturidade_id } }
+        end
     end
 
     def salvar_dimensao
@@ -27,16 +29,20 @@ class CadastroController < ApplicationController
         dimensao.descricao = params[:descricao]
         dimensao.save
 
-        opcao = params[:opcao]
-        redirect_to cadastro_path(opcao: opcao)
+        respond_to do |format|
+            format.html { redirect_to cadastro_path(opcao: params[:opcao]) }
+            format.json { render json: { id: dimensao.id, descricao: dimensao.descricao } }
+        end
     end
 
     def excluir_dimensao
         dimensao = Dimensao.find(params[:id])
         dimensao.destroy
 
-        opcao = params[:opcao]
-        redirect_to cadastro_path(opcao: opcao)
+        respond_to do |format|
+            format.html { redirect_to cadastro_path(opcao: params[:opcao]) }
+            format.json { render json: { id: params[:id] } }
+        end
     end
 
     def alterar_dimensao

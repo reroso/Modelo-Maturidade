@@ -39,7 +39,7 @@
     <!-- #Div de criação de nova dimensão-->
     <div id="create_new_dimencao" class="main-create-level w-100 create-dimencao hidden">
         <p>Nova Dimensão:</p>
-        <form action="/cadastro/incluir_dimensao" method="post" class="d-flex-center-center flex-column h-100">
+        <form id="form_create_dimensao" action="/cadastro/incluir_dimensao" method="post" class="d-flex-center-center flex-column h-100">
           <div class="form-control d-flex-center-center">
             <label for="nome_dimensao">Nome:</label>
             <textarea type="text" id="nome_dimensao" name="descricao"></textarea>
@@ -77,7 +77,7 @@
     <% @dimensaos.each do |dimensao| %>
     <%if dimensao.maturidade_id == @opcao%>
     <!--# Início da Dimensão X -->
-      <div id="dimencao-<%= dimensao.id %>" class="dimencao">
+      <div id="dimencao-<%= dimensao.id %>" class="dimencao dimensao-lista">
         <!--# Início do Header da Dimensão X -->
         <div id="header-dimencao-<%= dimensao.id %>" class="expandable-header d-flex-center-between dimencao w-100">
           <!-- #expandeMain(grau do modelo + '-' + id) -->
@@ -86,7 +86,7 @@
               <i id="plus-dimencao-<%= dimensao.id %>"  class="icon-plus"></i>
               <i id="minus-dimencao-<%= dimensao.id %>"  class="icon-minus hidden"></i>
             </div>
-            <h3 id="titulo-nivel-<%= dimensao.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>')"><strong><%=contadorDimensaos%> - </strong><%= dimensao.descricao %></h3>
+            <h3 id="titulo-nivel-<%= dimensao.id %>" style="max-height: 25px;" onclick="mostra_titulo('<%= dimensao.id %>')"><strong></strong><%= dimensao.descricao %></h3>
             
             <%if maturidade_selecionada.nivelEscolha == "3"%>
               <form id="meu_formulario_dimensoes" action="/cadastro/<%= dimensao.id %>/salvar_dimensao_nivel" method="post">
@@ -191,7 +191,7 @@
           <div class="expandable-header-right">
             <button onclick="biuldProcessoForm(<%= dimensao.id %>)" id="novo-dimencao-<%= dimensao.id %>" class="expandable-header-btn"><%= image_tag("icons/plus.svg", width: 16, height: 16) %></button>
             <button onclick="openDimensaoEditForm(<%= dimensao.id %>, '<%= dimensao.descricao %>')" id="editar-dimencao-<%= dimensao.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
-            <button id="excluir-dimencao-<%= dimensao.id %>" onclick="location.href='/cadastro/<%= dimensao.id %>/excluir_dimensao?opcao=<%= @opcao %>'" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
+            <button type="button" id="excluir-dimencao-<%= dimensao.id %>" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
           </div>
         </div>
         <!--# Fim do Header da Dimensão X -->
@@ -792,4 +792,140 @@
       var form = selectElement.closest("form");
       form.submit();
     }
+  </script>
+
+  <script>
+    // Intercepta o submit do formulário de criação de dimensão
+    document.addEventListener('DOMContentLoaded', function() {
+      // Numera todas as dimensões ao carregar a página
+      const section = document.querySelector('.main-content.main-utlizar-modelo');
+      if (section) {
+        const dimElements = Array.from(section.querySelectorAll('.dimencao.dimensao-lista')).filter(el => el.offsetParent !== null);
+        dimElements.forEach((el, idx) => {
+          const strong = el.querySelector('h3 strong');
+          if (strong) strong.textContent = (idx + 1) + ' - ';
+        });
+      }
+      const form = document.getElementById('form_create_dimensao');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const descricao = document.getElementById('nome_dimensao').value;
+          const maturidade_id = document.getElementById('maturidade_dimensao').value;
+          axios.post('/cadastro/incluir_dimensao', {
+            descricao: descricao,
+            maturidade_id: maturidade_id
+          }, { headers: { 'Accept': 'application/json' } })
+          .then(function(response) {
+            if (response.data && response.data.id) {
+              // Monta o HTML da nova dimensão
+              const html = `
+                <div id="dimencao-${response.data.id}" class="dimencao dimensao-lista">
+                  <div id="header-dimencao-${response.data.id}" class="expandable-header d-flex-center-between dimencao w-100">
+                    <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(${response.data.id})">
+                      <div class="h-100" onclick="expandeMain('dimencao-${response.data.id}')">
+                        <i id="plus-dimencao-${response.data.id}"  class="icon-plus"></i>
+                        <i id="minus-dimencao-${response.data.id}"  class="icon-minus hidden"></i>
+                      </div>
+                      <h3 id="titulo-nivel-${response.data.id}" style="max-height: 25px;" onclick="mostra_titulo('${response.data.id}')"><strong></strong> ${response.data.descricao}</h3>
+                    </div>
+                    <div class="expandable-header-right">
+                      <button onclick="biuldProcessoForm(${response.data.id})" id="novo-dimencao-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/plus.svg" width="16" height="16"></button>
+                      <button onclick="openDimensaoEditForm(${response.data.id}, '${response.data.descricao}')" id="editar-dimencao-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/edit.svg" width="15" height="15"></button>
+                      <button type="button" id="excluir-dimencao-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/delete.svg" width="16" height="16"></button>
+                    </div>
+                  </div>
+                  <div id="main-dimencao-${response.data.id}" class="expandable-main dimencao hidden"></div>
+                </div>
+              `;
+              // Insere no final da lista
+              section.insertAdjacentHTML('beforeend', html);
+
+              // Recalcula a numeração de todas as dimensões
+              const dimElements = Array.from(section.querySelectorAll('.dimencao.dimensao-lista')).filter(el => el.offsetParent !== null);
+              dimElements.forEach((el, idx) => {
+                const strong = el.querySelector('h3 strong');
+                if (strong) strong.textContent = (idx + 1) + ' - ';
+              });
+            }
+            form.reset();
+            openDimensaoForm();
+          })
+          .catch(function(error) {
+            alert('Erro ao cadastrar dimensão!');
+          });
+        });
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const formEdit = document.getElementById('form_edit_dimensao');
+      if (formEdit) {
+        formEdit.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const descricao = document.getElementById('nome_editar_dimensao').value;
+          const action = formEdit.getAttribute('action');
+          axios.post(action, {
+            descricao: descricao
+          }, { headers: { 'Accept': 'application/json' } })
+          .then(function(response) {
+            if (response.data && response.data.id) {
+              // Atualiza o nome na lista
+              const h3 = document.querySelector(`#titulo-nivel-${response.data.id}`);
+              if (h3) {
+                // Mantém o número e só troca o nome
+                const strong = h3.querySelector('strong');
+                h3.innerHTML = `<strong>${strong ? strong.textContent : ''}</strong>${response.data.descricao}`;
+              }
+            }
+            // Fecha o form de edição
+            openDimensaoEditForm();
+          })
+          .catch(function(error) {
+            alert('Erro ao editar dimensão!');
+          });
+        });
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Delegação de evento para exclusão de dimensão
+      document.querySelector('.main-content.main-utlizar-modelo').addEventListener('click', function(e) {
+        const btn = e.target.closest('.expandable-header-btn[id^="excluir-dimencao-"]');
+        if (btn) {
+          e.preventDefault();
+          if (!confirm('Tem certeza que deseja excluir esta dimensão?')) return;
+          const id = btn.id.replace('excluir-dimencao-', '');
+          const opcao = document.getElementById('maturidade_dimensao') ? document.getElementById('maturidade_dimensao').value : '';
+          const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+          axios.get(`/cadastro/${id}/excluir_dimensao`, {
+            params: { opcao: opcao },
+            headers: {
+              'Accept': 'application/json'
+            }
+          })
+          .then(function(response) {
+            if (response.data && response.data.id) {
+              // Remove a dimensão do DOM
+              const div = document.getElementById('dimencao-' + response.data.id);
+              if (div) div.remove();
+              // Renumera as dimensões
+              const section = document.querySelector('.main-content.main-utlizar-modelo');
+              const dimElements = Array.from(section.querySelectorAll('.dimencao.dimensao-lista')).filter(el => el.offsetParent !== null);
+              dimElements.forEach((el, idx) => {
+                const strong = el.querySelector('h3 strong');
+                if (strong) strong.textContent = (idx + 1) + ' - ';
+              });
+            }
+          })
+          .catch(function(error) {
+            alert('Erro ao excluir dimensão!');
+          });
+        }
+      });
+    });
   </script>
