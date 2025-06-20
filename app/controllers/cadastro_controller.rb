@@ -117,19 +117,58 @@ class CadastroController < ApplicationController
         #resultados
 
     def incluir_resultado
-        resultado = Resultado.new
-        resultado.descricao = params[:descricao]
-        resultado.processo_id = params[:processo_id]
-        resultado.save
+        begin
+            Rails.logger.info "Parâmetros recebidos: #{params.inspect}"
 
-        respond_to do |format|
-            format.html {
-                opcao = params[:opcao]
-                redirect_to cadastro_path(opcao: opcao)
-            }
-            format.json {
-                render json: { id: resultado.id, descricao: resultado.descricao, processo_id: resultado.processo_id }
-            }
+            resultado = Resultado.new
+            resultado.descricao = params[:descricao]
+            resultado.processo_id = params[:processo_id]
+
+            if resultado.save
+                processo = resultado.processo
+                dimensao = processo.dimensao
+
+                respond_to do |format|
+                    format.html {
+                        redirect_to cadastro_path(opcao: params[:opcao])
+                    }
+                    format.json {
+                        render json: {
+                            id: resultado.id,
+                            descricao: resultado.descricao,
+                            processo_id: processo.id,
+                            dimensao_id: dimensao.id
+                        }, status: :created
+                    }
+                end
+            else
+                respond_to do |format|
+                    format.html {
+                        redirect_to cadastro_path(opcao: params[:opcao]), alert: 'Erro ao criar resultado'
+                    }
+                    format.json {
+                        render json: {
+                            message: 'Erro ao criar resultado',
+                            errors: resultado.errors.full_messages
+                        }, status: :unprocessable_entity
+                    }
+                end
+            end
+        rescue => e
+            Rails.logger.error "Erro ao criar resultado: #{e.message}"
+            Rails.logger.error e.backtrace.join("\n")
+
+            respond_to do |format|
+                format.html {
+                    redirect_to cadastro_path(opcao: params[:opcao]), alert: 'Erro interno ao criar resultado'
+                }
+                format.json {
+                    render json: {
+                        message: 'Erro interno ao criar resultado',
+                        error: e.message
+                    }, status: :internal_server_error
+                }
+            end
         end
     end
 
@@ -138,16 +177,34 @@ class CadastroController < ApplicationController
         resultado.descricao = params[:descricao]
         resultado.save
 
-        opcao = params[:opcao]
-        redirect_to cadastro_path(opcao: opcao)
+        respond_to do |format|
+            format.html {
+                opcao = params[:opcao]
+                redirect_to cadastro_path(opcao: opcao)
+            }
+            format.json {
+                processo = resultado.processo
+                dimensao = processo.dimensao
+                render json: {
+                    id: resultado.id,
+                    descricao: resultado.descricao,
+                    processo_id: processo.id,
+                    dimensao_id: dimensao.id
+                }
+            }
+        end
     end
 
     def excluir_resultado
         resultado = Resultado.find(params[:id])
+        processo = resultado.processo
+        dimensao = processo.dimensao
         resultado.destroy
 
-        opcao = params[:opcao]
-        redirect_to cadastro_path(opcao: opcao)
+        respond_to do |format|
+            format.html { redirect_to cadastro_path(opcao: params[:opcao]) }
+            format.json { render json: { id: params[:id], processo_id: processo.id, dimensao_id: dimensao.id } }
+        end
     end
 
     def alterar_resultado

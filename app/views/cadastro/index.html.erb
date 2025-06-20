@@ -353,12 +353,12 @@
                 
 
               <!--# Início do resultado Z do processo Y da dimensão X -->
-              <div id="resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="resultado">
+              <div id="resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="resultado resultado-lista">
                 <!--# Início do header do resultado Z do processo Y da dimensão X -->
                 <div id="header-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-header d-flex-center-between resultado w-100">
                   <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(1)"><!-- o 1 do id é o id da dimensão-->
                       <i id="plus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid icon-caret-right"></i>
-                    <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" style="height: auto; white-space: normal; word-wrap: break-word;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')"><strong><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> - </strong><%= resultado.descricao %></h3>
+                    <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" style="height: auto; white-space: normal; word-wrap: break-word;" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')"><strong class="numero-resultado"><%=contadorDimensaos%>.<%=contadorProcessos%>.<%=contadorResultados%> - </strong><%= resultado.descricao %></h3>
 
                     <%if maturidade_selecionada.nivelEscolha == "2"%>
                     <form id="meu_formulario_resultados" action="/cadastroResultado/<%= resultado.id %>/salvar_resultado_nivel" method="post">
@@ -598,19 +598,18 @@
 
     //Função de abrir e fechar o form de criação de novos resultados esperados
     function biuldResultadoForm(dimensao, processo) {
-
       const templateNovoResultadoEsperado = `
         <div id="create_new_resultado_${dimensao}_${processo}" class="main-create-level d-flex-center-center dimencao w-100">
           <p>Novo Resultado Esperado:</p>
-          <form method="post" action="/cadastroResultado/incluir_resultado?opcao=<%= @opcao %>" method="post" class="d-flex-center-center flex-column">
+          <form method="post" action="/cadastroResultado/incluir_resultado?opcao=<%= @opcao %>" class="d-flex-center-center flex-column">
             <div class="form-control d-flex-center-center">
               <label for="nome-novo">Nome:</label>
               <textarea type="text" id="nome-novo-resultado-${dimensao}-${processo}" name="descricao"></textarea>
               <input type="text" name="processo_id" value="${processo}" class="inputDimensao hidden">
             </div>
             <div class="main-create-level-buttons">
-              <button class="main-create-level-submit">Cadastrar</button>
-              <button class="main-create-level-cancel" onclick="biuldResultadoForm(${dimensao}, ${processo})">cancelar</button>
+              <button type="submit" class="main-create-level-submit">Cadastrar</button>
+              <a class="main-create-level-cancel" onclick="biuldResultadoForm(${dimensao}, ${processo})">cancelar</a>
             </div>
           </form>
         </div> 
@@ -702,7 +701,7 @@
       const templateNovoResultadoEsperado = `
         <div id="editar_resultado_${dimensao}_${processo}_${resultado}" class="main-create-level d-flex-center-center dimencao w-100">
           <p>Editar Resultado Esperado:</p>
-          <form method="post" action="/cadastroResultado/${resultado}/salvar_resultado?opcao=<%= @opcao %>" method="post" class="d-flex-center-center flex-column">
+          <form action="/cadastroResultado/${resultado}/salvar_resultado?opcao=<%= @opcao %>" method="post" class="d-flex-center-center flex-column">
             <div class="form-control d-flex-center-center">
               <label for="nome-novo">Nome:</label>
               <textarea type="text" id="nome-editar-resultado-${dimensao}-${processo}-${resultado}" name="descricao">${descricao}</textarea>
@@ -1050,7 +1049,7 @@
             }
             // Fecha o modal de edição de processo
             if (typeof biuldResultadoFormEditarProcesso === 'function') {
-              biuldResultadoFormEditarProcesso(response.data.dimensao_id, response.data.id);
+                biuldResultadoFormEditarProcesso(response.data.dimensao_id, response.data.id);
             }
           }
         })
@@ -1108,50 +1107,221 @@
         e.preventDefault();
         const descricao = form.querySelector('textarea[name="descricao"]').value;
         const processo_id = form.querySelector('input[name="processo_id"]').value;
-        axios.post('/cadastroResultado/incluir_resultado', {
+        
+        console.log('Enviando dados:', {
           descricao: descricao,
           processo_id: processo_id
+        });
+        
+        axios.post('/cadastroResultado/incluir_resultado', {
+          descricao: descricao,
+          processo_id: processo_id,
+          opcao: document.getElementById('maturidade_dimensao').value
         }, {
-          headers: { 'Accept': 'application/json' }
+          headers: { 
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          }
         })
         .then(function(response) {
+          console.log('Resposta:', response);
           if (response.data && response.data.id) {
             // Monta o HTML do novo resultado
-            const mainProc = document.getElementById('main-processo-' + response.data.processo_id.split('-')[0] + '-' + response.data.processo_id);
+            const mainProcId = 'main-processo-' + response.data.dimensao_id + '-' + response.data.processo_id;
+            console.log('Buscando elemento pai para inserir resultado:', mainProcId);
+            const mainProc = document.getElementById(mainProcId);
+
+            // Pega o número da dimensão e processo dos elementos pais
+            const processoDiv = document.getElementById('processo-' + response.data.dimensao_id + '-' + response.data.processo_id);
+            const dimensaoDiv = processoDiv ? processoDiv.closest('.dimencao.dimensao-lista') : null;
+            let dimNumero = '0', procNumero = '0';
+
+            if (dimensaoDiv && processoDiv) {
+              const dimHeaderStrong = dimensaoDiv.querySelector(':scope > .expandable-header h3 strong.numero-dimensao');
+              const procHeaderStrong = processoDiv.querySelector(':scope > .expandable-header h3 strong.numero-processo');
+
+              if (dimHeaderStrong && dimHeaderStrong.textContent.trim()) {
+                dimNumero = dimHeaderStrong.textContent.trim().split(' ')[0];
+              }
+
+              if (procHeaderStrong && procHeaderStrong.textContent.trim()) {
+                const procParts = procHeaderStrong.textContent.trim().split(' ')[0].split('.');
+                if (procParts.length > 1) {
+                  procNumero = procParts[1];
+                }
+              }
+            }
+
+            // Encontra o último contador de resultados usado
+            let contadorResultados = 1;
+            const resultadosExistentes = mainProc ? mainProc.querySelectorAll('.resultado.resultado-lista') : [];
+            if (resultadosExistentes.length > 0) {
+              const ultimoResultado = resultadosExistentes[resultadosExistentes.length - 1];
+              const ultimoNumeroStrong = ultimoResultado.querySelector('h3 strong.numero-resultado');
+              if (ultimoNumeroStrong && ultimoNumeroStrong.textContent) {
+                const partes = ultimoNumeroStrong.textContent.trim().split(' ')[0].split('.');
+                if (partes.length === 3) {
+                  contadorResultados = parseInt(partes[2]) + 1;
+                }
+              }
+            }
+
+            // Gera o HTML do select de níveis se necessário
+            let nivelSelectHtml = '';
+            if (response.data.nivel_selecionado) {
+              nivelSelectHtml = `
+                <form id="meu_formulario_resultados" action="/cadastroResultado/${response.data.id}/salvar_resultado_nivel" method="post">
+                  <select class="nivel_maturidade_select" style="font-size: 13px!important; padding: 2px 6px" name="nivel_selecionado" onchange="submitForm(this)">
+                    <option value="" selected>Selecionar Nível</option>
+                  </select>
+                </form>
+              `;
+            }
+
             const html = `
-              <div id="resultado-${response.data.processo_id}-${response.data.id}" class="resultado resultado-lista">
-                <div id="header-resultado-${response.data.processo_id}-${response.data.id}" class="expandable-header d-flex-center-between resultado w-100">
+              <div id="resultado-${response.data.dimensao_id}-${response.data.processo_id}-${response.data.id}" class="resultado resultado-lista">
+                <div id="header-resultado-${response.data.dimensao_id}-${response.data.processo_id}-${response.data.id}" class="expandable-header d-flex-center-between resultado w-100">
                   <div class="expandable-header-left d-flex-center-start">
-                    <i id="plus-resultado-${response.data.processo_id}-${response.data.id}" class="fa-solid icon-caret-right"></i>
-                    <h3 id="titulo-nivel-${response.data.processo_id}-${response.data.id}" style="height: auto; white-space: normal; word-wrap: break-word;"><strong class="numero-resultado"></strong> ${response.data.descricao}</h3>
+                    <i id="plus-resultado-${response.data.dimensao_id}-${response.data.processo_id}-${response.data.id}" class="fa-solid icon-caret-right"></i>
+                    <h3 id="titulo-nivel-${response.data.dimensao_id}-${response.data.processo_id}-${response.data.id}" style="height: auto; white-space: normal; word-wrap: break-word;"><strong class="numero-resultado">${dimNumero}.${procNumero}.${contadorResultados} - </strong> ${response.data.descricao}</h3>
+                    ${nivelSelectHtml}
                   </div>
                   <div class="resultado-header-right">
                     <div class="expandable-header-right">
+                      <button onclick="biuldEsperadoForm(${response.data.dimensao_id}, ${response.data.processo_id}, ${response.data.id}, '${response.data.descricao}')" id="editar-resultado-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/edit.svg" width="15" height="15"></button>
                       <button type="button" id="excluir-resultado-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/delete.svg" width="16" height="16"></button>
                     </div>
                   </div>
                 </div>
-                <div id="main-resultado-${response.data.processo_id}-${response.data.id}" class="expandable-main resultado"></div>
+                <div id="main-resultado-${response.data.dimensao_id}-${response.data.processo_id}-${response.data.id}" class="expandable-main resultado"></div>
               </div>
             `;
             if (mainProc) {
               mainProc.insertAdjacentHTML('beforeend', html);
-              // Renumera os resultados dentro deste processo
-              const resultados = mainProc.querySelectorAll('.resultado.resultado-lista');
-              resultados.forEach((el, idx) => {
-                const strong = el.querySelector('h3 strong.numero-resultado');
-                if (strong) strong.textContent = (idx + 1) + ' - ';
-              });
+              console.log('Resultado inserido com sucesso!');
+            } else {
+              alert('Erro: Não foi possível encontrar o elemento pai para inserir o resultado! Veja o console para detalhes.');
+              console.error('Elemento main-processo não encontrado:', mainProcId);
             }
             // Fecha o modal de criação de resultado esperado
             if (typeof biuldResultadoForm === 'function') {
-              biuldResultadoForm(response.data.processo_id.split('-')[0], response.data.processo_id);
+              biuldResultadoForm(response.data.dimensao_id, response.data.processo_id);
+            }
+            // Limpa o formulário
+            form.reset();
+          }
+        })
+        .catch(function(error) {
+          console.error('Erro completo:', error);
+          if (error.response) {
+            console.error('Dados do erro:', error.response.data);
+            alert('Erro ao cadastrar resultado: ' + (error.response.data.message || 'Erro desconhecido'));
+          } else {
+            alert('Erro ao cadastrar resultado! Verifique o console para mais detalhes.');
+          }
+        });
+      }
+    });
+
+    // Intercepta submit do form de edição de resultado esperado (delegação para forms dinâmicos)
+    document.body.addEventListener('submit', function(e) {
+      const form = e.target;
+      if (form && form.action && form.action.includes('/cadastroResultado/') && form.action.includes('/salvar_resultado')) {
+        e.preventDefault();
+
+        const parentDiv = form.closest('[id^="editar_resultado_"]');
+        const ids = parentDiv.id.split('_');
+        const dimensao_id_from_dom = ids[2];
+        const processo_id_from_dom = ids[3];
+        const descricao = form.querySelector('textarea[name="descricao"]').value;
+
+        axios.post(form.action, {
+          descricao: descricao
+        }, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          }
+        })
+        .then(function(response) {
+          if (response.data && response.data.id) {
+            const h3 = document.querySelector(`#titulo-nivel-${dimensao_id_from_dom}-${processo_id_from_dom}-${response.data.id}`);
+            if (h3) {
+              const strong = h3.querySelector('strong.numero-resultado');
+              h3.innerHTML = `<strong class="numero-resultado">${strong ? strong.textContent : ''}</strong> ${response.data.descricao}`;
+            }
+
+            if (typeof biuldEsperadoForm === 'function') {
+                biuldEsperadoForm(dimensao_id_from_dom, processo_id_from_dom, response.data.id, response.data.descricao);
             }
           }
         })
         .catch(function(error) {
-          alert('Erro ao cadastrar resultado!');
+          alert('Erro ao editar resultado esperado!');
+          console.error(error);
         });
       }
     });
+
+    // Delegação de evento para exclusão de resultado
+    document.querySelector('.main-content.main-utlizar-modelo').addEventListener('click', function(e) {
+        const btn = e.target.closest('.expandable-header-btn[id^="excluir-resultado-"]');
+        if (btn) {
+          e.preventDefault();
+          if (!confirm('Tem certeza que deseja excluir este resultado?')) return;
+          
+          const id = btn.id.replace('excluir-resultado-', '');
+          const mainProc = btn.closest('.expandable-main.processo');
+
+          axios.get(`/cadastroResultado/${id}/excluir_resultado`, {
+            headers: {
+              'Accept': 'application/json',
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+          })
+          .then(function(response) {
+            if (response.data && response.data.id) {
+              const div = document.getElementById(`resultado-${response.data.dimensao_id}-${response.data.processo_id}-${response.data.id}`);
+              if (div) div.remove();
+              
+              if(mainProc) {
+                renumerarResultados(mainProc);
+              }
+            }
+          })
+          .catch(function(error) {
+            alert('Erro ao excluir resultado!');
+            console.error(error);
+          });
+        }
+    });
+
+    function renumerarResultados(mainProc) {
+      const resultados = mainProc.querySelectorAll('.resultado.resultado-lista');
+      const processoDiv = mainProc.parentElement;
+      
+      if (processoDiv) {
+        const procHeaderStrong = processoDiv.querySelector('h3 strong.numero-processo');
+        let dimNumero = '0', procNumero = '0';
+        
+        if (procHeaderStrong && procHeaderStrong.textContent.trim()) {
+          const match = procHeaderStrong.textContent.match(/(\d+)\.(\d+)/);
+          if (match) {
+            dimNumero = match[1];
+            procNumero = match[2];
+          }
+        }
+
+        let contadorResultados = 1;
+        resultados.forEach((el) => {
+          const strong = el.querySelector('h3 strong.numero-resultado');
+          if (strong) {
+            strong.textContent = `${dimNumero}.${procNumero}.${contadorResultados} - `;
+            contadorResultados++;
+          }
+        });
+      }
+    }
   </script>
