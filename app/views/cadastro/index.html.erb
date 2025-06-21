@@ -190,7 +190,7 @@
           </div>
           <div class="expandable-header-right">
             <button onclick="biuldProcessoForm(<%= dimensao.id %>)" id="novo-dimencao-<%= dimensao.id %>" class="expandable-header-btn"><%= image_tag("icons/plus.svg", width: 16, height: 16) %></button>
-            <button onclick="openDimensaoEditForm(<%= dimensao.id %>, '<%= dimensao.descricao %>')" id="editar-dimencao-<%= dimensao.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
+            <button onclick="openDimensaoEditForm(<%= dimensao.id %>)" id="editar-dimencao-<%= dimensao.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
             <button type="button" id="excluir-dimencao-<%= dimensao.id %>" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
           </div>
         </div>
@@ -549,13 +549,16 @@
       }
     }
     //Função de abrir e fechar o form de Alteração de dimensão
-    function openDimensaoEditForm(id, descricao) {
+    function openDimensaoEditForm(id) {
       const formDimensao = document.getElementById("edit_dimencao");
       const formEditDimencao = document.getElementById("form_edit_dimensao");
       const textareaEditDimensao = document.getElementById("nome_editar_dimensao");
       
+      const h3 = document.querySelector(`#titulo-nivel-${id}`);
+      const description = h3.textContent.replace(h3.querySelector('strong').textContent, '').trim();
+
       formEditDimencao.setAttribute("action", "cadastro/"+ id +"/salvar_dimensao?opcao=<%= @opcao %>");
-      textareaEditDimensao.innerHTML = descricao;
+      textareaEditDimensao.value = description;
 
       if(formDimensao.classList.contains("hidden")) {
         formDimensao.classList.remove("hidden");
@@ -830,7 +833,7 @@
                     </div>
                     <div class="expandable-header-right">
                       <button onclick="biuldProcessoForm(${response.data.id})" id="novo-dimencao-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/plus.svg" width="16" height="16"></button>
-                      <button onclick="openDimensaoEditForm(${response.data.id}, '${response.data.descricao}')" id="editar-dimencao-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/edit.svg" width="15" height="15"></button>
+                      <button onclick="openDimensaoEditForm(${response.data.id})" id="editar-dimencao-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/edit.svg" width="15" height="15"></button>
                       <button type="button" id="excluir-dimencao-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/delete.svg" width="16" height="16"></button>
                     </div>
                   </div>
@@ -880,7 +883,7 @@
               }
             }
             // Fecha o form de edição
-            openDimensaoEditForm();
+            openDimensaoEditForm(response.data.id.toString());
           })
           .catch(function(error) {
             alert('Erro ao editar dimensão!');
