@@ -876,7 +876,7 @@
               if (h3) {
                 // Mantém o número e só troca o nome
                 const strong = h3.querySelector('strong.numero-dimensao');
-                h3.innerHTML = `<strong class="numero-dimensao"></strong>${response.data.descricao}`;
+                h3.innerHTML = `<strong class="numero-dimensao">${strong ? strong.textContent : ''}</strong> ${response.data.descricao}`;
               }
             }
             // Fecha o form de edição
