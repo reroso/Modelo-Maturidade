@@ -466,7 +466,7 @@
                   </div>
                   <div class="resultado-header-right">
                     <div class="expandable-header-right">
-                      <button onclick="biuldEsperadoForm(<%= dimensao.id %>, <%= processo.id %>, <%= resultado.id %>, '<%= resultado.descricao %>')" id="editar-resultado-<%= resultado.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
+                      <button onclick="biuldEsperadoForm(<%= dimensao.id %>, <%= processo.id %>, <%= resultado.id %>)" id="editar-resultado-<%= resultado.id %>" class="expandable-header-btn"><%= image_tag("icons/edit.svg", width: 15, height: 15) %></button>
                       <button type="button" id="excluir-resultado-<%= resultado.id %>" class="expandable-header-btn"><%= image_tag("icons/delete.svg", width: 16, height: 16) %></button>
                     </div>
                   </div>
@@ -703,7 +703,9 @@
       }
     }
 
-    function biuldEsperadoForm(dimensao, processo, resultado, descricao) {
+    function biuldEsperadoForm(dimensao, processo, resultado) {
+      const h3 = document.querySelector(`#titulo-nivel-${dimensao}-${processo}-${resultado}`);
+      const description = h3.textContent.replace(h3.querySelector('strong').textContent, '').trim();
 
       const templateNovoResultadoEsperado = `
         <div id="editar_resultado_${dimensao}_${processo}_${resultado}" class="main-create-level d-flex-center-center dimencao w-100">
@@ -711,7 +713,7 @@
           <form action="/cadastroResultado/${resultado}/salvar_resultado?opcao=<%= @opcao %>" method="post" class="d-flex-center-center flex-column">
             <div class="form-control d-flex-center-center">
               <label for="nome-novo">Nome:</label>
-              <textarea type="text" id="nome-editar-resultado-${dimensao}-${processo}-${resultado}" name="descricao">${descricao}</textarea>
+              <textarea type="text" id="nome-editar-resultado-${dimensao}-${processo}-${resultado}" name="descricao">${description}</textarea>
             </div>
             <div class="main-create-level-buttons">
               <button class="main-create-level-submit">Salvar</button>
@@ -1196,7 +1198,7 @@
                   </div>
                   <div class="resultado-header-right">
                     <div class="expandable-header-right">
-                      <button onclick="biuldEsperadoForm(${response.data.dimensao_id}, ${response.data.processo_id}, ${response.data.id}, '${response.data.descricao}')" id="editar-resultado-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/edit.svg" width="15" height="15"></button>
+                      <button onclick="biuldEsperadoForm(${response.data.dimensao_id}, ${response.data.processo_id}, ${response.data.id})" id="editar-resultado-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/edit.svg" width="15" height="15"></button>
                       <button type="button" id="excluir-resultado-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/delete.svg" width="16" height="16"></button>
                     </div>
                   </div>
@@ -1261,7 +1263,7 @@
             }
 
             if (typeof biuldEsperadoForm === 'function') {
-                biuldEsperadoForm(dimensao_id_from_dom, processo_id_from_dom, response.data.id, response.data.descricao);
+                biuldEsperadoForm(dimensao_id_from_dom, processo_id_from_dom, response.data.id);
             }
           }
         })
