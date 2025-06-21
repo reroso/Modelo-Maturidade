@@ -823,9 +823,27 @@
           axios.post('/cadastro/incluir_dimensao', {
             descricao: descricao,
             maturidade_id: maturidade_id
-          }, { headers: { 'Accept': 'application/json' } })
+          }, { 
+            headers: { 
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            } 
+          })
           .then(function(response) {
             if (response.data && response.data.id) {
+              // Gera o HTML do select de níveis para dimensão se necessário
+              let nivelSelectHtmlDimensao = '';
+              if (typeof nivelSelectOptionsDimensao !== 'undefined' && nivelSelectOptionsDimensao) {
+                nivelSelectHtmlDimensao = `
+                <form id="meu_formulario_dimensoes" action="/cadastro/${response.data.id}/salvar_dimensao_nivel" method="post">
+                    <select class="nivel_maturidade_select" style="font-size: 13px!important; padding: 2px 6px" name="nivel_selecionado" onchange="submitForm(this)">
+                    ${nivelSelectOptionsDimensao}
+                    </select>
+                </form>
+                `;
+              }
+
               // Monta o HTML da nova dimensão
               const html = `
                 <div id="dimencao-${response.data.id}" class="dimencao dimensao-lista" data-resultado-escolha="${salvar_resultado_escolha}">
@@ -836,6 +854,7 @@
                         <i id="minus-dimencao-${response.data.id}"  class="icon-minus hidden"></i>
                       </div>
                       <h3 id="titulo-nivel-${response.data.id}" style="max-height: 25px;" onclick="mostra_titulo('${response.data.id}')"><strong class="numero-dimensao"></strong> ${response.data.descricao}</h3>
+                      ${nivelSelectHtmlDimensao}
                     </div>
                     <div class="expandable-header-right">
                       <button onclick="biuldProcessoForm(${response.data.id})" id="novo-dimencao-${response.data.id}" class="expandable-header-btn"><img src="/assets/icons/plus.svg" width="16" height="16"></button>
@@ -860,7 +879,13 @@
             openDimensaoForm();
           })
           .catch(function(error) {
-            alert('Erro ao cadastrar dimensão!');
+            console.error('Erro completo:', error);
+            if (error.response) {
+              console.error('Dados do erro:', error.response.data);
+              alert('Erro ao cadastrar dimensão: ' + (error.response.data.message || 'Erro desconhecido'));
+            } else {
+              alert('Erro ao cadastrar dimensão! Verifique o console para mais detalhes.');
+            }
           });
         });
       }
@@ -965,12 +990,26 @@
               } else {
                 iconeExpandir = `<i id="plus-processo-${response.data.dimensao_id}-${response.data.id}" class="fa-solid icon-caret-right abrir_form_resultado_esperado"></i>`;
               }
+
+              // Gera o HTML do select de níveis para processo se necessário
+              let nivelSelectHtmlProcesso = '';
+              if (typeof nivelSelectOptionsProcesso !== 'undefined' && nivelSelectOptionsProcesso) {
+                nivelSelectHtmlProcesso = `
+                <form id="meu_formulario_processos" action="/cadastroProcesso/${response.data.id}/salvar_processo_nivel" method="post">
+                    <select class="nivel_maturidade_select" style="font-size: 13px!important; padding: 2px 6px" name="nivel_selecionado" onchange="submitForm(this)">
+                    ${nivelSelectOptionsProcesso}
+                    </select>
+                </form>
+                `;
+              }
+
               const html = `
                 <div id="processo-${response.data.dimensao_id}-${response.data.id}" class="processo processo-lista">
                   <div id="header-processo-${response.data.dimensao_id}-${response.data.id}" class="expandable-header d-flex-center-between processo w-100">
                     <div class="expandable-header-left d-flex-center-start" onclick="expandeMain('processo-${response.data.dimensao_id}-${response.data.id}')">
                       ${iconeExpandir}
                       <h3 id="titulo-nivel-${response.data.dimensao_id}-${response.data.id}" style="height: auto; white-space: normal; word-wrap: break-word;" onclick="mostra_titulo('${response.data.dimensao_id}-${response.data.id}')"><strong class="numero-processo"></strong> ${response.data.descricao}</h3>
+                      ${nivelSelectHtmlProcesso}
                     </div>
                     <div class="processo-header-right">
                       <div class="expandable-header-right">
@@ -1364,5 +1403,71 @@
   <% else %>
     <script>
       const nivelSelectOptions = '';
+    </script>
+  <% end %>
+
+  <% if @opcao != 0 && maturidade_selecionada.nivelEscolha == "1" %>
+    <script>
+      <%
+        options_html_processo = '<option value="" selected>Selecionar Nível</option>'
+        if maturidade_selecionada.tipoNivel == "1"
+          menor = maturidade_selecionada.menorNivel.to_i
+          maior = maturidade_selecionada.maiorNivel.to_i
+          menor, maior = maior, menor if menor > maior
+          (menor..maior).each do |n|
+            level = @levels.find { |l| l.index.to_i == n && l.modelo_id.to_i == @opcao }
+            desc = level ? " - #{level.descricao}" : ""
+            options_html_processo << "<option value='#{n}'>#{n}#{desc}</option>"
+          end
+        else
+          menor = maturidade_selecionada.menorNivel.to_s
+          maior = maturidade_selecionada.maiorNivel.to_s
+          menor, maior = maior, menor if menor > maior
+          (menor..maior).each do |c|
+            level = @levels.find { |l| l.index.to_s == c && l.modelo_id.to_i == @opcao }
+            desc = level ? " - #{level.descricao}" : ""
+            options_html_processo << "<option value='#{c}'>#{c}#{desc}</option>"
+          end
+        end
+      %>
+      const nivelSelectOptionsProcesso = `<%= options_html_processo.html_safe %>`;
+    </script>
+  <% else %>
+    <script>
+      const nivelSelectOptionsProcesso = '';
+    </script>
+  <% end %>
+
+  <% if @opcao != 0 && maturidade_selecionada.nivelEscolha == "3" %>
+    <script>
+      <%
+        options_html_dimensao = '<option value="" selected>Selecionar Nível</option>'
+        if maturidade_selecionada.tipoNivel == "1"
+          menor = maturidade_selecionada.menorNivel.to_i
+          maior = maturidade_selecionada.maiorNivel.to_i
+          menor, maior = maior, menor if menor > maior
+          (menor..maior).each do |n|
+            level = @levels.find { |l| l.index.to_i == n && l.modelo_id.to_i == @opcao }
+            desc = level ? " - #{level.descricao}" : ""
+            options_html_dimensao << "<option value='#{n}'>#{n}#{desc}</option>"
+          end
+        else
+          menor = maturidade_selecionada.menorNivel.to_s
+          maior = maturidade_selecionada.maiorNivel.to_s
+          menor, maior = maior, menor if menor > maior
+          (menor..maior).each do |c|
+            level = @levels.find { |l| l.index.to_s == c && l.modelo_id.to_i == @opcao }
+            desc = level ? " - #{level.descricao}" : ""
+            options_html_dimensao << "<option value='#{c}'>#{c}#{desc}</option>"
+          end
+        end
+      %>
+      const nivelSelectOptionsDimensao = `<%= options_html_dimensao.html_safe %>`;
+      const salvar_resultado_escolha = '<%= salvar_resultado_escolha %>';
+    </script>
+  <% else %>
+    <script>
+      const nivelSelectOptionsDimensao = '';
+      const salvar_resultado_escolha = '<%= salvar_resultado_escolha %>';
     </script>
   <% end %>
