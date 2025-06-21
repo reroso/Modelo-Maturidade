@@ -724,7 +724,7 @@
       `;
 
       if(!document.getElementById("editar_resultado_" + dimensao + "_" + processo + "_" + resultado)) {
-        const elementoPai = document.getElementById("main-resultado-" + dimensao + "-" + processo + "-" + resultado);
+        const elementoPai = document.getElementById("main-resultado-" + dimensao + "_" + processo + "_" + resultado);
         elementoPai.insertAdjacentHTML("afterbegin", templateNovoResultadoEsperado);
       } else {
         const elementoDescartado = document.getElementById("editar_resultado_" + dimensao + "_" + processo + "_" + resultado);
@@ -1178,14 +1178,14 @@
 
             // Gera o HTML do select de níveis se necessário
             let nivelSelectHtml = '';
-            if (response.data.nivel_selecionado) {
-              nivelSelectHtml = `
+            if (typeof nivelSelectOptions !== 'undefined' && nivelSelectOptions) {
+                nivelSelectHtml = `
                 <form id="meu_formulario_resultados" action="/cadastroResultado/${response.data.id}/salvar_resultado_nivel" method="post">
-                  <select class="nivel_maturidade_select" style="font-size: 13px!important; padding: 2px 6px" name="nivel_selecionado" onchange="submitForm(this)">
-                    <option value="" selected>Selecionar Nível</option>
-                  </select>
+                    <select class="nivel_maturidade_select" style="font-size: 13px!important; padding: 2px 6px" name="nivel_selecionado" onchange="submitForm(this)">
+                    ${nivelSelectOptions}
+                    </select>
                 </form>
-              `;
+                `;
             }
 
             const html = `
@@ -1334,3 +1334,35 @@
       }
     }
   </script>
+
+  <% if @opcao != 0 && maturidade_selecionada.nivelEscolha == "2" %>
+    <script>
+      <%
+        options_html = '<option value="" selected>Selecionar Nível</option>'
+        if maturidade_selecionada.tipoNivel == "1"
+          menor = maturidade_selecionada.menorNivel.to_i
+          maior = maturidade_selecionada.maiorNivel.to_i
+          menor, maior = maior, menor if menor > maior
+          (menor..maior).each do |n|
+            level = @levels.find { |l| l.index.to_i == n && l.modelo_id.to_i == @opcao }
+            desc = level ? " - #{level.descricao}" : ""
+            options_html << "<option value='#{n}'>#{n}#{desc}</option>"
+          end
+        else
+          menor = maturidade_selecionada.menorNivel.to_s
+          maior = maturidade_selecionada.maiorNivel.to_s
+          menor, maior = maior, menor if menor > maior
+          (menor..maior).each do |c|
+            level = @levels.find { |l| l.index.to_s == c && l.modelo_id.to_i == @opcao }
+            desc = level ? " - #{level.descricao}" : ""
+            options_html << "<option value='#{c}'>#{c}#{desc}</option>"
+          end
+        end
+      %>
+      const nivelSelectOptions = `<%= options_html.html_safe %>`;
+    </script>
+  <% else %>
+    <script>
+      const nivelSelectOptions = '';
+    </script>
+  <% end %>
