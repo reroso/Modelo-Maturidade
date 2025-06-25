@@ -156,7 +156,7 @@
                             <% end %>
                               <!-- Adicionar arquivos -->
                               <li class="file-galery-item d-flex-center-start">
-                                <%= form_with(url: "/cadastroProcesso/#{processo.id}/salvar_processo_docs", method: :post, local: false, multipart: true, data: { remote: true }) do |f| %>
+                                <%= form_with(url: "/cadastroProcesso/#{processo.id}/salvar_processo_docs", method: :post, remote: true, multipart: true) do |f| %>
                                   <%= f.file_field :docs, required: true %>
                                   <%= f.text_field :descricao, class: "input-artefato", id: "descricao_artefato", placeholder: "Descrição do artefato", required: true %>
                                   <%= f.hidden_field :modelo, value: @modelo %>
@@ -244,7 +244,7 @@
                                       <% end %>
                                       <!-- Adicionar arquivos -->
                                       <li class="file-galery-item d-flex-center-start">
-                                          <%= form_with(url: "/cadastroResultado/#{resultado.id}/salvar_resultado_docs", method: :post, local: false, multipart: true, data: { remote: true }) do |f| %>
+                                          <%= form_with(url: "/cadastroResultado/#{resultado.id}/salvar_resultado_docs", method: :post, remote: true, multipart: true) do |f| %>
                                           <%= f.file_field :docs, required: true %>
                                           <%= f.text_field :descricao, class: "input-artefato", id: "descricao_artefato", placeholder: "Descrição do artefato", required: true %>
                                           <%= f.hidden_field :modelo, value: @modelo %>

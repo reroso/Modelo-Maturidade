@@ -1,4 +1,14 @@
-var fileList = document.querySelector("#main-processo-<%= @dimensao.id %>-<%= @processo.id %> .file-galery");
+var forms = document.querySelectorAll('form[action*="salvar_processo_docs"]');
+var fileList = null;
+forms.forEach(function(form) {
+  if (form.action.includes("/cadastroProcesso/<%= @processo.id %>/salvar_processo_docs")) {
+    var li = form.closest('li');
+    if (li) {
+      fileList = li.parentElement;
+    }
+  }
+});
+console.log('fileList:', fileList);
 
 var novoArquivo = `<%= j render partial: 'processo_documento_item', locals: { 
   doc: @attachment, 

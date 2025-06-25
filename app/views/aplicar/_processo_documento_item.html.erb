@@ -1,6 +1,15 @@
 <%# Este partial espera as seguintes variáveis locais: doc, dimensao_id, processo_id, opcao, modelo %>
-<li id="doc-<%= dimensao_id %>-<%= processo_id %>-<%= doc.id %>" class="file-galery-item d-flex-center-start">
-  <h5 class="descricao-artefato"><%= doc.descricao%></h5>
+<li id="doc-<%= dimensao_id %>-<%= processo_id %>--<%= doc.id %>" class="file-galery-item d-flex-center-start">
+  <h5 class="descricao-artefato" id="descricao-doc-<%= doc.id %>"><%= doc.descricao %></h5>
+  <form id="form-editar-descricao-<%= doc.id %>" action="/aplicar/<%= doc.id %>/atualizar_descricao_doc" method="post" style="display:none; margin-right:10px;">
+    <input type="text" name="descricao" value="<%= doc.descricao %>" style="margin-right:5px;">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+    <button type="submit" class="btn-cadastrar">Salvar</button>
+    <button type="button" onclick="toggleDescricao(<%= doc.id %>, false)">Cancelar</button>
+  </form>
+  <button type="button" class="file-galery-item-btn" onclick="toggleDescricao(<%= doc.id %>, true)">
+    <%= image_tag('icons/edit.svg', width: '20px', height: '20px') %>
+  </button>
   <span class="descricao-artefato">-</span>
   <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
   <button onclick="show_popup('confirmar_exclusao', '/cadastroProcesso/<%= doc.id %>/excluir_processo_docs?opcao=<%= opcao %>&modelo=<%= modelo %>')" class="file-galery-item-btn">
