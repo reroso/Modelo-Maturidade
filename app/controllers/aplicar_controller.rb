@@ -34,7 +34,7 @@ class AplicarController < ApplicationController
         @opcao = params[:opcao]
         @modelo = params[:modelo]
         @dimensao = @processo.dimensao
-        
+
         respond_to do |format|
             format.html { redirect_to aplicar_path(opcao: @opcao, modelo: @modelo) }
             format.js
@@ -66,7 +66,7 @@ class AplicarController < ApplicationController
         @opcao = params[:opcao]
         @modelo = params[:modelo]
         @dimensao = @resultado.processo.dimensao
-        
+
         respond_to do |format|
             format.html { redirect_to aplicar_path(opcao: @opcao, modelo: @modelo) }
             format.js
@@ -81,6 +81,15 @@ class AplicarController < ApplicationController
         opcao = params[:opcao]
         modelo = params[:modelo]
 
+        redirect_to aplicar_path(opcao: opcao, modelo: modelo)
+    end
+
+    def atualizar_descricao_doc
+        attachment = ActiveStorage::Attachment.find(params[:id])
+        blob = attachment.blob
+        blob.update(descricao: params[:descricao])
+        opcao = params[:opcao] || params[:modelo]
+        modelo = params[:modelo] || params[:opcao]
         redirect_to aplicar_path(opcao: opcao, modelo: modelo)
     end
 

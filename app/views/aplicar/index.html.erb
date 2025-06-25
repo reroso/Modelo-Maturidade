@@ -135,7 +135,16 @@
                                 <%if doc.modelo == @modelo%>
                                   <!-- Arquivo-1-Dimensão-1 -->
                                   <li id="doc-<%= dimensao.id %>-<%= processo.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-start">
-                                    <h5 class="descricao-artefato"><%= doc.descricao%></h5>
+                                    <h5 class="descricao-artefato" id="descricao-doc-<%= doc.id %>"><%= doc.descricao %></h5>
+                                    <form id="form-editar-descricao-<%= doc.id %>" action="/aplicar/<%= doc.id %>/atualizar_descricao_doc" method="post" style="display:none; margin-right:10px;">
+                                      <input type="text" name="descricao" value="<%= doc.descricao %>" style="margin-right:5px;">
+                                      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                      <button type="submit" class="btn-cadastrar">Salvar</button>
+                                      <button type="button" onclick="toggleDescricao(<%= doc.id %>, false)">Cancelar</button>
+                                    </form>
+                                    <button type="button" class="file-galery-item-btn" onclick="toggleDescricao(<%= doc.id %>, true)">
+                                      <%= image_tag('icons/edit.svg', width: '20px', height: '20px') %>
+                                    </button>
                                     <span class="descricao-artefato">-</span>
                                     <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
                                     <button onclick="show_popup('confirmar_exclusao', '/cadastroProcesso/<%= doc.id %>/excluir_processo_docs?opcao=<%= @opcao %>&modelo=<%= @modelo %>')" class="file-galery-item-btn">
@@ -214,7 +223,16 @@
                                           <!-- Arquivo-1-Dimensão-1 -->
                                           <%if doc.modelo == @modelo%>
                                             <li id="doc-<%= dimensao.id %>-<%= resultado.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-start">
-                                              <h5 class="descricao-artefato"><%= doc.descricao%></h5>
+                                              <h5 class="descricao-artefato" id="descricao-doc-<%= doc.id %>"><%= doc.descricao %></h5>
+                                              <form id="form-editar-descricao-<%= doc.id %>" action="/aplicar/<%= doc.id %>/atualizar_descricao_doc" method="post" style="display:none; margin-right:10px;">
+                                                <input type="text" name="descricao" value="<%= doc.descricao %>" style="margin-right:5px;">
+                                                <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                                <button type="submit" class="btn-cadastrar">Salvar</button>
+                                                <button type="button" onclick="toggleDescricao(<%= doc.id %>, false)">Cancelar</button>
+                                              </form>
+                                              <button type="button" class="file-galery-item-btn" onclick="toggleDescricao(<%= doc.id %>, true)">
+                                                <%= image_tag('icons/edit.svg', width: '20px', height: '20px') %>
+                                              </button>
                                               <span class="descricao-artefato">-</span>
                                               <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
                                               <button onclick="show_popup('confirmar_exclusao', '/cadastroResultado/<%= doc.id %>/excluir_resultado_docs?opcao=<%= @opcao %>&modelo=<%= @modelo %>')" class="file-galery-item-btn">
@@ -537,4 +555,59 @@
     } 
 
 
+</script>
+
+<script>
+function toggleDescricao(docId, editar) {
+  var h5 = document.getElementById('descricao-doc-' + docId);
+  var form = document.getElementById('form-editar-descricao-' + docId);
+  if (editar) {
+    h5.style.display = 'none';
+    form.style.display = 'inline-block';
+  } else {
+    h5.style.display = '';
+    form.style.display = 'none';
+  }
+}
+
+// AJAX para edição de descrição
+window.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('[id^="form-editar-descricao-"]').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var docId = this.id.replace('form-editar-descricao-', '');
+      var input = this.querySelector('input[name="descricao"]');
+      var descricao = input.value;
+      var token = this.querySelector('input[name="authenticity_token"]').value;
+      fetch(this.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRF-Token': token
+        },
+        body: 'descricao=' + encodeURIComponent(descricao) + '&authenticity_token=' + encodeURIComponent(token) + '&id=' + encodeURIComponent(docId)
+      })
+      .then(function(response) {
+        if (response.ok) {
+          document.getElementById('descricao-doc-' + docId).textContent = descricao;
+          toggleDescricao(docId, false);
+        } else {
+          alert('Erro ao salvar descrição!');
+        }
+      });
+    });
+  });
+});
+
+// Limpar campos do formulário de upload após envio assíncrono
+window.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('form[data-remote="true"]').forEach(function(form) {
+    form.addEventListener('ajax:success', function() {
+      var fileInput = form.querySelector('input[type="file"]');
+      var descInput = form.querySelector('input[type="text"]');
+      if (fileInput) fileInput.value = '';
+      if (descInput) descInput.value = '';
+    });
+  });
+});
 </script>
