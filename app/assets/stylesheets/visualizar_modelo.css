@@ -54,14 +54,16 @@
     border-bottom: 1px solid var(--cinza-borda-input);
   }
     .expandable-header-left {
-      margin-bottom: 10px;
-      max-width: 90%;
+      flex: 1;
+      margin-right: 15px;
+      min-width: 0;
       text-align: justify;
     }
       .expandable-header-left h3 {
         font-size: 18px;
-        overflow:hidden; 
         user-select: none;
+        white-space: normal;
+        word-wrap: break-word;
       }
       .expandable-header-left h3 strong {
         color: #8eb729;
@@ -72,11 +74,21 @@
         font-size: 18px;
         margin-right: 8px;
       }
+    .expandable-header-right {
+      flex-shrink: 0;
+    }
+    .expandable-header .select-nivel-maturidade {
+    
+    }
     .expandable-header-btn, .file-galery-item-btn {
       background-color: transparent;
       padding: 5px;
       cursor: pointer;
     }
+
+  .align-top {
+    align-items: flex-start !important;
+  }
 
   .expandable-main {
     margin-left: 20px;

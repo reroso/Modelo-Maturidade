@@ -85,7 +85,6 @@ button {
     }
       .expandable-header-left h3 {
         font-size: 18px;
-        overflow:hidden; 
         user-select: none;
       }
       .expandable-header-left h3 strong {
