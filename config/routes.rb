@@ -112,4 +112,9 @@ Rails.application.routes.draw do
 
   post "/aplicar/:id/atualizar_descricao_doc", to: "aplicar#atualizar_descricao_doc"
 
+  # Rotas para avaliação com IA
+  post '/avaliar/:id/avaliar_com_ia', to: 'avaliar#avaliar_com_ia', as: 'avaliar_com_ia'
+  post '/avaliar/avaliar_lote_com_ia', to: 'avaliar#avaliar_lote_com_ia', as: 'avaliar_lote_com_ia'
+  post '/avaliar/:id/marcar_revisado', to: 'avaliar#marcar_revisado'
+
 end

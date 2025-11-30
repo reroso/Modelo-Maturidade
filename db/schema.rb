@@ -34,6 +34,11 @@ ActiveRecord::Schema.define(version: 2025_06_19_053116) do
     t.text "descricao"
     t.integer "modelo"
     t.text "descricao_avaliador"
+    t.boolean "ai_generated", default: false
+    t.decimal "ai_confidence", precision: 5, scale: 2
+    t.boolean "reviewed_by_appraiser", default: false
+    t.integer "appraiser_id"
+    t.index ["appraiser_id"], name: "index_active_storage_blobs_on_appraiser_id"
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 

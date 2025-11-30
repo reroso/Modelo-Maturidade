@@ -48,3 +48,5 @@ db/schema.rb
 yarn-debug.log*
 .yarn-integrity
 .tool-versions
+
+/config/master.key

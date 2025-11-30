@@ -9,6 +9,9 @@ class AplicarController < ApplicationController
         @modelo = params[:modelo].to_i
         @modelo_aplicado = ModeloAplicado.all
         @levels = Level.all
+        @expertise_areas = ModeloAplicado.distinct.pluck(:dominio).compact
+        @instituicoes = ModeloAplicado.distinct.pluck(:instituicao).compact
+        @metodos = ModeloAplicado.distinct.pluck(:metodo).compact
     end
 
     def atualizar_opcao
@@ -74,14 +77,16 @@ class AplicarController < ApplicationController
     end
 
     def excluir_resultado_docs
-
         attachment = ActiveStorage::Attachment.find(params[:id])
         attachment.purge
 
         opcao = params[:opcao]
         modelo = params[:modelo]
 
-        redirect_to aplicar_path(opcao: opcao, modelo: modelo)
+        respond_to do |format|
+            format.html { redirect_to aplicar_path(opcao: opcao, modelo: modelo) }
+            format.js
+        end
     end
 
     def atualizar_descricao_doc

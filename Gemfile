@@ -27,6 +27,13 @@ gem 'select2-rails'
 gem 'chartkick'
 gem 'gruff'
 
+# Gems para IA
+gem 'dotenv-rails' # Para carregar variáveis de ambiente do arquivo .env
+gem 'ruby-openai', '~> 3.7'
+gem 'httparty'
+gem 'pdf-reader' # Para ler PDFs
+gem 'docx' # Para ler documentos Word
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

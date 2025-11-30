@@ -56,7 +56,7 @@
           <div id="dimencao-<%= dimensao.id %>" class="dimencao">
             <!--A== Header-Dimensão -->
             <div id="header-dimencao-<%= dimensao.id %>" class="expandable-header d-flex-center-between dimencao w-100 align-top">
-              <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(<%= dimensao.id %>)"><!-- o 1 do id é o id da dimensão-->
+              <div class="expandable-header-left d-flex-center-start" onclick="toggleDimensao(<%= dimensao.id %>)"><!-- o 1 do id é o id da dimensão-->
                 <div onclick="expandeMain('dimencao-<%= dimensao.id %>')">
                   <i id="plus-dimencao-<%= dimensao.id %>" class="fa-solid fa-plus"></i>
                   <i id="minus-dimencao-<%= dimensao.id %>" class="fa-solid fa-minus hidden"></i>
@@ -74,7 +74,7 @@
                   <div id="processo-<%= dimensao.id %>-<%= processo.id %>" class="processo">
                     <!--A== Header-Processo-1-1 -->
                     <div id="header-processo-<%= dimensao.id %>-<%= processo.id %>" class="expandable-header d-flex-center-between processo w-100 align-top">
-                      <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(<%= processo.id %>)"><!-- o 1 do id é o id da dimensão-->
+                      <div class="expandable-header-left d-flex-center-start" onclick="toggleProcesso(<%= processo.id %>)"><!-- o 1 do id é o id da dimensão-->
                         <div onclick="expandeMain('processo-<%= dimensao.id %>-<%= processo.id %>')">
                           <i id="plus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid fa-plus abrir_form_resultado_esperado"></i>
                           <i id="minus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid fa-minus hidden"></i>
@@ -121,7 +121,7 @@
                             <ul class="file-galery m-0"  style="border: 0px;">
                             <% if processo.docs.attached? %>
                               <% processo.docs.each do |doc| %>
-                                <%if doc.modelo == @modelo%>
+                                <%if doc.blob.modelo == @modelo%>
                                   <!-- Arquivo-1-Dimensão-1 -->
                                   <li id="doc-<%= dimensao.id %>-<%= processo.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-between m-0" style="border: 0px 0px 1px 0px; padding: 10px;">
                                     <div class="d-flex-center-start">  
@@ -129,15 +129,236 @@
                                       <span class="descricao-artefato">-</span>
                                       <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
                                     </div>
+                                    <!-- Adicionar antes do formulário de avaliação existente -->
+                                    <div class="ai-evaluation-controls" style="margin-bottom: 15px;">
+                                      <button onclick="avaliarComIA(<%= doc.id %>)" class="btn-ai-evaluate" title="Avaliar com IA">
+                                        🤖 Avaliar com IA
+                                      </button>
+                                      
+                                      <% if current_appraiser.expertise_areas.any? %>
+                                        <button onclick="avaliarLoteComIA(<%= @modelo %>)" class="btn-ai-batch" title="Avaliar todos os documentos não avaliados com IA">
+                                          🚀 Avaliar Lote com IA
+                                        </button>
+                                      <% end %>
+                                    </div>
+
+                                    <!-- Modificar o formulário existente para incluir indicadores de IA -->
                                     <form action="/avaliar/<%= doc.id %>/salvar_classificacao_docs" method="post">
-                                        <select name="classificacao" onchange="this.form.submit()">
+                                        <select name="classificacao" onchange="this.form.submit()" <%= doc.blob.ai_generated? ? 'style="border: 2px solid #4CAF50;"' : '' %>>
                                             <option value="" disabled selected>Selecione uma opção</option>
-                                            <option value="1" <%= doc.classificacao == 1 ? 'selected' : '' %>>Atende Totalmente</option>
-                                            <option value="2" <%= doc.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
-                                            <option value="3" <%= doc.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
+                                            <option value="1" <%= doc.blob.classificacao == 1 ? 'selected' : '' %>>Atende Totalmente</option>
+                                            <option value="2" <%= doc.blob.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
+                                            <option value="3" <%= doc.blob.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
                                         </select>
-                                        <textarea name="descricao_avaliador" placeholder="Justifique sua escolha" rows="2" style="width:100%;margin-top:5px;" onchange="this.form.submit()"><%= doc.descricao_avaliador %></textarea>
+                                        
+                                        <% if doc.blob.ai_generated? %>
+                                            <div class="ai-indicator" title="Avaliado por IA">
+                                                🤖 <small>Sugestão de IA</small>
+                                            </div>
+                                        <% end %>
+                                        
+                                        <textarea name="descricao_avaliador" 
+                                                  placeholder="Justifique sua escolha" 
+                                                  rows="2" 
+                                                  style="width:400px;margin-top:5px;resize:none;min-height:40px;overflow-y:hidden;<%= doc.blob.ai_generated? ? 'border: 2px solid #4CAF50;' : '' %>" 
+                                                  onchange="this.form.submit()" 
+                                                  oninput="autoResize(this)"><%= doc.blob.descricao_avaliador %></textarea>
+                                                  
+                                        <% if doc.blob.ai_generated? && !doc.blob.reviewed_by_appraiser? %>
+                                            <div class="ai-review-controls">
+                                                <button type="button" onclick="marcarComoRevisado(<%= doc.id %>)" class="btn-confirm-ai">
+                                                    ✓ Confirmar Avaliação da IA
+                                                </button>
+                                            </div>
+                                        <% end %>
                                     </form>
+
+                                    <!-- Adicionar JavaScript para funcionalidades de IA -->
+                                    <script>
+                                    function avaliarComIA(docId) {
+                                        // Mostrar loading
+                                        showLoading("Avaliando documento com IA...");
+                                        
+                                        fetch(`/avaliar/${docId}/avaliar_com_ia`, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+                                            }
+                                        })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            hideLoading();
+                                            
+                                            if (data.success) {
+                                                // Atualizar a interface com a sugestão da IA
+                                                showNotification(`Avaliação concluída: ${getClassificationText(data.classification)}`, 'success');
+                                                location.reload(); // Recarregar para mostrar as mudanças
+                                            } else {
+                                                showNotification(`Erro na avaliação: ${data.error}`, 'error');
+                                            }
+                                        })
+                                        .catch(error => {
+                                            hideLoading();
+                                            showNotification('Erro na comunicação com o servidor', 'error');
+                                        });
+                                    }
+
+                                    function avaliarLoteComIA(modeloId) {
+                                        if (!confirm('Avaliar todos os documentos não avaliados com IA? Esta operação pode demorar alguns minutos.')) {
+                                            return;
+                                        }
+                                        
+                                        showLoading("Avaliando documentos em lote com IA...");
+                                        
+                                        fetch('/avaliar/avaliar_lote_com_ia', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+                                            },
+                                            body: JSON.stringify({ modelo_id: modeloId })
+                                        })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            hideLoading();
+                                            showNotification(data.message, 'success');
+                                            location.reload();
+                                        })
+                                        .catch(error => {
+                                            hideLoading();
+                                            showNotification('Erro na avaliação em lote', 'error');
+                                        });
+                                    }
+
+                                    function marcarComoRevisado(docId) {
+                                        fetch(`/avaliar/${docId}/marcar_revisado`, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+                                            }
+                                        })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                showNotification('Avaliação confirmada', 'success');
+                                                location.reload();
+                                            }
+                                        });
+                                    }
+
+                                    function getClassificationText(classification) {
+                                        switch(classification) {
+                                            case 1: return 'Atende Totalmente';
+                                            case 2: return 'Atende Parcialmente';
+                                            case 3: return 'Não Atende';
+                                            default: return 'Não classificado';
+                                        }
+                                    }
+
+                                    function showLoading(message) {
+                                        // Implementar overlay de loading
+                                        const loading = document.createElement('div');
+                                        loading.id = 'ai-loading';
+                                        loading.innerHTML = `
+                                            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+                                                <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                                    <div class="spinner"></div>
+                                                    <p>${message}</p>
+                                                </div>
+                                            </div>
+                                        `;
+                                        document.body.appendChild(loading);
+                                    }
+
+                                    function hideLoading() {
+                                        const loading = document.getElementById('ai-loading');
+                                        if (loading) {
+                                            loading.remove();
+                                        }
+                                    }
+
+                                    function showNotification(message, type) {
+                                        // Implementar sistema de notificações
+                                        const notification = document.createElement('div');
+                                        notification.className = `notification ${type}`;
+                                        notification.textContent = message;
+                                        notification.style.cssText = `
+                                            position: fixed;
+                                            top: 20px;
+                                            right: 20px;
+                                            padding: 15px;
+                                            border-radius: 5px;
+                                            color: white;
+                                            z-index: 10000;
+                                            ${type === 'success' ? 'background: #4CAF50;' : 'background: #f44336;'}
+                                        `;
+                                        
+                                        document.body.appendChild(notification);
+                                        
+                                        setTimeout(() => {
+                                            notification.remove();
+                                        }, 5000);
+                                    }
+                                    </script>
+
+                                    <style>
+                                    .ai-evaluation-controls {
+                                        display: flex;
+                                        gap: 10px;
+                                        margin-bottom: 15px;
+                                    }
+
+                                    .btn-ai-evaluate, .btn-ai-batch {
+                                        background: #4CAF50;
+                                        color: white;
+                                        border: none;
+                                        padding: 8px 15px;
+                                        border-radius: 5px;
+                                        cursor: pointer;
+                                        font-size: 12px;
+                                    }
+
+                                    .btn-ai-evaluate:hover, .btn-ai-batch:hover {
+                                        background: #45a049;
+                                    }
+
+                                    .ai-indicator {
+                                        background: #e8f5e8;
+                                        color: #2e7d32;
+                                        padding: 5px;
+                                        border-radius: 3px;
+                                        font-size: 11px;
+                                        margin-top: 5px;
+                                    }
+
+                                    .btn-confirm-ai {
+                                        background: #2196F3;
+                                        color: white;
+                                        border: none;
+                                        padding: 5px 10px;
+                                        border-radius: 3px;
+                                        font-size: 11px;
+                                        margin-top: 5px;
+                                        cursor: pointer;
+                                    }
+
+                                    .spinner {
+                                        border: 4px solid #f3f3f3;
+                                        border-top: 4px solid #3498db;
+                                        border-radius: 50%;
+                                        width: 30px;
+                                        height: 30px;
+                                        animation: spin 1s linear infinite;
+                                        margin: 0 auto 10px;
+                                    }
+
+                                    @keyframes spin {
+                                        0% { transform: rotate(0deg); }
+                                        100% { transform: rotate(360deg); }
+                                    }
+                                    </style>
                                   </li>
                                 <% end %> 
                               <% end %> 
@@ -155,7 +376,7 @@
                             <div id="resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="resultado">
                               <!--A== Header-Resultado -->
                               <div id="header-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-header d-flex-center-between resultado w-100 align-top">
-                                <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(1)"><!-- o 1 do id é o id da dimensão-->
+                                <div class="expandable-header-left d-flex-center-start" onclick="toggleResultado(<%= dimensao.id %>, <%= processo.id %>, <%= resultado.id %>)"><!-- o 1 do id é o id da dimensão-->
                                   <div onclick="expandeMain('resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')">
                                     <i id="plus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid fa-plus"></i>
                                     <i id="minus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid fa-minus hidden"></i>
@@ -190,17 +411,6 @@
                                   <%salvarDescricao = ""%>
                                   <%contadorExistencia = 0%>
                                 </div>
-                                <div class="expandable-header-right">
-                                  <form action="/avaliar/<%= resultado.id %>/salvar_classificacao_resultado" class="form-classificacao-resultado" method="post">
-                                      <select name="classificacao_resultado" onchange="this.form.submit()">
-                                          <option value="" disabled selected>Selecione uma opção</option>
-                                          <option value="1" <%= resultado.classificacao_resultado == 1 ? 'selected' : '' %>>Atende Totalmente</option>
-                                          <option value="2" <%= resultado.classificacao_resultado == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
-                                          <option value="3" <%= resultado.classificacao_resultado == 3 ? 'selected' : '' %>>Não Atende</option>
-                                          <option value="4" <%= resultado.classificacao_resultado == 4 ? 'selected' : '' %>>Não se Aplica</option>
-                                      </select>
-                                  </form>
-                                </div>
                               </div>
                               <!--A== Main-Resultado -->
                               <div id="main-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-main resultado hidden">
@@ -209,19 +419,244 @@
                                     <ul class="file-galery m-0" style="border: 0px;">
                                       <% if resultado.docs.attached? %>
                                         <% resultado.docs.each do |doc| %>
-                                          <%if doc.modelo == @modelo%>
+                                          <%if doc.blob.modelo == @modelo%>
                                             <!-- Arquivo-1-Dimensão-1 -->
                                             <li id="doc-<%= dimensao.id %>-<%= resultado.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-between m-0" style="border: 0px 0px 1px 0px; padding: 10px;">
-                                              <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
+                                              <div class="d-flex-center-start">  
+                                                <h5 class="descricao-artefato"><%= doc.descricao %></h5>
+                                                <span class="descricao-artefato">-</span>
+                                                <%= link_to doc.filename, rails_blob_path(doc, disposition: 'attachment'), class: 'download-link' %>
+                                              </div>
+                                              <!-- Adicionar antes do formulário de avaliação existente -->
+                                              <div class="ai-evaluation-controls" style="margin-bottom: 15px;">
+                                                <button onclick="avaliarComIA(<%= doc.id %>)" class="btn-ai-evaluate" title="Avaliar com IA">
+                                                  🤖 Avaliar com IA
+                                                </button>
+                                                
+                                                <% if current_appraiser.expertise_areas.any? %>
+                                                  <button onclick="avaliarLoteComIA(<%= @modelo %>)" class="btn-ai-batch" title="Avaliar todos os documentos não avaliados com IA">
+                                                    🚀 Avaliar Lote com IA
+                                                  </button>
+                                                <% end %>
+                                              </div>
+
+                                              <!-- Modificar o formulário existente para incluir indicadores de IA -->
                                               <form action="/avaliar/<%= doc.id %>/salvar_classificacao_docs" method="post">
-                                                  <select name="classificacao" onchange="this.form.submit()">
+                                                  <select name="classificacao" onchange="this.form.submit()" <%= doc.blob.ai_generated? ? 'style="border: 2px solid #4CAF50;"' : '' %>>
                                                       <option value="" disabled selected>Selecione uma opção</option>
-                                                      <option value="1" <%= doc.classificacao == 1 ? 'selected' : '' %>>Atende Totalmente</option>
-                                                      <option value="2" <%= doc.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
-                                                      <option value="3" <%= doc.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
+                                                      <option value="1" <%= doc.blob.classificacao == 1 ? 'selected' : '' %>>Atende Totalmente</option>
+                                                      <option value="2" <%= doc.blob.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
+                                                      <option value="3" <%= doc.blob.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
                                                   </select>
-                                                  <textarea name="descricao_avaliador" placeholder="Justifique sua escolha" rows="2" style="width:100%;margin-top:5px;" onchange="this.form.submit()"><%= doc.descricao_avaliador %></textarea>
+                                                  
+                                                  <% if doc.blob.ai_generated? %>
+                                                      <div class="ai-indicator" title="Avaliado por IA">
+                                                          🤖 <small>Sugestão de IA</small>
+                                                      </div>
+                                                  <% end %>
+                                                  
+                                                  <textarea name="descricao_avaliador" 
+                                                            placeholder="Justifique sua escolha" 
+                                                            rows="2" 
+                                                            style="width:400px;margin-top:5px;resize:none;min-height:40px;overflow-y:hidden;<%= doc.blob.ai_generated? ? 'border: 2px solid #4CAF50;' : '' %>" 
+                                                            onchange="this.form.submit()" 
+                                                            oninput="autoResize(this)"><%= doc.blob.descricao_avaliador %></textarea>
+                                                            
+                                                  <% if doc.blob.ai_generated? && !doc.blob.reviewed_by_appraiser? %>
+                                                      <div class="ai-review-controls">
+                                                          <button type="button" onclick="marcarComoRevisado(<%= doc.id %>)" class="btn-confirm-ai">
+                                                              ✓ Confirmar Avaliação da IA
+                                                          </button>
+                                                      </div>
+                                                  <% end %>
                                               </form>
+
+                                              <!-- Adicionar JavaScript para funcionalidades de IA -->
+                                              <script>
+                                              function avaliarComIA(docId) {
+                                                  // Mostrar loading
+                                                  showLoading("Avaliando documento com IA...");
+                                                  
+                                                  fetch(`/avaliar/${docId}/avaliar_com_ia`, {
+                                                      method: 'POST',
+                                                      headers: {
+                                                          'Content-Type': 'application/json',
+                                                          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+                                                      }
+                                                  })
+                                                  .then(response => response.json())
+                                                  .then(data => {
+                                                      hideLoading();
+                                                      
+                                                      if (data.success) {
+                                                          // Atualizar a interface com a sugestão da IA
+                                                          showNotification(`Avaliação concluída: ${getClassificationText(data.classification)}`, 'success');
+                                                          location.reload(); // Recarregar para mostrar as mudanças
+                                                      } else {
+                                                          showNotification(`Erro na avaliação: ${data.error}`, 'error');
+                                                      }
+                                                  })
+                                                  .catch(error => {
+                                                      hideLoading();
+                                                      showNotification('Erro na comunicação com o servidor', 'error');
+                                                  });
+                                              }
+
+                                              function avaliarLoteComIA(modeloId) {
+                                                  if (!confirm('Avaliar todos os documentos não avaliados com IA? Esta operação pode demorar alguns minutos.')) {
+                                                      return;
+                                                  }
+                                                  
+                                                  showLoading("Avaliando documentos em lote com IA...");
+                                                  
+                                                  fetch('/avaliar/avaliar_lote_com_ia', {
+                                                      method: 'POST',
+                                                      headers: {
+                                                          'Content-Type': 'application/json',
+                                                          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+                                                      },
+                                                      body: JSON.stringify({ modelo_id: modeloId })
+                                                  })
+                                                  .then(response => response.json())
+                                                  .then(data => {
+                                                      hideLoading();
+                                                      showNotification(data.message, 'success');
+                                                      location.reload();
+                                                  })
+                                                  .catch(error => {
+                                                      hideLoading();
+                                                      showNotification('Erro na avaliação em lote', 'error');
+                                                  });
+                                              }
+
+                                              function marcarComoRevisado(docId) {
+                                                  fetch(`/avaliar/${docId}/marcar_revisado`, {
+                                                      method: 'POST',
+                                                      headers: {
+                                                          'Content-Type': 'application/json',
+                                                          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+                                                      }
+                                                  })
+                                                  .then(response => response.json())
+                                                  .then(data => {
+                                                      if (data.success) {
+                                                          showNotification('Avaliação confirmada', 'success');
+                                                          location.reload();
+                                                      }
+                                                  });
+                                              }
+
+                                              function getClassificationText(classification) {
+                                                  switch(classification) {
+                                                      case 1: return 'Atende Totalmente';
+                                                      case 2: return 'Atende Parcialmente';
+                                                      case 3: return 'Não Atende';
+                                                      default: return 'Não classificado';
+                                                  }
+                                              }
+
+                                              function showLoading(message) {
+                                                  // Implementar overlay de loading
+                                                  const loading = document.createElement('div');
+                                                  loading.id = 'ai-loading';
+                                                  loading.innerHTML = `
+                                                      <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+                                                          <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                                              <div class="spinner"></div>
+                                                              <p>${message}</p>
+                                                          </div>
+                                                      </div>
+                                                  `;
+                                                  document.body.appendChild(loading);
+                                              }
+
+                                              function hideLoading() {
+                                                  const loading = document.getElementById('ai-loading');
+                                                  if (loading) {
+                                                      loading.remove();
+                                                  }
+                                              }
+
+                                              function showNotification(message, type) {
+                                                  // Implementar sistema de notificações
+                                                  const notification = document.createElement('div');
+                                                  notification.className = `notification ${type}`;
+                                                  notification.textContent = message;
+                                                  notification.style.cssText = `
+                                                      position: fixed;
+                                                      top: 20px;
+                                                      right: 20px;
+                                                      padding: 15px;
+                                                      border-radius: 5px;
+                                                      color: white;
+                                                      z-index: 10000;
+                                                      ${type === 'success' ? 'background: #4CAF50;' : 'background: #f44336;'}
+                                                  `;
+                                                  
+                                                  document.body.appendChild(notification);
+                                                  
+                                                  setTimeout(() => {
+                                                      notification.remove();
+                                                  }, 5000);
+                                              }
+                                              </script>
+
+                                              <style>
+                                              .ai-evaluation-controls {
+                                                  display: flex;
+                                                  gap: 10px;
+                                                  margin-bottom: 15px;
+                                              }
+
+                                              .btn-ai-evaluate, .btn-ai-batch {
+                                                  background: #4CAF50;
+                                                  color: white;
+                                                  border: none;
+                                                  padding: 8px 15px;
+                                                  border-radius: 5px;
+                                                  cursor: pointer;
+                                                  font-size: 12px;
+                                              }
+
+                                              .btn-ai-evaluate:hover, .btn-ai-batch:hover {
+                                                  background: #45a049;
+                                              }
+
+                                              .ai-indicator {
+                                                  background: #e8f5e8;
+                                                  color: #2e7d32;
+                                                  padding: 5px;
+                                                  border-radius: 3px;
+                                                  font-size: 11px;
+                                                  margin-top: 5px;
+                                              }
+
+                                              .btn-confirm-ai {
+                                                  background: #2196F3;
+                                                  color: white;
+                                                  border: none;
+                                                  padding: 5px 10px;
+                                                  border-radius: 3px;
+                                                  font-size: 11px;
+                                                  margin-top: 5px;
+                                                  cursor: pointer;
+                                              }
+
+                                              .spinner {
+                                                  border: 4px solid #f3f3f3;
+                                                  border-top: 4px solid #3498db;
+                                                  border-radius: 50%;
+                                                  width: 30px;
+                                                  height: 30px;
+                                                  animation: spin 1s linear infinite;
+                                                  margin: 0 auto 10px;
+                                              }
+
+                                              @keyframes spin {
+                                                  0% { transform: rotate(0deg); }
+                                                  100% { transform: rotate(360deg); }
+                                              }
+                                              </style>
                                             </li>
                                           <% end %>
                                         <% end %> 
@@ -248,6 +683,11 @@
       <% end %> <!-- /M -->
     </section>
   </main>
+
+  <style>
+    /* Forçar que os blocos expansíveis da página Avaliar comecem escondidos */
+    .main-content.main-utlizar-modelo .expandable-main { display: none !important; }
+  </style>
 
 <style>
   .expandable-header {
@@ -364,16 +804,80 @@
 
   <script>
     //* Expande e contrai main dimensão
-    function show_todos_processos(form_id,dimensao){
-        if((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-plus")){
-        document.getElementById(`dimensao_child_`+dimensao).classList.remove('hidden');
-        document.getElementById(form_id).classList.remove('icon-plus');
-        document.getElementById(form_id).classList.add('icon-minus');
-        } else if ((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-minus")) {
-        document.getElementById(`dimensao_child_`+dimensao).classList.add('hidden');
-        document.getElementById(form_id).classList.remove('icon-minus');
-        document.getElementById(form_id).classList.add('icon-plus');
-        }
+    // Toggle functions para controlar abertura/fechamento das camadas
+    function toggleDimensao(dimensaoId) {
+      var main = document.getElementById('main-dimencao-' + dimensaoId);
+      var plus = document.getElementById('plus-dimencao-' + dimensaoId);
+      var minus = document.getElementById('minus-dimencao-' + dimensaoId);
+
+      if (!main || !plus || !minus) return;
+
+      if (main.classList.contains('hidden')) {
+        main.classList.remove('hidden');
+        main.style.display = '';
+        plus.classList.add('hidden');
+        minus.classList.remove('hidden');
+      } else {
+        main.classList.add('hidden');
+        main.style.display = 'none';
+        plus.classList.remove('hidden');
+        minus.classList.add('hidden');
+      }
+    }
+
+    function toggleProcesso(processoId) {
+      // processoId é o id do processo, os elementos são identificados por 'main-processo-<dimensao>-<processo>'
+      // Procuramos por qualquer elemento cujo id termine com '-<processoId>' e comece com 'main-processo-'
+      var selector = "[id^='main-processo-'][id$='-" + processoId + "']";
+      var main = document.querySelector(selector);
+      var plus = document.getElementById("plus-processo-" + processoId);
+      var minus = document.getElementById("minus-processo-" + processoId);
+
+      if (!main) {
+        // fallback: tentar localizar por parte do id quando existem dupla referência (dimensao-processo)
+        main = document.querySelector("div[id*='main-processo-'][id*='-" + processoId + "']");
+      }
+
+      if (!main) return;
+
+      if (plus) plus.classList.add('hidden');
+      if (minus) minus.classList.remove('hidden');
+
+      if (main.classList.contains('hidden')) {
+        main.classList.remove('hidden');
+        main.style.display = '';
+        if (plus) plus.classList.add('hidden');
+        if (minus) minus.classList.remove('hidden');
+      } else {
+        main.classList.add('hidden');
+        main.style.display = 'none';
+        if (plus) plus.classList.remove('hidden');
+        if (minus) minus.classList.add('hidden');
+      }
+    }
+
+    function toggleResultado(dimensaoId, processoId, resultadoId) {
+      var mainId = 'main-resultado-' + dimensaoId + '-' + processoId + '-' + resultadoId;
+      var plusId = 'plus-resultado-' + dimensaoId + '-' + processoId + '-' + resultadoId;
+      var minusId = 'minus-resultado-' + dimensaoId + '-' + processoId + '-' + resultadoId;
+
+      var main = document.getElementById(mainId);
+      var plus = document.getElementById(plusId);
+      var minus = document.getElementById(minusId);
+
+      if (!main) return;
+
+      if (main.classList.contains('hidden')) {
+        main.classList.remove('hidden');
+        main.style.display = '';
+        if (plus) plus.classList.add('hidden');
+        if (minus) minus.classList.remove('hidden');
+      } else {
+        main.classList.add('hidden');
+        main.style.display = 'none';
+        if (plus) plus.classList.remove('hidden');
+        if (minus) minus.classList.add('hidden');
+      }
     }
 
     //* Expande e contrai main processos
@@ -394,6 +898,28 @@
     }     
 
     $(document).ready(function(){
+
+      // Redimensionar todos os textareas com conteúdo ao carregar a página
+      setTimeout(function() {
+        document.querySelectorAll('textarea[name="descricao_avaliador"]').forEach(function(textarea) {
+          autoResize(textarea);
+        });
+      }, 100);
+      
+      // Segunda tentativa com delay maior para garantir que o conteúdo foi renderizado
+      setTimeout(function() {
+        document.querySelectorAll('textarea[name="descricao_avaliador"]').forEach(function(textarea) {
+          if (textarea.value && textarea.value.trim() !== '') {
+            autoResize(textarea);
+          }
+        });
+      }, 500);
+
+      // Garantir que todos os blocos expansíveis comecem escondidos (fallback)
+      document.querySelectorAll('.expandable-main').forEach(function(el) {
+        try { el.style.display = 'none'; } catch(e) {}
+        if (!el.classList.contains('hidden')) el.classList.add('hidden');
+      });
 
       $(".header-select #modelo_aplicado_id").change(function(){
         var classeDaOpcao = this.value;
@@ -481,4 +1007,77 @@
             div_ModelosSalvos.classList.add('hidden');
         }
     }
+
+    // Função para redimensionar automaticamente o textarea
+    function autoResize(textarea) {
+        // Reset da altura para calcular corretamente
+        textarea.style.height = 'auto';
+        
+        // Calcular a altura necessária baseada no conteúdo
+        var scrollHeight = textarea.scrollHeight;
+        var minHeight = 40; // altura mínima em pixels
+        
+        // Usar a maior altura entre scrollHeight e minHeight
+        var newHeight = Math.max(scrollHeight, minHeight);
+        
+        // Aplicar a nova altura
+        textarea.style.height = newHeight + 'px';
+    }
+
+    // Normaliza a árvore DOM: move .processo e .resultado para seus containers corretos
+    function normalizeNesting() {
+      try {
+        // Move processos para dentro de main-dimencao-<dimensaoId>
+        document.querySelectorAll('div[id^="processo-"]').forEach(function(el) {
+          if (!el.classList.contains('processo')) return;
+          var parts = el.id.split('-'); // ['processo', '<dimensaoId>', '<processoId>']
+          if (parts.length < 3) return;
+          var dimensaoId = parts[1];
+          var target = document.getElementById('main-dimencao-' + dimensaoId);
+          if (target && !el.closest('#main-dimencao-' + dimensaoId)) {
+            target.appendChild(el);
+            console.log('Moved processo', el.id, 'into', target.id);
+          }
+        });
+
+        // Move resultados para dentro de main-processo-<dimensao>-<processo>
+        document.querySelectorAll('div[id^="resultado-"]').forEach(function(el) {
+          if (!el.classList.contains('resultado')) return;
+          var parts = el.id.split('-'); // ['resultado', '<dimensaoId>', '<processoId>', '<resultadoId>']
+          if (parts.length < 4) return;
+          var dimensaoId = parts[1];
+          var processoId = parts[2];
+          var target = document.getElementById('main-processo-' + dimensaoId + '-' + processoId);
+          if (target && !el.closest('#main-processo-' + dimensaoId + '-' + processoId)) {
+            target.appendChild(el);
+            console.log('Moved resultado', el.id, 'into', target.id);
+          }
+        });
+      } catch(e) {
+        console.error('normalizeNesting error', e);
+      }
+    }
+
+    // Executa após renderização completa
+    setTimeout(function() { normalizeNesting(); }, 150);
+
+    // Corrigir elementos mal-nested: esconder processos/resultado que não estão dentro do seu pai esperado
+    setTimeout(function() {
+      try {
+        document.querySelectorAll('.processo').forEach(function(proc) {
+          if (!proc.closest("[id^='main-dimencao-']") && !proc.closest("[id^='main-processo-']")) {
+            proc.style.display = 'none';
+          }
+        });
+
+        document.querySelectorAll('.resultado').forEach(function(res) {
+          if (!res.closest("[id^='main-processo-']") && !res.closest("[id^='main-resultado-']")) {
+            res.style.display = 'none';
+          }
+        });
+      } catch(e) {
+        // não bloquear se houver erro
+        console.error('cleanup nesting error', e);
+      }
+    }, 100);
 </script>

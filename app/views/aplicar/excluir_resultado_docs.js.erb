@@ -1,0 +1,3 @@
+// Remove o item da lista de evidências do resultado
+var li = document.getElementById('doc-<%= @attachment.record.processo.dimensao_id %>-<%= @attachment.record_id %>--<%= @attachment.id %>');
+if (li) li.remove(); 

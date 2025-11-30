@@ -71,21 +71,33 @@ button {
 
 .dimencao, .processo, .resultado {
   margin-bottom: 15px;
+  max-width: 100%;
 }
 .processo, .resultado {
   margin-top: 20px;
+  width: 100%;
 }
   .expandable-header {
     border-bottom: 1px solid var(--cinza-borda-input);
   }
     .expandable-header-left {
       margin-bottom: 10px;
-      max-width: 90%;
+      max-width: 100%;
       text-align: justify;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
       .expandable-header-left h3 {
         font-size: 18px;
         user-select: none;
+        white-space: normal;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+        line-height: 1.4;
+        max-height: 25px;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
       }
       .expandable-header-left h3 strong {
         color: #8eb729;

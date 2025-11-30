@@ -935,15 +935,40 @@
 <section class="pop-up-calcularNivel d-flex-center-center hidden" id="popup_Grafico">
     <div class="popup-main d-flex-center-evenly flex-column" style="height: auto; min-height: 800px; width: 90vw; max-width: 1800px; padding: 20px;" id="popup_GraficoMain">
         <button onclick="mostra_Grafico()" style="align-self: flex-end; background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-size: 18px; cursor: pointer; margin-bottom: 10px;">X</button>
-        <div class="popup-content" style="width: 100%; height: 700px; overflow: hidden;">
-        <button onclick="exportarModeloPDF()" class="btn btn-success">
-            <i class="fa-solid fa-file-pdf"></i> Exportar Modelo Completo
+        <div class="popup-content" style="width: 100%; height: 700px;">
+        <button onclick="exportarModeloPDF()" class="btn btn-success exportar-relatorio-btn">
+            <i class="fa-solid fa-file-pdf"></i> Exportar Relatório
         </button>
-            <<!-- Adicione o canvas aqui -->>
-            <canvas id="classificacoesChart" style="width: 100%; height: 100%;"></canvas>
+        <canvas id="classificacoesChart" style="width: 100%; height: 700px;"></canvas>
         </div>
     </div>
 </section>
+
+<style>
+.exportar-relatorio-btn {
+    padding: 8px 18px;
+    font-size: 15px;
+    border-radius: 5px;
+    background-color: #d32f2f;
+    color: #fff;
+    border: none;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.exportar-relatorio-btn:hover {
+    background-color: #b71c1c;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    color: #fff;
+}
+.exportar-relatorio-btn i {
+    font-size: 18px;
+}
+</style>
 
 <script>
 
