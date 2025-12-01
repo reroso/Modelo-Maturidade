@@ -19,9 +19,11 @@
           <%= image_tag('icons/info.svg', width: '25px', height: '25px') %>
         </button>
       </div>
+      <% if @opcao != 0 %>
+        <% maturidade_selecionada = Maturidade.find(@opcao) %>
+      <% end %>
       <div style="display: none">
         <%if @opcao != 0%>
-            <% maturidade_selecionada = Maturidade.find(@opcao)%>
             <div id="mudancaResultado" class="<%=maturidade_selecionada.resultadoEscolha%>"> </div>
             <div id="maturidadeSelecionadaNivelEscolha" class="<%= maturidade_selecionada.nivelEscolha%>"></div>
         <%end%>
@@ -126,7 +128,7 @@
                     <!--A== Main-Processo-1-1 -->
                     <div id="main-processo-<%= dimensao.id %>-<%= processo.id %>" class="expandable-main processo hidden">
                       <%if @opcao != 0%>
-                        <%if maturidade_selecionada.nivelEscolha == "1" || (maturidade_selecionada.nivelEscolha == "3" && maturidade_selecionada.resultadoEscolha == "1") %> <!--x ESTAMOS AQUI
+                        <%if maturidade_selecionada.nivelEscolha == "1" || (maturidade_selecionada.nivelEscolha == "3" && maturidade_selecionada.resultadoEscolha == "1") %>
                           <div class="file-galery-wrapper dimencao">
                             <h4 class="file-galery-wrapper-title">Upload de artefatos</h4>
                             <ul class="file-galery">
