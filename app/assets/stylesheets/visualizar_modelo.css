@@ -64,6 +64,8 @@
         user-select: none;
         white-space: normal;
         word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.4;
       }
       .expandable-header-left h3 strong {
         color: #8eb729;
