@@ -38,9 +38,11 @@
         </div>
       </div> 
       -->
+      <% if @opcao != 0 %>
+        <% maturidade_selecionada = Maturidade.find(@opcao) %>
+      <% end %>
       <div style="display: none">
         <%if @opcao != 0%>
-            <% maturidade_selecionada = Maturidade.find(@opcao)%>
             <div id="mudancaResultado" class="<%=maturidade_selecionada.resultadoEscolha%>"> </div>
             <div id="maturidadeSelecionadaNivelEscolha" class="<%= maturidade_selecionada.nivelEscolha%>"></div>
         <%end%>
@@ -56,12 +58,12 @@
           <div id="dimencao-<%= dimensao.id %>" class="dimencao">
             <!--A== Header-Dimensão -->
             <div id="header-dimencao-<%= dimensao.id %>" class="expandable-header d-flex-center-between dimencao w-100 align-top">
-              <div class="expandable-header-left d-flex-center-start" onclick="toggleDimensao(<%= dimensao.id %>)"><!-- o 1 do id é o id da dimensão-->
+              <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(<%= dimensao.id %>)"><!-- o 1 do id é o id da dimensão-->
                 <div onclick="expandeMain('dimencao-<%= dimensao.id %>')">
                   <i id="plus-dimencao-<%= dimensao.id %>" class="fa-solid fa-plus"></i>
                   <i id="minus-dimencao-<%= dimensao.id %>" class="fa-solid fa-minus hidden"></i>
                 </div>
-                <h3 id="titulo-nivel-<%= dimensao.id %>" onclick="mostra_titulo('<%= dimensao.id %>')"> <strong><%= contadorDimensaos %>- </strong><%= dimensao.descricao %></h3>
+                <h3 id="titulo-nivel-<%= dimensao.id %>"> <strong><%= contadorDimensaos %>- </strong><%= dimensao.descricao %></h3>
               </div>
             </div>
           
@@ -74,12 +76,12 @@
                   <div id="processo-<%= dimensao.id %>-<%= processo.id %>" class="processo">
                     <!--A== Header-Processo-1-1 -->
                     <div id="header-processo-<%= dimensao.id %>-<%= processo.id %>" class="expandable-header d-flex-center-between processo w-100 align-top">
-                      <div class="expandable-header-left d-flex-center-start" onclick="toggleProcesso(<%= processo.id %>)"><!-- o 1 do id é o id da dimensão-->
+                      <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(<%= processo.id %>)"><!-- o 1 do id é o id da dimensão-->
                         <div onclick="expandeMain('processo-<%= dimensao.id %>-<%= processo.id %>')">
                           <i id="plus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid fa-plus abrir_form_resultado_esperado"></i>
                           <i id="minus-processo-<%= dimensao.id %>-<%= processo.id %>" class="fa-solid fa-minus hidden"></i>
                         </div>
-                        <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>')"><strong><%= contadorDimensaos %>.<%= contadorProcessos %> - </strong><%= processo.descricao %></h3>
+                        <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>"><strong><%= contadorDimensaos %>.<%= contadorProcessos %> - </strong><%= processo.descricao %></h3>
                         <% if processo.nivel_selecionado %>
                           <%if maturidade_selecionada.tipoNivel == "1"%>
                             <%salvarDescricao = ""%>
@@ -121,7 +123,7 @@
                             <ul class="file-galery m-0"  style="border: 0px;">
                             <% if processo.docs.attached? %>
                               <% processo.docs.each do |doc| %>
-                                <%if doc.blob.modelo == @modelo%>
+                                <%if doc.blob.modelo.to_i == @modelo%>
                                   <!-- Arquivo-1-Dimensão-1 -->
                                   <li id="doc-<%= dimensao.id %>-<%= processo.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-between m-0" style="border: 0px 0px 1px 0px; padding: 10px;">
                                     <div class="d-flex-center-start">  
@@ -144,14 +146,15 @@
 
                                     <!-- Modificar o formulário existente para incluir indicadores de IA -->
                                     <form action="/avaliar/<%= doc.id %>/salvar_classificacao_docs" method="post">
-                                        <select name="classificacao" onchange="this.form.submit()" <%= doc.blob.ai_generated? ? 'style="border: 2px solid #4CAF50;"' : '' %>>
+                                        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                                        <select name="classificacao" onchange="this.form.submit()" <%= doc.blob.ai_generated ? 'style="border: 2px solid #4CAF50;"' : '' %>>
                                             <option value="" disabled selected>Selecione uma opção</option>
-                                            <option value="1" <%= doc.blob.classificacao == 1 ? 'selected' : '' %>>Atende Totalmente</option>
-                                            <option value="2" <%= doc.blob.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
-                                            <option value="3" <%= doc.blob.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
+                                            <option value="1" <%= doc.blob.classificacao.to_i == 1 ? 'selected' : '' %>>Atende Totalmente</option>
+                                            <option value="2" <%= doc.blob.classificacao.to_i == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
+                                            <option value="3" <%= doc.blob.classificacao.to_i == 3 ? 'selected' : '' %>>Não Atende</option>
                                         </select>
                                         
-                                        <% if doc.blob.ai_generated? %>
+                                        <% if doc.blob.ai_generated %>
                                             <div class="ai-indicator" title="Avaliado por IA">
                                                 🤖 <small>Sugestão de IA</small>
                                             </div>
@@ -160,11 +163,11 @@
                                         <textarea name="descricao_avaliador" 
                                                   placeholder="Justifique sua escolha" 
                                                   rows="2" 
-                                                  style="width:400px;margin-top:5px;resize:none;min-height:40px;overflow-y:hidden;<%= doc.blob.ai_generated? ? 'border: 2px solid #4CAF50;' : '' %>" 
+                                                  style="width:400px;margin-top:5px;resize:none;min-height:40px;overflow-y:hidden;<%= doc.blob.ai_generated ? 'border: 2px solid #4CAF50;' : '' %>" 
                                                   onchange="this.form.submit()" 
                                                   oninput="autoResize(this)"><%= doc.blob.descricao_avaliador %></textarea>
                                                   
-                                        <% if doc.blob.ai_generated? && !doc.blob.reviewed_by_appraiser? %>
+                                        <% if doc.blob.ai_generated && !doc.blob.reviewed_by_appraiser %>
                                             <div class="ai-review-controls">
                                                 <button type="button" onclick="marcarComoRevisado(<%= doc.id %>)" class="btn-confirm-ai">
                                                     ✓ Confirmar Avaliação da IA
@@ -376,12 +379,12 @@
                             <div id="resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="resultado">
                               <!--A== Header-Resultado -->
                               <div id="header-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="expandable-header d-flex-center-between resultado w-100 align-top">
-                                <div class="expandable-header-left d-flex-center-start" onclick="toggleResultado(<%= dimensao.id %>, <%= processo.id %>, <%= resultado.id %>)"><!-- o 1 do id é o id da dimensão-->
+                                <div class="expandable-header-left d-flex-center-start" onclick="show_todos_processos(1)"><!-- o 1 do id é o id da dimensão-->
                                   <div onclick="expandeMain('resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')">
                                     <i id="plus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid fa-plus"></i>
                                     <i id="minus-resultado-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" class="fa-solid fa-minus hidden"></i>
                                   </div>
-                                  <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>" onclick="mostra_titulo('<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>')"><strong><%= contadorDimensaos %>.<%= contadorProcessos %>.<%= contadorResultados %> - </strong><%= resultado.descricao %></h3>
+                                  <h3 id="titulo-nivel-<%= dimensao.id %>-<%= processo.id %>-<%= resultado.id %>"><strong><%= contadorDimensaos %>.<%= contadorProcessos %>.<%= contadorResultados %> - </strong><%= resultado.descricao %></h3>
                                   <%if maturidade_selecionada.tipoNivel == "1"%>
                                     <%salvarDescricao = ""%>
                                     <%contadorExistencia = 0%>
@@ -419,7 +422,7 @@
                                     <ul class="file-galery m-0" style="border: 0px;">
                                       <% if resultado.docs.attached? %>
                                         <% resultado.docs.each do |doc| %>
-                                          <%if doc.blob.modelo == @modelo%>
+                                          <%if doc.blob.modelo.to_i == @modelo%>
                                             <!-- Arquivo-1-Dimensão-1 -->
                                             <li id="doc-<%= dimensao.id %>-<%= resultado.id %>--<%= doc.id %>" class="file-galery-item d-flex-center-between m-0" style="border: 0px 0px 1px 0px; padding: 10px;">
                                               <div class="d-flex-center-start">  
@@ -442,14 +445,15 @@
 
                                               <!-- Modificar o formulário existente para incluir indicadores de IA -->
                                               <form action="/avaliar/<%= doc.id %>/salvar_classificacao_docs" method="post">
-                                                  <select name="classificacao" onchange="this.form.submit()" <%= doc.blob.ai_generated? ? 'style="border: 2px solid #4CAF50;"' : '' %>>
+                                                  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                                                  <select name="classificacao" onchange="this.form.submit()" <%= doc.blob.ai_generated ? 'style="border: 2px solid #4CAF50;"' : '' %>>
                                                       <option value="" disabled selected>Selecione uma opção</option>
-                                                      <option value="1" <%= doc.blob.classificacao == 1 ? 'selected' : '' %>>Atende Totalmente</option>
-                                                      <option value="2" <%= doc.blob.classificacao == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
-                                                      <option value="3" <%= doc.blob.classificacao == 3 ? 'selected' : '' %>>Não Atende</option>
+                                                      <option value="1" <%= doc.blob.classificacao.to_i == 1 ? 'selected' : '' %>>Atende Totalmente</option>
+                                                      <option value="2" <%= doc.blob.classificacao.to_i == 2 ? 'selected' : '' %>>Atende Parcialmente</option>
+                                                      <option value="3" <%= doc.blob.classificacao.to_i == 3 ? 'selected' : '' %>>Não Atende</option>
                                                   </select>
                                                   
-                                                  <% if doc.blob.ai_generated? %>
+                                                  <% if doc.blob.ai_generated %>
                                                       <div class="ai-indicator" title="Avaliado por IA">
                                                           🤖 <small>Sugestão de IA</small>
                                                       </div>
@@ -458,11 +462,11 @@
                                                   <textarea name="descricao_avaliador" 
                                                             placeholder="Justifique sua escolha" 
                                                             rows="2" 
-                                                            style="width:400px;margin-top:5px;resize:none;min-height:40px;overflow-y:hidden;<%= doc.blob.ai_generated? ? 'border: 2px solid #4CAF50;' : '' %>" 
+                                                            style="width:400px;margin-top:5px;resize:none;min-height:40px;overflow-y:hidden;<%= doc.blob.ai_generated ? 'border: 2px solid #4CAF50;' : '' %>" 
                                                             onchange="this.form.submit()" 
                                                             oninput="autoResize(this)"><%= doc.blob.descricao_avaliador %></textarea>
                                                             
-                                                  <% if doc.blob.ai_generated? && !doc.blob.reviewed_by_appraiser? %>
+                                                  <% if doc.blob.ai_generated && !doc.blob.reviewed_by_appraiser %>
                                                       <div class="ai-review-controls">
                                                           <button type="button" onclick="marcarComoRevisado(<%= doc.id %>)" class="btn-confirm-ai">
                                                               ✓ Confirmar Avaliação da IA
@@ -684,11 +688,6 @@
     </section>
   </main>
 
-  <style>
-    /* Forçar que os blocos expansíveis da página Avaliar comecem escondidos */
-    .main-content.main-utlizar-modelo .expandable-main { display: none !important; }
-  </style>
-
 <style>
   .expandable-header {
     align-items: flex-start !important;
@@ -698,6 +697,7 @@
 
   <script>
     //contante de todos os ids de todos os popups da pagina;
+    console.log("ta aqui");
     const listaPopups = ["cadastrar_dominio", "confirmar_exclusao"];
 
     //Função para mostrar um popup qualquer
@@ -756,19 +756,22 @@
     <!--# Função de expandir e retrair as camadas dos modelos -->
   <script>
     function expandeMain(id_expandir) {
+      console.log('expandeMain chamado com:', id_expandir);
       var div_expandir = document.getElementById('main-' + id_expandir);
       var plus_trocar = document.getElementById('plus-' + id_expandir);
       var minus_trocar = document.getElementById('minus-' + id_expandir);
 
-      if (div_expandir.classList.contains('hidden')) {
+      if (div_expandir && div_expandir.classList.contains('hidden')) {
         div_expandir.classList.remove('hidden');
-        plus_trocar.classList.add('hidden');
-        minus_trocar.classList.remove('hidden');
+        div_expandir.style.display = '';
+        if(plus_trocar) plus_trocar.classList.add('hidden');
+        if(minus_trocar) minus_trocar.classList.remove('hidden');
 
-      } else {
+      } else if (div_expandir) {
         div_expandir.classList.add('hidden');
-        plus_trocar.classList.remove('hidden');
-        minus_trocar.classList.add('hidden');
+        div_expandir.style.display = 'none';
+        if(plus_trocar) plus_trocar.classList.remove('hidden');
+        if(minus_trocar) minus_trocar.classList.add('hidden');
       }
     }
 
@@ -804,80 +807,16 @@
 
   <script>
     //* Expande e contrai main dimensão
-    // Toggle functions para controlar abertura/fechamento das camadas
-    function toggleDimensao(dimensaoId) {
-      var main = document.getElementById('main-dimencao-' + dimensaoId);
-      var plus = document.getElementById('plus-dimencao-' + dimensaoId);
-      var minus = document.getElementById('minus-dimencao-' + dimensaoId);
-
-      if (!main || !plus || !minus) return;
-
-      if (main.classList.contains('hidden')) {
-        main.classList.remove('hidden');
-        main.style.display = '';
-        plus.classList.add('hidden');
-        minus.classList.remove('hidden');
-      } else {
-        main.classList.add('hidden');
-        main.style.display = 'none';
-        plus.classList.remove('hidden');
-        minus.classList.add('hidden');
-      }
-    }
-
-    function toggleProcesso(processoId) {
-      // processoId é o id do processo, os elementos são identificados por 'main-processo-<dimensao>-<processo>'
-      // Procuramos por qualquer elemento cujo id termine com '-<processoId>' e comece com 'main-processo-'
-      var selector = "[id^='main-processo-'][id$='-" + processoId + "']";
-      var main = document.querySelector(selector);
-      var plus = document.getElementById("plus-processo-" + processoId);
-      var minus = document.getElementById("minus-processo-" + processoId);
-
-      if (!main) {
-        // fallback: tentar localizar por parte do id quando existem dupla referência (dimensao-processo)
-        main = document.querySelector("div[id*='main-processo-'][id*='-" + processoId + "']");
-      }
-
-      if (!main) return;
-
-      if (plus) plus.classList.add('hidden');
-      if (minus) minus.classList.remove('hidden');
-
-      if (main.classList.contains('hidden')) {
-        main.classList.remove('hidden');
-        main.style.display = '';
-        if (plus) plus.classList.add('hidden');
-        if (minus) minus.classList.remove('hidden');
-      } else {
-        main.classList.add('hidden');
-        main.style.display = 'none';
-        if (plus) plus.classList.remove('hidden');
-        if (minus) minus.classList.add('hidden');
-      }
-    }
-
-    function toggleResultado(dimensaoId, processoId, resultadoId) {
-      var mainId = 'main-resultado-' + dimensaoId + '-' + processoId + '-' + resultadoId;
-      var plusId = 'plus-resultado-' + dimensaoId + '-' + processoId + '-' + resultadoId;
-      var minusId = 'minus-resultado-' + dimensaoId + '-' + processoId + '-' + resultadoId;
-
-      var main = document.getElementById(mainId);
-      var plus = document.getElementById(plusId);
-      var minus = document.getElementById(minusId);
-
-      if (!main) return;
-
-      if (main.classList.contains('hidden')) {
-        main.classList.remove('hidden');
-        main.style.display = '';
-        if (plus) plus.classList.add('hidden');
-        if (minus) minus.classList.remove('hidden');
-      } else {
-        main.classList.add('hidden');
-        main.style.display = 'none';
-        if (plus) plus.classList.remove('hidden');
-        if (minus) minus.classList.add('hidden');
-      }
+    function show_todos_processos(form_id,dimensao){
+        if((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-plus")){
+        document.getElementById(`dimensao_child_`+dimensao).classList.remove('hidden');
+        document.getElementById(form_id).classList.remove('icon-plus');
+        document.getElementById(form_id).classList.add('icon-minus');
+        } else if ((form_id == (`dimensao_`+dimensao+`_icon`)) && (document.getElementById(form_id).classList == "icon-minus")) {
+        document.getElementById(`dimensao_child_`+dimensao).classList.add('hidden');
+        document.getElementById(form_id).classList.remove('icon-minus');
+        document.getElementById(form_id).classList.add('icon-plus');
+        }
     }
 
     //* Expande e contrai main processos
@@ -897,7 +836,8 @@
         }
     }     
 
-    $(document).ready(function(){
+    // Usar turbolinks:load ao invés de document.ready para compatibilidade com Turbolinks
+    document.addEventListener('turbolinks:load', function(){
 
       // Redimensionar todos os textareas com conteúdo ao carregar a página
       setTimeout(function() {
@@ -914,12 +854,6 @@
           }
         });
       }, 500);
-
-      // Garantir que todos os blocos expansíveis comecem escondidos (fallback)
-      document.querySelectorAll('.expandable-main').forEach(function(el) {
-        try { el.style.display = 'none'; } catch(e) {}
-        if (!el.classList.contains('hidden')) el.classList.add('hidden');
-      });
 
       $(".header-select #modelo_aplicado_id").change(function(){
         var classeDaOpcao = this.value;
@@ -1023,61 +957,4 @@
         // Aplicar a nova altura
         textarea.style.height = newHeight + 'px';
     }
-
-    // Normaliza a árvore DOM: move .processo e .resultado para seus containers corretos
-    function normalizeNesting() {
-      try {
-        // Move processos para dentro de main-dimencao-<dimensaoId>
-        document.querySelectorAll('div[id^="processo-"]').forEach(function(el) {
-          if (!el.classList.contains('processo')) return;
-          var parts = el.id.split('-'); // ['processo', '<dimensaoId>', '<processoId>']
-          if (parts.length < 3) return;
-          var dimensaoId = parts[1];
-          var target = document.getElementById('main-dimencao-' + dimensaoId);
-          if (target && !el.closest('#main-dimencao-' + dimensaoId)) {
-            target.appendChild(el);
-            console.log('Moved processo', el.id, 'into', target.id);
-          }
-        });
-
-        // Move resultados para dentro de main-processo-<dimensao>-<processo>
-        document.querySelectorAll('div[id^="resultado-"]').forEach(function(el) {
-          if (!el.classList.contains('resultado')) return;
-          var parts = el.id.split('-'); // ['resultado', '<dimensaoId>', '<processoId>', '<resultadoId>']
-          if (parts.length < 4) return;
-          var dimensaoId = parts[1];
-          var processoId = parts[2];
-          var target = document.getElementById('main-processo-' + dimensaoId + '-' + processoId);
-          if (target && !el.closest('#main-processo-' + dimensaoId + '-' + processoId)) {
-            target.appendChild(el);
-            console.log('Moved resultado', el.id, 'into', target.id);
-          }
-        });
-      } catch(e) {
-        console.error('normalizeNesting error', e);
-      }
-    }
-
-    // Executa após renderização completa
-    setTimeout(function() { normalizeNesting(); }, 150);
-
-    // Corrigir elementos mal-nested: esconder processos/resultado que não estão dentro do seu pai esperado
-    setTimeout(function() {
-      try {
-        document.querySelectorAll('.processo').forEach(function(proc) {
-          if (!proc.closest("[id^='main-dimencao-']") && !proc.closest("[id^='main-processo-']")) {
-            proc.style.display = 'none';
-          }
-        });
-
-        document.querySelectorAll('.resultado').forEach(function(res) {
-          if (!res.closest("[id^='main-processo-']") && !res.closest("[id^='main-resultado-']")) {
-            res.style.display = 'none';
-          }
-        });
-      } catch(e) {
-        // não bloquear se houver erro
-        console.error('cleanup nesting error', e);
-      }
-    }, 100);
 </script>
