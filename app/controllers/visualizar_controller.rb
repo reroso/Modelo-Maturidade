@@ -78,9 +78,18 @@ class VisualizarController < ApplicationController
                 end
             when "3"
                 @dimensaos.each do |dimensao|
-                    next unless dimensao.maturidade_id == @opcao
+                    next unless dimensao.maturidade_id == @opcao && dimensao.nivel_selecionado.to_s == nivel.to_s
                     @processos.each do |processo|
-                        if dimensao.id == processo.dimensao_id && processo.nivel_selecionado.to_s == nivel.to_s
+                        next unless dimensao.id == processo.dimensao_id
+
+                        if maturidade.resultadoEscolha == "2"
+                            @resultados.each do |resultado|
+                                next unless processo.id == resultado.processo_id
+                                resultado.docs.each do |doc|
+                                    docs_nivel << doc if doc.modelo == @modelo
+                                end
+                            end
+                        else
                             processo.docs.each do |doc|
                                 docs_nivel << doc if doc.modelo == @modelo
                             end
@@ -96,7 +105,13 @@ class VisualizarController < ApplicationController
                 classificacoes: docs_avaliados.map(&:classificacao)
             }
 
-            # Se não houver documentos neste nível, para a avaliação
+            # Exceção de negócio: se não houver nenhum artefato no menor nível,
+            # considera que o modelo pertence ao menor nível.
+            if idx == 0 && docs_nivel.empty?
+                return is_alpha ? (nivel_num + 64).chr : nivel_num
+            end
+
+            # Se não houver documentos avaliados neste nível, para a avaliação
             if docs_nivel.empty? || docs_avaliados.empty?
                 break
             end
@@ -210,6 +225,49 @@ class VisualizarController < ApplicationController
                         end
                     end
                 end
+            when "3" # Dimensões
+                @dimensaos.each do |dimensao|
+                    next unless dimensao.maturidade_id == @opcao &&
+                                  dimensao.nivel_selecionado.to_s == nivel.to_s
+
+                    # No modo Dimensões, cada ponta do radar representa uma dimensão.
+                    unless processos_do_nivel.include?(dimensao.descricao)
+                        processos_do_nivel << dimensao.descricao
+                        dados_processos[dimensao.descricao] = {
+                            total_docs: 0,
+                            docs_atende_totalmente: 0
+                        }
+                    end
+
+                    @processos.each do |processo|
+                        next unless dimensao.id == processo.dimensao_id
+
+                        # No modo Dimensões com resultados esperados, os artefatos ficam em resultado.docs
+                        if maturidade.resultadoEscolha == "2"
+                            @resultados.each do |resultado|
+                                next unless processo.id == resultado.processo_id
+
+                                resultado.docs.each do |doc|
+                                    next unless doc.modelo == @modelo
+
+                                    dados_processos[dimensao.descricao][:total_docs] += 1
+                                    if doc.classificacao == 1 # Atende Totalmente
+                                        dados_processos[dimensao.descricao][:docs_atende_totalmente] += 1
+                                    end
+                                end
+                            end
+                        else
+                            processo.docs.each do |doc|
+                                next unless doc.modelo == @modelo
+
+                                dados_processos[dimensao.descricao][:total_docs] += 1
+                                if doc.classificacao == 1 # Atende Totalmente
+                                    dados_processos[dimensao.descricao][:docs_atende_totalmente] += 1
+                                end
+                            end
+                        end
+                    end
+                end
             end
 
             next if processos_do_nivel.empty?
@@ -224,11 +282,13 @@ class VisualizarController < ApplicationController
                 end
             end
 
+            eixo_descricao = maturidade.nivelEscolha == "3" ? "Dimensões" : "Processos"
+
             # Prepara dados do gráfico radar para este nível
             @chart_data_por_nivel[nivel] = {
                 labels: processos_do_nivel,
                 datasets: [{
-                    label: "Atendimento Total dos Processos - Nível #{nivel}",
+                    label: "Atendimento Total por #{eixo_descricao} - Nível #{nivel}",
                     data: porcentagens,
                     fill: true,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -330,6 +390,39 @@ class VisualizarController < ApplicationController
                         end
                     end
                 end
+            when "3" # Dimensões
+                @dimensaos.each do |dimensao|
+                    next unless dimensao.maturidade_id == @opcao &&
+                                  dimensao.nivel_selecionado.to_s == nivel.to_s
+
+                    @processos.each do |processo|
+                        next unless dimensao.id == processo.dimensao_id
+
+                        if maturidade.resultadoEscolha == "2"
+                            @resultados.each do |resultado|
+                                next unless processo.id == resultado.processo_id
+
+                                resultado.docs.each do |doc|
+                                    next unless doc.modelo == @modelo
+
+                                    dados_niveis[nivel][:total_docs] += 1
+                                    if doc.classificacao == 1 # Atende Totalmente
+                                        dados_niveis[nivel][:docs_atende_totalmente] += 1
+                                    end
+                                end
+                            end
+                        else
+                            processo.docs.each do |doc|
+                                next unless doc.modelo == @modelo
+
+                                dados_niveis[nivel][:total_docs] += 1
+                                if doc.classificacao == 1 # Atende Totalmente
+                                    dados_niveis[nivel][:docs_atende_totalmente] += 1
+                                end
+                            end
+                        end
+                    end
+                end
             end
         end
 
@@ -343,9 +436,19 @@ class VisualizarController < ApplicationController
             end
         end
 
+        # Usa a descrição customizada do nível (Level) quando existir.
+        levels_por_indice = @levels
+            .select { |level| level.modelo_id.to_i == @opcao }
+            .index_by { |level| level.index.to_s }
+
+        labels_niveis = niveis.map do |nivel|
+            descricao = levels_por_indice[nivel.to_s]&.descricao
+            descricao.present? ? "#{nivel} - #{descricao}" : nivel.to_s
+        end
+
         # Prepara dados do gráfico radar geral
         @general_chart_data = {
-            labels: niveis,
+            labels: labels_niveis,
             datasets: [{
                 label: "Porcentagem de Atendimento Total por Nível",
                 data: porcentagens,

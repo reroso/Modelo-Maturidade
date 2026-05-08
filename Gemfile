@@ -26,6 +26,7 @@ gem 'devise'
 gem 'select2-rails'
 gem 'chartkick'
 gem 'gruff'
+gem 'rails-erd'
 
 # Gems para IA
 gem 'dotenv-rails' # Para carregar variáveis de ambiente do arquivo .env

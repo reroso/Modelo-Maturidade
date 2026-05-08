@@ -50,3 +50,5 @@ yarn-debug.log*
 .tool-versions
 
 /config/master.key
+db/structure.sql
+erd.pdf

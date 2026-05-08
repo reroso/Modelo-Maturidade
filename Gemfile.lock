@@ -84,6 +84,7 @@ GEM
       marcel (~> 1.0.0)
       ssrf_filter (~> 1.0)
     chartkick (5.0.7)
+    choice (0.2.0)
     concurrent-ruby (1.2.2)
     crass (1.0.6)
     csv (3.3.5)
@@ -193,6 +194,11 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
+    rails-erd (1.7.2)
+      activerecord (>= 4.2)
+      activesupport (>= 4.2)
+      choice (~> 0.2.0)
+      ruby-graphviz (~> 1.2)
     rails-html-sanitizer (1.6.0)
       loofah (~> 2.21)
       nokogiri (~> 1.14)
@@ -214,6 +220,8 @@ GEM
     rmagick (5.5.0)
       observer (~> 0.1)
       pkg-config (~> 1.4)
+    ruby-graphviz (1.2.5)
+      rexml
     ruby-openai (3.7.0)
       httparty (>= 0.18.1)
     ruby-rc4 (0.1.5)
@@ -304,6 +312,7 @@ DEPENDENCIES
   pdf-reader
   puma (~> 4.1)
   rails (~> 6.0.4)
+  rails-erd
   ruby-openai (~> 3.7)
   sass-rails (>= 6)
   select2-rails

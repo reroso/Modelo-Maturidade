@@ -432,12 +432,12 @@
                                               </div>
                                               <!-- Adicionar antes do formulário de avaliação existente -->
                                               <div class="ai-evaluation-controls" style="margin-bottom: 15px;">
-                                                <button onclick="avaliarComIA(<%= doc.id %>)" class="btn-ai-evaluate" title="Avaliar com IA">
+                                                <button onclick="avaliarComIA(<%= doc.id %>)" class="btn-ai-evaluate hidden" title="Avaliar com IA">
                                                   🤖 Avaliar com IA
                                                 </button>
                                                 
                                                 <% if current_appraiser.expertise_areas.any? %>
-                                                  <button onclick="avaliarLoteComIA(<%= @modelo %>)" class="btn-ai-batch" title="Avaliar todos os documentos não avaliados com IA">
+                                                  <button onclick="avaliarLoteComIA(<%= @modelo %>)" class="btn-ai-batch hidden" title="Avaliar todos os documentos não avaliados com IA">
                                                     🚀 Avaliar Lote com IA
                                                   </button>
                                                 <% end %>
